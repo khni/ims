@@ -1,5 +1,6 @@
 import { Fail, Ok } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
+import { Context } from "./types.js";
 
 export interface IMutationService<R extends IRepository> {
   create: <
@@ -11,11 +12,7 @@ export interface IMutationService<R extends IRepository> {
     },
   >(params: {
     data: TCreateInput;
-    context: {
-      userId: string;
-      requestId: string;
-      organizationId: string;
-    };
+    context: Context;
   }) => Promise<
     | Fail<"MODULE_NAME_CONFLICT">
     | Fail<"MODULE_CREATION_LIMIT_EXCEEDED">
@@ -32,11 +29,7 @@ export interface IMutationService<R extends IRepository> {
   >(params: {
     data: TUpdateInput;
     id: string;
-    context: {
-      userId: string;
-      requestId: string;
-      organizationId: string;
-    };
+    context: Context;
   }) => Promise<
     Fail<"MODULE_NAME_CONFLICT"> | Ok<Awaited<ReturnType<R["update"]>>>
   >;

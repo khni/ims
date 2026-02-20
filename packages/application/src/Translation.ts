@@ -1,9 +1,6 @@
-import i18n, { Resource, ResourceLanguage, TOptionsBase } from "i18next";
-import organizationUserEn from "./organization-user/intl/locales/en.json" with { type: "json" };
-import organizationUserAr from "./organization-user/intl/locales/ar.json" with { type: "json" };
-import organizationEn from "./organization/intl/locales/en.json" with { type: "json" };
-import organizationAr from "./organization/intl/locales/ar.json" with { type: "json" };
-import { Messages } from "./organization-user/intl/types.js";
+import i18n from "i18next";
+import commonEn from "./intl/locales/en.json" with { type: "json" };
+import commonAr from "./intl/locales/ar.json" with { type: "json" };
 
 i18n.init({
   fallbackLng: "en",
@@ -11,16 +8,14 @@ i18n.init({
 
   resources: {
     en: {
-      organizationUser: organizationUserEn,
-      organization: organizationEn,
+      common: commonEn,
     },
     ar: {
-      organizationUser: organizationUserAr,
-      organization: organizationAr,
+      common: commonAr,
     },
   },
 
-  ns: ["organizationUser", "organization"], // namespaces
+  ns: ["common"], // namespaces
 
   interpolation: {
     escapeValue: false,

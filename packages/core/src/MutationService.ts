@@ -1,9 +1,9 @@
-import { IActivityLogService } from "@avuny/activity-log";
-
 import { creationLimitExceeded, nameConflict, ok } from "@avuny/utils";
 
 import { IRepository } from "./IRepository.js";
 import { IMutationService } from "./IMutationService.js";
+import { Context } from "./types.js";
+import { IActivityLogService } from "./IActivityLogService.js";
 
 export class MutationService<
   R extends IRepository,
@@ -24,7 +24,7 @@ export class MutationService<
     > & { name: string },
   >(params: {
     data: TCreateInput;
-    context: { userId: string; requestId: string; organizationId: string };
+    context: Context;
   }) => {
     const { data, context } = params;
     const existsRecord = await this.repository.findUnique({
@@ -83,7 +83,7 @@ export class MutationService<
   >(params: {
     data: TUpdateInput;
     id: string;
-    context: { userId: string; requestId: string; organizationId: string };
+    context: Context;
   }) => {
     const { data, context, id } = params;
     if (data.name) {

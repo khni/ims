@@ -38,8 +38,9 @@
     "vitest": "^3.2.3"
   },
   "dependencies": {
-    "@avuny/zod": "workspace:*",
     "@avuny/utils": "workspace:*",
-    "@hono/zod-openapi": "^1.1.5"
+    "@avuny/zod": "workspace:*",
+    "@hono/zod-openapi": "^1.1.5",
+    "hono": "^4.12.0"
   }
 }

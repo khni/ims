@@ -1,5 +1,6 @@
 import { Ok } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
+import { Context } from "./types.js";
 
 export type FilteredPaginatedList<IFilters, TOrderBy> = {
   page?: number;
@@ -40,10 +41,6 @@ export interface IQueryService<R extends IRepository> {
 
   findById: (params: {
     id: string;
-    context: {
-      userId: string;
-      requestId: string;
-      organizationId: string;
-    };
+    context: Context;
   }) => Promise<Ok<Awaited<ReturnType<R["findUnique"]>>>>;
 }

@@ -47,16 +47,8 @@
     "zod": "^4.0.5"
   },
   "dependencies": {
-    "@avuny/activity-log": "workspace:*",
-    "@avuny/auth": "workspace:*",
     "@avuny/core": "workspace:*",
     "@avuny/hono": "workspace:*",
-    "@avuny/intl": "workspace:*",
-    "@avuny/organization": "workspace:*",
-    "@avuny/organization-user": "workspace:*",
-    "@avuny/permission": "workspace:*",
-    "@avuny/region": "workspace:*",
-    "@avuny/role": "workspace:*",
     "@hono/swagger-ui": "^0.5.2",
     "@hono/zod-openapi": "^1.1.5",
     "@khni/auth": "^3.0.0",
