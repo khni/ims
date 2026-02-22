@@ -1,0 +1,124 @@
+enum ActionName {
+  create
+  read
+  update
+  delete
+  approve
+  reject
+  export
+  import
+  share
+  archive
+  restore
+}
+
+enum ResourceName {
+  user
+  role
+  item
+  invoice
+  customer
+  supplier
+  purchase_order
+  sales_order
+  warehouse
+  organization
+  report
+}
+
+
+// NEW: System-defined custom permissions that don't fit CRUD patterns
+enum SystemCustomPermission {
+  FULL_ACCESS
+  //example custom permissions
+  // Financial permissions
+  VIEW_FINANCIAL_REPORTS
+  PROCESS_BULK_PAYMENTS
+  OVERRIDE_PRICING
+  VIEW_COST_PRICES
+  ACCESS_PROFIT_MARGINS
+
+  // Administrative permissions
+  MANAGE_ORGANIZATION_SETTINGS
+  INVITE_USERS
+  MANAGE_BILLING
+  EXPORT_ALL_DATA
+  ACCESS_AUDIT_LOGS
+
+  // Operational permissions
+  OVERRIDE_INVENTORY
+  BYPASS_APPROVAL_WORKFLOWS
+  MANAGE_INTEGRATIONS
+  SCHEDULE_BATCH_OPERATIONS
+  ACCESS_ADMIN_DASHBOARD
+
+  // Data permissions
+  VIEW_SENSITIVE_DATA
+  ACCESS_ALL_RECORDS
+  OVERRIDE_DATA_RETENTION
+}
+
+// =========================================
+// SYSTEM PERMISSIONS (Standard CRUD operations)
+// =========================================
+
+model Action {
+  id          String       @id @default(uuid())
+  name        ActionName   @unique
+  description String?
+  permissions Permission[]
+}
+
+model Resource {
+  id          String       @id @default(uuid())
+  name        ResourceName @unique
+  description String?
+  permissions Permission[]
+}
+
+// Standard CRUD permissions
+model Permission {
+  id         String   @id @default(uuid())
+  action     Action   @relation(fields: [actionId], references: [id], onDelete: Cascade)
+  actionId   String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  resourceId String
+
+  // Permission metadata
+  description String?
+  category    String?
+  isDangerous Boolean @default(false)
+
+  rolePermissions RolePermission[]
+  SidebarOption   SidebarOption[]
+
+  @@unique([actionId, resourceId])
+  @@index([category, isDangerous])
+  @@map("permissions")
+}
+
+// =========================================
+// SYSTEM CUSTOM PERMISSIONS (Non-CRUD operations)
+// =========================================
+
+model CustomPermission {
+  id          String                 @id @default(uuid())
+  code        SystemCustomPermission @unique // System-defined enum value
+  name        String
+  description String?
+  category    String // e.g., "FINANCIAL", "ADMINISTRATIVE", "OPERATIONAL"
+  riskLevel   String                 @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+
+  // System metadata
+  isActive         Boolean  @default(true)
+  requiresApproval Boolean  @default(false) // High-risk permissions need approval
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relationships
+  roleCustomPermissions RoleCustomPermission[]
+
+  @@index([category, riskLevel])
+  @@index([code, isActive])
+  @@map("custom_permissions")
+}

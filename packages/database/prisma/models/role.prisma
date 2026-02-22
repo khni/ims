@@ -1,0 +1,106 @@
+enum OrganizationUserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  REJECTED
+  SUSPENDED
+}
+
+model Role {
+  id             String       @id @default(uuid())
+  name           String
+  description    String?
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+
+  // Role metadata
+  isSystem Boolean @default(false)
+  priority Int     @default(0)
+
+  // Permissions
+  rolePermissions       RolePermission[]
+  roleCustomPermissions RoleCustomPermission[]
+  organizationUsers             OrganizationUser[]
+
+  // Audit
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("roles")
+}
+
+// Role Assignment to Users within Organizations
+
+
+model OrganizationUser {
+  id             String       @id @default(uuid())
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  name           String
+  role           Role         @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId         String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  
+  status     OrganizationUserStatus @default(PENDING)
+  expiresAt  DateTime?
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId,  organizationId])
+  @@unique([name,  organizationId])
+  @@index([userId, status])
+  @@index([roleId, status])
+  @@map("organization_users")
+}
+
+// =========================================
+// LINK ROLE ↔ PERMISSIONS (many-to-many)
+// =========================================
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId       String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  permissionId String
+
+
+  conditions Json?
+  isActive   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@map("role_permissions")
+}
+
+model RoleCustomPermission {
+  id                 String           @id @default(uuid())
+  role               Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId             String
+  customPermission   CustomPermission @relation(fields: [customPermissionId], references: [id], onDelete: Cascade)
+  customPermissionId String
+
+  // Additional context for high-risk permissions
+  conditions       Json?
+  approvalRequired Boolean   @default(false)
+  approvedBy       String? // User ID who approved this permission
+  approvedAt       DateTime?
+  grantedAt        DateTime  @default(now())
+  grantedBy        String?
+
+  @@unique([roleId, customPermissionId])
+  @@index([roleId])
+  @@index([customPermissionId, approvalRequired])
+  @@map("role_custom_permissions")
+}

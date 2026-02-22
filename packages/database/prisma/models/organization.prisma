@@ -1,0 +1,53 @@
+model Organization {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  stateId String
+  state   State  @relation(fields: [stateId], references: [id])
+
+  inventoryStartDate DateTime
+
+  industryCategoryId String?
+  industryCategory   IndustryCategory? @relation(fields: [industryCategoryId], references: [id])
+
+  fiscalYearPatternId String?
+  fiscalYearPattern   FiscalYearPattern? @relation(fields: [fiscalYearPatternId], references: [id])
+
+  owner   User   @relation("OrganizationOwnership", fields: [ownerId], references: [id])
+  ownerId String
+
+  organizationUsers OrganizationUser[]
+  roles     Role[]
+  // optional fields
+  address   String?
+  zipCode   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, ownerId])
+  @@map("organizations")
+}
+
+model IndustryCategory {
+  id            String         @id @default(uuid())
+  code          String         @unique // e.g. "MANUFACTURING"
+  label         String // e.g. "Manufacturing"
+  organizations Organization[]
+
+  @@map("industry_categories")
+}
+
+model FiscalYearPattern {
+  id    String @id @default(uuid())
+  code  String @unique // APR_MAR
+  label String // April – March
+
+  startMonth Int // 4
+  endMonth   Int // 3
+
+  organizations Organization[]
+
+  @@map("fiscal_year_patterns")
+}

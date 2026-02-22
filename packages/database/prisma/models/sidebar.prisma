@@ -1,0 +1,42 @@
+enum SidebarHeadingType {
+  Users
+}
+
+enum SidebarOptionType {
+  Users
+  Roles
+}
+
+model SidebarHeading {
+  id String @id() @default(uuid())
+
+  name           SidebarHeadingType @unique()
+  icon           String
+  sidebarOptions SidebarOption[]
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("sidebar_headings")
+}
+
+model SidebarOption {
+  id String @id() @default(uuid())
+
+  name SidebarOptionType @unique()
+  icon String?
+  path String
+
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  permissionId String
+
+  sidebarHeading   SidebarHeading @relation(fields: [sidebarHeadingId], references: [id], onDelete: Cascade)
+  sidebarHeadingId String
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("sidebar_options")
+}

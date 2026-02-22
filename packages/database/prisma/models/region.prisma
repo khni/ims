@@ -1,0 +1,123 @@
+model Region {
+  id           String      @id @default(uuid())
+  name         String      @unique
+  translations Json?
+  wikiDataId   String?
+  subregions   Subregion[]
+  countries    Country[]
+}
+
+model Subregion {
+  id           String    @id @default(uuid())
+  name         String    @unique
+  translations Json?
+  wikiDataId   String?
+  regionId     String
+  region       Region    @relation(fields: [regionId], references: [id])
+  countries    Country[]
+
+  @@unique([name, regionId])
+}
+
+model Currency {
+  id        String    @id @default(uuid())
+  code      String    @unique
+  name      String?
+  symbol    String?
+  countries Country[]
+
+  //organization Organization[]
+}
+
+model PhoneCode {
+  id        String    @id @default(uuid())
+  code      String    @unique
+  countries Country[]
+}
+
+model TimeZone {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  offset    String?
+  countries Country[]
+
+  Country Country[] @relation("CountryTimeZones")
+
+  //organization Organization[]
+}
+
+model Translation {
+  id        String   @id @default(uuid())
+  language  String
+  value     Json
+  countryId String?
+  country   Country? @relation(fields: [countryId], references: [id])
+
+  @@unique([language, countryId])
+}
+
+model Country {
+  id           String        @id @default(uuid())
+  name         String
+  iso3         String?
+  iso2         String?       @unique
+  numericCode  String?
+  capital      String?
+  tld          String?
+  native       String?
+  latitude     String?
+  longitude    String?
+  emoji        String?
+  emojiU       String?
+  wikiDataId   String?
+  regionId     String?
+  subregionId  String?
+  currencyId   String?
+  phoneCodeId  String?
+  region       Region?       @relation(fields: [regionId], references: [id])
+  subregion    Subregion?    @relation(fields: [subregionId], references: [id])
+  currency     Currency?     @relation(fields: [currencyId], references: [id])
+  phoneCode    PhoneCode?    @relation(fields: [phoneCodeId], references: [id])
+  timezones    TimeZone[]    @relation("CountryTimeZones")
+  translations Translation[]
+  states       State[]
+
+  TimeZone TimeZone[]
+
+  city City[]
+}
+
+model State {
+  id            String         @id @default(uuid())
+  name          String
+  iso2          String?
+  fipsCode      String?
+  type          String?
+  latitude      String?
+  longitude     String?
+  wikiDataId    String?
+  native        String?
+  countryId     String
+  country       Country        @relation(fields: [countryId], references: [id])
+  cities        City[]
+  organizations Organization[]
+
+  @@unique([name, countryId])
+}
+
+model City {
+  id          String  @id @default(uuid())
+  name        String
+  stateCode   String?
+  countryCode String?
+  latitude    String?
+  longitude   String?
+  wikiDataId  String?
+  native      String?
+  stateId     String
+  countryId   String
+  state       State   @relation(fields: [stateId], references: [id])
+  country     Country @relation(fields: [countryId], references: [id])
+
+  @@unique([name, stateId])
+}

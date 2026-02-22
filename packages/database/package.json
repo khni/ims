@@ -1,0 +1,41 @@
+{
+  "name": "@avuny/db",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./enums": {
+      "import": "./dist/enums.js",
+      "types": "./dist/enums.d.ts"
+    },
+    "./types": "./src/types.ts"
+  },
+  "scripts": {
+    "db:migrate": "prisma migrate dev --skip-generate",
+    "db:generate": "prisma generate",
+    "db:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:push:force": "prisma db push --force-reset",
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "pnpm db:generate && tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "clean:build": "rm -rf dist && rm -rf tsconfig.build.tsbuildinfo && rm -rf .turbo && rm -rf ./src/generated/prisma"
+  },
+  "dependencies": {
+    "@prisma/adapter-neon": "^6.19.0",
+    "@prisma/adapter-pg": "^6.19.0",
+    "@prisma/client": "^6.19.0",
+    "@prisma/extension-accelerate": "^2.0.2",
+    "dotenv": "^17.2.3",
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "prisma": "^6.19.0",
+    "typescript": "^5.6.3"
+  }
+}
