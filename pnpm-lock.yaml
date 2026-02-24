@@ -75,9 +75,15 @@ importers:
       '@avuny/core':
         specifier: workspace:*
         version: link:../core
+      '@avuny/db':
+        specifier: workspace:*
+        version: link:../database
       '@avuny/hono':
         specifier: workspace:*
         version: link:../hono
+      '@avuny/zod':
+        specifier: workspace:*
+        version: link:../zod
       '@hono/swagger-ui':
         specifier: ^0.5.2
         version: 0.5.3(hono@4.12.0)

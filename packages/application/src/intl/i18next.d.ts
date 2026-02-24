@@ -1,4 +1,4 @@
-import type commonEn from "./locales/en.json";
+import type commonEn from "./locales/common/en.json";
 
 type CommonMessages = typeof commonEn;
 

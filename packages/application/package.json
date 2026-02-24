@@ -49,6 +49,8 @@
   "dependencies": {
     "@avuny/core": "workspace:*",
     "@avuny/hono": "workspace:*",
+    "@avuny/db": "workspace:*",
+    "@avuny/zod": "workspace:*",
     "@hono/swagger-ui": "^0.5.2",
     "@hono/zod-openapi": "^1.1.5",
     "@khni/auth": "^3.0.0",

@@ -1,6 +1,6 @@
 import i18n from "i18next";
-import commonEn from "./intl/locales/en.json" with { type: "json" };
-import commonAr from "./intl/locales/ar.json" with { type: "json" };
+import commonEn from "./locales/common/en.json" with { type: "json" };
+import commonAr from "./locales/common/ar.json" with { type: "json" };
 
 i18n.init({
   fallbackLng: "en",
@@ -27,3 +27,9 @@ export const trans = ({ lang }: { lang: "en" | "ar" }) => {
   const translation = i18n.getFixedT(lang);
   return translation;
 };
+
+// example usage
+/**
+ * const t = trans({lang:"en"})
+t("common:errors.MODULE_NAME_CONFLICT")
+ */
