@@ -120,7 +120,7 @@ export class CreateService<
             tx,
             data: {
               event: "create",
-              organizationId: context.organizationId,
+              organizationId: context.organizationId || record.id, // in case of organization creation, the organizationId is the record id
               resourceId: record.id,
               resourceType: this.config.moduleName,
             },
