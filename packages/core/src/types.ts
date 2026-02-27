@@ -6,5 +6,14 @@ export type Context = {
 };
 export type ServiceContext = Omit<Context, "lang">;
 
-export type Resource = "role" | "user" | "organization";
-export type Action = "read" | "update" | "create" | "delete";
+export type Resource =
+  | "user"
+  | "role"
+  | "organization"
+  | "item"
+  | "invoice"
+  | "customer"
+  | "supplier"
+  | "purchase_order"
+  | "sales_order";
+export type Action = "create" | "update" | "delete" | "restore" | "archive";

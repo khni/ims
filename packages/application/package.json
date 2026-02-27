@@ -51,6 +51,7 @@
     "@avuny/hono": "workspace:*",
     "@avuny/db": "workspace:*",
     "@avuny/zod": "workspace:*",
+    "@avuny/utils": "workspace:*",
     "@hono/swagger-ui": "^0.5.2",
     "@hono/zod-openapi": "^1.1.5",
     "@khni/auth": "^3.0.0",

@@ -1,1 +1,1 @@
-export type Messages = typeof import("./locales/common/en.json");
+export type Messages = typeof import("./locales/organization/en.json");

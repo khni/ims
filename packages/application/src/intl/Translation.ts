@@ -1,6 +1,6 @@
 import i18n from "i18next";
-import commonEn from "./locales/common/en.json" with { type: "json" };
-import commonAr from "./locales/common/ar.json" with { type: "json" };
+import organizationEn from "./locales/organization/en.json" with { type: "json" };
+import organizationAr from "./locales/organization/ar.json" with { type: "json" };
 
 i18n.init({
   fallbackLng: "en",
@@ -8,14 +8,14 @@ i18n.init({
 
   resources: {
     en: {
-      common: commonEn,
+      organization: organizationEn,
     },
     ar: {
-      common: commonAr,
+      organization: organizationAr,
     },
   },
 
-  ns: ["common"], // namespaces
+  ns: ["organization"], // namespaces
 
   interpolation: {
     escapeValue: false,
@@ -31,5 +31,5 @@ export const trans = ({ lang }: { lang: "en" | "ar" }) => {
 // example usage
 /**
  * const t = trans({lang:"en"})
-t("common:errors.MODULE_NAME_CONFLICT")
+t("organization:errors.MODULE_NAME_CONFLICT")
  */

@@ -1,11 +1,11 @@
-import type commonEn from "./locales/common/en.json";
+import type organizationEn from "./locales/organization/en.json";
 
-type CommonMessages = typeof commonEn;
+type OrganizationMessages = typeof organizationEn;
 
 declare module "i18next" {
   interface CustomTypeOptions {
     resources: {
-      common: CommonMessages;
+      organization: OrganizationMessages;
     };
   }
 }
