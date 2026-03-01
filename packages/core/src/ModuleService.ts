@@ -1,4 +1,4 @@
-import { CreateService } from "./CreateService-2.js";
+import { CreateService } from "./CreateService.js";
 import { IActivityLogService } from "./IActivityLogService.js";
 import { IResourcePermission } from "./index.js";
 

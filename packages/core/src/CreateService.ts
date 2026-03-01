@@ -6,36 +6,39 @@ import {
 } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { ServiceContext as Context } from "./types.js";
+import { ServiceContext as Context, Resource } from "./types.js";
 import { IResourcePermission } from "./ServiceGuard/IResourcePermission.js";
 import { IActivityLogService } from "./IActivityLogService.js";
 
-type BeforeCreateHook<T, Tx> = (params: {
+export type BeforeCreateHook<T, Tx> = (params: {
   data: T;
   tx: Tx;
   context: Context;
 }) => Promise<T | void>;
 
-type AfterCreateHook<T, Tx> = (params: {
+export type AfterCreateHook<T, Tx> = (params: {
   record: T;
   tx: Tx;
   context: Context;
 }) => Promise<void>;
 
-export class CreateService<
-  R extends IRepository,
-  TCreateInput extends Record<string, any>,
-> {
+export class CreateService {
   constructor(
-    private repository: R,
-    private config: {
-      creationLimit: number;
-      moduleName: "role" | "user" | "organization";
-    },
+    private activityLog: IActivityLogService,
+    private resourcePermission: IResourcePermission,
   ) {}
 
   create =
-    <E>(options?: {
+    <
+      E,
+      R extends IRepository,
+      TCreateInput extends Record<string, any>,
+    >(options: {
+      config: {
+        creationLimit: number;
+        moduleName: Resource;
+      };
+      repository: R;
       uniqueChecker?: {
         keys: (keyof (TCreateInput & { organizationId: string }))[];
         errorKey: E;
@@ -44,37 +47,34 @@ export class CreateService<
         beforeCreate?: BeforeCreateHook<TCreateInput, any>;
         afterCreate?: AfterCreateHook<any, any>;
       };
-      activityLog?: IActivityLogService;
-      reourcePermission?: IResourcePermission;
     }) =>
     async <Tx>(params: { data: TCreateInput; context: Context; tx?: Tx }) => {
-      if (options?.reourcePermission) {
-        const canCreate = await options.reourcePermission.check({
-          action: "create",
-          organizationId: params.context.organizationId,
-          userId: params.context.userId,
-          resource: this.config.moduleName,
-        });
-        if (!canCreate) {
-          return fail(
-            ModuleErrorCodes.USER_NO_PERMISSION,
-            params.context,
-            `${this.config.moduleName}CreateService.create`,
-          );
-        }
+      const canCreate = await this.resourcePermission.check({
+        action: "create",
+        organizationId: params.context.organizationId,
+        userId: params.context.userId,
+        resource: options.config.moduleName,
+      });
+      if (!canCreate) {
+        return fail(
+          ModuleErrorCodes.USER_NO_PERMISSION,
+          params.context,
+          `${options.config.moduleName}CreateService.create`,
+        );
       }
+
       const { data, context } = params;
       const { uniqueChecker, hooks } = options ?? {};
 
       // 🔴 Creation limit check
-      const recordsCount = await this.repository.count({
+      const recordsCount = await options.repository.count({
         where: { organizationId: context.organizationId },
       });
 
-      if (recordsCount >= this.config.creationLimit) {
+      if (recordsCount >= options.config.creationLimit) {
         return creationLimitExceeded(
           context,
-          `${this.config.moduleName}CreateService.create`,
+          `${options.config.moduleName}CreateService.create`,
         );
       }
 
@@ -83,16 +83,16 @@ export class CreateService<
         data: { ...data, organizationId: context.organizationId },
         uniqueChecker,
         context,
-        repository: this.repository,
+        repository: options.repository,
         config: {
-          moduleName: this.config.moduleName,
+          moduleName: options.config.moduleName,
           action: "create",
         },
       });
 
       if (uniqueError) return uniqueError;
 
-      const record = await this.repository.createTransaction(
+      const record = await options.repository.createTransaction(
         async (transaction) => {
           let finalData = { ...data, organizationId: context.organizationId };
           const tx = params.tx ?? transaction;
@@ -111,18 +111,18 @@ export class CreateService<
             }
           }
 
-          const record = await this.repository.create({
+          const record = await options.repository.create({
             data: finalData,
             tx,
           });
 
-          await options?.activityLog?.create({
+          await this.activityLog.create({
             tx,
             data: {
               event: "create",
               organizationId: context.organizationId || record.id, // in case of organization creation, the organizationId is the record id
               resourceId: record.id,
-              resourceType: this.config.moduleName,
+              resourceType: options.config.moduleName,
             },
           });
 
@@ -138,7 +138,7 @@ export class CreateService<
       return ok(
         record,
         context,
-        `${this.config.moduleName}CreateService.create`,
+        `${options.config.moduleName}CreateService.create`,
       );
     };
 }

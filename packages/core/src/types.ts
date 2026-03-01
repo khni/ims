@@ -16,4 +16,10 @@ export type Resource =
   | "supplier"
   | "purchase_order"
   | "sales_order";
-export type Action = "create" | "update" | "delete" | "restore" | "archive";
+export type Action =
+  | "create"
+  | "update"
+  | "delete"
+  | "restore"
+  | "archive"
+  | "read";
