@@ -27,7 +27,7 @@ export const mutateOrganizationSchema = organizationSchema
 export const createOrganizationBodySchema = mutateOrganizationSchema;
 
 // params schema
-export const updateOrganizationBodySchema = mutateOrganizationSchema.partial();
+export const updateOrganizationBodySchema = mutateOrganizationSchema;
 
 export const getOrganizationByIdSchema = organizationSchema.pick({ id: true });
 

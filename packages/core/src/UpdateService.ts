@@ -1,8 +1,14 @@
-import { creationLimitExceeded, fail, ok } from "@avuny/utils";
+import {
+  creationLimitExceeded,
+  fail,
+  ModuleErrorCodes,
+  ok,
+} from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { ServiceContext as Context } from "./types.js";
+import { ServiceContext as Context, Resource } from "./types.js";
 import { IActivityLogService } from "./IActivityLogService.js";
+import { IResourcePermission } from "./index.js";
 
 /**
  *
@@ -23,20 +29,18 @@ type AfterUpdateHook<T, Tx> = (params: {
   context: Context;
 }) => Promise<void>;
 
-export class UpdateService<
-  R extends IRepository,
-  TUpdateInput extends Record<string, any>,
-> {
+export class UpdateService {
   constructor(
-    private repository: R,
-
-    private config: {
-      moduleName: "role" | "user" | "organization";
-    },
+    private activityLog: IActivityLogService,
+    private resourcePermission: IResourcePermission,
   ) {}
 
   update =
-    <E>(options?: {
+    <
+      E,
+      R extends IRepository,
+      TUpdateInput extends Record<string, any>,
+    >(options: {
       uniqueChecker?: {
         keys: (keyof (TUpdateInput & { organizationId: string }))[];
         errorKey: E;
@@ -45,7 +49,10 @@ export class UpdateService<
         beforeUpdate?: BeforeUpdateHook<TUpdateInput, any>;
         afterUpdate?: AfterUpdateHook<any, any>;
       };
-      activityLog?: IActivityLogService;
+      config: {
+        moduleName: Resource;
+      };
+      repository: R;
     }) =>
     async <Tx>(params: {
       data: TUpdateInput;
@@ -53,6 +60,19 @@ export class UpdateService<
       context: Context;
       tx?: Tx;
     }) => {
+      const canUpdate = await this.resourcePermission.check({
+        action: "update",
+        organizationId: params.context.organizationId,
+        userId: params.context.userId,
+        resource: options.config.moduleName,
+      });
+      if (!canUpdate) {
+        return fail(
+          ModuleErrorCodes.USER_NO_PERMISSION,
+          params.context,
+          `${options.config.moduleName}UpdateService.update`,
+        );
+      }
       const { data, context, id } = params;
       const { uniqueChecker, hooks } = options ?? {};
 
@@ -62,16 +82,16 @@ export class UpdateService<
         uniqueChecker,
         context,
         id,
-        repository: this.repository,
+        repository: options.repository,
         config: {
-          moduleName: this.config.moduleName,
+          moduleName: options.config.moduleName,
           action: "update",
         },
       });
 
       if (uniqueError) return uniqueError;
 
-      const record = await this.repository.createTransaction(
+      const record = await options.repository.createTransaction(
         async (transaction) => {
           let finalData = { ...data };
           const tx = params.tx ?? transaction;
@@ -86,19 +106,19 @@ export class UpdateService<
             if (modified) finalData = modified;
           }
 
-          const record = await this.repository.update({
+          const record = await options.repository.update({
             data: finalData,
             where: { id },
             tx,
           });
 
-          await options?.activityLog?.create({
+          await this.activityLog.create({
             tx,
             data: {
               event: "update",
               organizationId: context.organizationId,
               resourceId: record.id,
-              resourceType: this.config.moduleName,
+              resourceType: options.config.moduleName,
             },
           });
 
@@ -114,7 +134,7 @@ export class UpdateService<
       return ok(
         record,
         context,
-        `${this.config.moduleName}UpdateService.update`,
+        `${options.config.moduleName}UpdateService.update`,
       );
     };
 }

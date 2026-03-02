@@ -7,7 +7,6 @@ export type FilteredPaginatedList<IFilters, TOrderBy> = {
   pageSize?: number;
   orderBy?: TOrderBy;
   filters: IFilters;
-  context: { userId: string; requestId: string; organizationId: string };
 };
 
 // <WIP>
