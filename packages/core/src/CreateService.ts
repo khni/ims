@@ -22,6 +22,10 @@ export type AfterCreateHook<T, Tx> = (params: {
   context: Context;
 }) => Promise<void>;
 
+export type CreateHooks<TCreateInput extends Record<string, any>> = {
+  beforeCreate?: BeforeCreateHook<TCreateInput, any>;
+  afterCreate?: AfterCreateHook<any, any>;
+};
 export class CreateService {
   constructor(
     private activityLog: IActivityLogService,
@@ -43,10 +47,7 @@ export class CreateService {
         keys: (keyof (TCreateInput & { organizationId: string }))[];
         errorKey: E;
       }[];
-      hooks?: {
-        beforeCreate?: BeforeCreateHook<TCreateInput, any>;
-        afterCreate?: AfterCreateHook<any, any>;
-      };
+      hooks?: CreateHooks<TCreateInput>;
     }) =>
     async <Tx>(params: { data: TCreateInput; context: Context; tx?: Tx }) => {
       const canCreate = await this.resourcePermission.check({

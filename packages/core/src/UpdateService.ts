@@ -16,18 +16,23 @@ import { IResourcePermission } from "./index.js";
  *
  */
 
-type BeforeUpdateHook<T, Tx> = (params: {
+export type BeforeUpdateHook<T, Tx> = (params: {
   data: T;
   id: string;
   tx: Tx;
   context: Context;
 }) => Promise<T | void>;
 
-type AfterUpdateHook<T, Tx> = (params: {
+export type AfterUpdateHook<T, Tx> = (params: {
   record: T;
   tx: Tx;
   context: Context;
 }) => Promise<void>;
+
+export type UpdateHooks<TUpdateInput extends Record<string, any>> = {
+  beforeUpdate?: BeforeUpdateHook<TUpdateInput, any>;
+  afterUpdate?: AfterUpdateHook<any, any>;
+};
 
 export class UpdateService {
   constructor(
@@ -45,10 +50,7 @@ export class UpdateService {
         keys: (keyof (TUpdateInput & { organizationId: string }))[];
         errorKey: E;
       }[];
-      hooks?: {
-        beforeUpdate?: BeforeUpdateHook<TUpdateInput, any>;
-        afterUpdate?: AfterUpdateHook<any, any>;
-      };
+      hooks?: UpdateHooks<TUpdateInput>;
       config: {
         moduleName: Resource;
       };

@@ -2,6 +2,7 @@ import {
   Context,
   CreateService,
   FilteredPaginatedList,
+  ModuleService,
   QueryService,
   UpdateService,
 } from "@avuny/core";
@@ -94,5 +95,42 @@ export class OrganizationService {
         repository: this.organizationRepository,
       });
     return await filteredPaginatedOrganizationList({ ...params });
+  };
+}
+
+class OrganizationModuleService extends ModuleService<OrganizationRepository> {
+  constructor(
+    createService: CreateService,
+    updateService: UpdateService,
+    queryService: QueryService,
+    repository: OrganizationRepository,
+  ) {
+    super(createService, updateService, queryService);
+
+    this.setConfig({
+      repository,
+      creationLimit: 10,
+      moduleName: "organization",
+    });
+  }
+
+  createOrg = async (params: {
+    context: Context;
+    data: CreateOrganizationBody;
+    tx?: unknown;
+  }) => {
+    /// here we can add any organization specific logic before creating an organization.
+    const createOrganization = this.create({
+      uniqueChecker: [
+        {
+          keys: ["name", "ownerId"],
+          errorKey: OrganizationErrorCode.MODULE_NAME_CONFLICT,
+        },
+      ],
+    });
+    return await createOrganization({
+      ...params,
+      data: { ...params.data, ownerId: params.context.userId },
+    });
   };
 }
