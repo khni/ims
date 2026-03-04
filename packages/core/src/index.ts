@@ -6,7 +6,7 @@ export * from "./IQueryService.js";
 export * from "./QueryService.js";
 export * from "./types.js";
 export * from "./ServiceGuard/index.js";
-
+export * from "./ModuleService.js";
 export * from "./CreateService.js";
 export * from "./UpdateService.js";
 export * from "./checkUnique.js";

@@ -6,7 +6,7 @@ import {
 } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { ServiceContext as Context, Resource } from "./types.js";
+import { ServiceContext as Context, Resource, UniqueChecker } from "./types.js";
 import { IActivityLogService } from "./IActivityLogService.js";
 import { IResourcePermission } from "./index.js";
 
@@ -16,18 +16,23 @@ import { IResourcePermission } from "./index.js";
  *
  */
 
-type BeforeUpdateHook<T, Tx> = (params: {
+export type BeforeUpdateHook<T, Tx> = (params: {
   data: T;
   id: string;
   tx: Tx;
   context: Context;
 }) => Promise<T | void>;
 
-type AfterUpdateHook<T, Tx> = (params: {
+export type AfterUpdateHook<T, Tx> = (params: {
   record: T;
   tx: Tx;
   context: Context;
 }) => Promise<void>;
+
+export type UpdateHooks<TUpdateInput extends Record<string, any>> = {
+  beforeUpdate?: BeforeUpdateHook<TUpdateInput, any>;
+  afterUpdate?: AfterUpdateHook<any, any>;
+};
 
 export class UpdateService {
   constructor(
@@ -41,14 +46,8 @@ export class UpdateService {
       R extends IRepository,
       TUpdateInput extends Record<string, any>,
     >(options: {
-      uniqueChecker?: {
-        keys: (keyof (TUpdateInput & { organizationId: string }))[];
-        errorKey: E;
-      }[];
-      hooks?: {
-        beforeUpdate?: BeforeUpdateHook<TUpdateInput, any>;
-        afterUpdate?: AfterUpdateHook<any, any>;
-      };
+      uniqueChecker?: UniqueChecker<TUpdateInput, E>;
+      hooks?: UpdateHooks<TUpdateInput>;
       config: {
         moduleName: Resource;
       };

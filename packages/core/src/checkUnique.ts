@@ -4,7 +4,7 @@ export const checkUnique = async <T, E>(params: {
   data: T;
   id?: string;
   uniqueChecker?: {
-    keys: (keyof (T & { organizationId: string }))[];
+    keys: (keyof T)[];
     errorKey: E;
   }[];
   context: { userId: string; requestId: string };

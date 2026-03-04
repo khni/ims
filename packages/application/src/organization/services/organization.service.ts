@@ -1,34 +1,30 @@
-import {
-  Context,
-  CreateService,
-  FilteredPaginatedList,
-  QueryService,
-  UpdateService,
-} from "@avuny/core";
+import { Context, FilteredPaginatedList, ModuleService } from "@avuny/core";
 import { OrganizationRepository } from "../repositories/organization.repository.js";
 import { OrganizationErrorCode } from "../errors/errorCode.js";
 import { CreateOrganizationBody, UpdateOrganizationBody } from "../types.js";
 
-export class OrganizationService {
+export class OrganizationModuleService {
   constructor(
-    private createService: CreateService,
-    private updateService: UpdateService,
-    private queryService: QueryService,
     private organizationRepository: OrganizationRepository,
-  ) {}
-  moduleName = "organization" as const;
+    private moduleService: ModuleService<OrganizationRepository>,
+  ) {
+    this.moduleService.setConfig({
+      repository: this.organizationRepository,
+      creationLimit: 10,
+      moduleName: "organization",
+    });
+  }
+
+  // ===============================
+  // UPDATE
+  // ===============================
   create = async (params: {
     context: Context;
     data: CreateOrganizationBody;
     tx?: unknown;
   }) => {
     /// here we can add any organization specific logic before creating an organization.
-    const createOrganization = this.createService.create({
-      config: {
-        creationLimit: 10,
-        moduleName: this.moduleName,
-      },
-      repository: this.organizationRepository,
+    const createOrganization = this.moduleService.create({
       uniqueChecker: [
         {
           keys: ["name", "ownerId"],
@@ -42,6 +38,9 @@ export class OrganizationService {
     });
   };
 
+  // ===============================
+  // UPDATE
+  // ===============================
   update = async (params: {
     context: Context;
     data: UpdateOrganizationBody;
@@ -49,11 +48,7 @@ export class OrganizationService {
     tx?: unknown;
   }) => {
     /// here we can add any organization specific logic before updating an organization.
-    const updateOrganization = this.updateService.update({
-      config: {
-        moduleName: this.moduleName,
-      },
-      repository: this.organizationRepository,
+    const updateOrganization = this.moduleService.update({
       uniqueChecker: [
         {
           keys: ["name", "ownerId"],
@@ -67,16 +62,17 @@ export class OrganizationService {
     });
   };
 
-  getById = async (params: { context: Context; id: string }) => {
-    const getOrganizationById = this.queryService.findById({
-      config: {
-        moduleName: this.moduleName,
-      },
-      repository: this.organizationRepository,
-    });
+  // ===============================
+  // FIND BY ID
+  // ===============================
+
+  findById = async (params: { context: Context; id: string }) => {
+    const getOrganizationById = this.moduleService.findById();
     return await getOrganizationById(params);
   };
-
+  // ===============================
+  // FILTERED PAGINATED LIST
+  // ===============================
   filteredPaginatedList = async (params: {
     context: Context;
     query: FilteredPaginatedList<
@@ -87,12 +83,7 @@ export class OrganizationService {
     >;
   }) => {
     const filteredPaginatedOrganizationList =
-      this.queryService.filteredPaginatedList({
-        config: {
-          moduleName: this.moduleName,
-        },
-        repository: this.organizationRepository,
-      });
+      this.moduleService.filteredPaginatedList();
     return await filteredPaginatedOrganizationList({ ...params });
   };
 }

@@ -23,3 +23,8 @@ export type Action =
   | "restore"
   | "archive"
   | "read";
+
+export type UniqueChecker<T, E> = {
+  keys: (keyof T)[];
+  errorKey: E;
+}[];

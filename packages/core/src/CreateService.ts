@@ -6,7 +6,7 @@ import {
 } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { ServiceContext as Context, Resource } from "./types.js";
+import { ServiceContext as Context, Resource, UniqueChecker } from "./types.js";
 import { IResourcePermission } from "./ServiceGuard/IResourcePermission.js";
 import { IActivityLogService } from "./IActivityLogService.js";
 
@@ -22,6 +22,10 @@ export type AfterCreateHook<T, Tx> = (params: {
   context: Context;
 }) => Promise<void>;
 
+export type CreateHooks<TCreateInput> = {
+  beforeCreate?: BeforeCreateHook<TCreateInput, any>;
+  afterCreate?: AfterCreateHook<any, any>;
+};
 export class CreateService {
   constructor(
     private activityLog: IActivityLogService,
@@ -29,24 +33,14 @@ export class CreateService {
   ) {}
 
   create =
-    <
-      E,
-      R extends IRepository,
-      TCreateInput extends Record<string, any>,
-    >(options: {
+    <E, R extends IRepository, TCreateInput>(options: {
       config: {
         creationLimit: number;
         moduleName: Resource;
       };
       repository: R;
-      uniqueChecker?: {
-        keys: (keyof (TCreateInput & { organizationId: string }))[];
-        errorKey: E;
-      }[];
-      hooks?: {
-        beforeCreate?: BeforeCreateHook<TCreateInput, any>;
-        afterCreate?: AfterCreateHook<any, any>;
-      };
+      uniqueChecker?: UniqueChecker<TCreateInput, E>;
+      hooks?: CreateHooks<TCreateInput>;
     }) =>
     async <Tx>(params: { data: TCreateInput; context: Context; tx?: Tx }) => {
       const canCreate = await this.resourcePermission.check({
