@@ -3,7 +3,7 @@ import { OrganizationRepository } from "../repositories/organization.repository.
 import { OrganizationErrorCode } from "../errors/errorCode.js";
 import { CreateOrganizationBody, UpdateOrganizationBody } from "../types.js";
 
-export class OrganizationModuleService {
+export class OrganizationService {
   constructor(
     private organizationRepository: OrganizationRepository,
     private moduleService: ModuleService<OrganizationRepository>,

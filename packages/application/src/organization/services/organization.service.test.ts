@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { OrganizationModuleService } from "./organization.service.js";
+import { OrganizationService } from "./organization.service.js";
 import { OrganizationErrorCode } from "../errors/errorCode.js";
 
 // Mock types
@@ -10,7 +10,7 @@ const mockContext = {
 describe("OrganizationModuleService", () => {
   let mockRepository: any;
   let mockModuleService: any;
-  let service: OrganizationModuleService;
+  let service: OrganizationService;
 
   beforeEach(() => {
     mockRepository = {};
@@ -23,7 +23,7 @@ describe("OrganizationModuleService", () => {
       filteredPaginatedList: vi.fn(),
     };
 
-    service = new OrganizationModuleService(mockRepository, mockModuleService);
+    service = new OrganizationService(mockRepository, mockModuleService);
   });
 
   // ===============================
