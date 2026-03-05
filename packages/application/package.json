@@ -37,6 +37,8 @@
     "@changesets/cli": "^2.29.7",
     "@microsoft/api-documenter": "^7.26.29",
     "@microsoft/api-extractor": "^7.52.8",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/qs": "^6.14.0",
     "@vitest/coverage-v8": "3.2.4",
     "@vitest/ui": "^3.2.3",
     "eslint": "^9.28.0",
@@ -48,10 +50,10 @@
   },
   "dependencies": {
     "@avuny/core": "workspace:*",
-    "@avuny/hono": "workspace:*",
     "@avuny/db": "workspace:*",
-    "@avuny/zod": "workspace:*",
+    "@avuny/hono": "workspace:*",
     "@avuny/utils": "workspace:*",
+    "@avuny/zod": "workspace:*",
     "@hono/swagger-ui": "^0.5.2",
     "@hono/zod-openapi": "^1.1.5",
     "@khni/auth": "^3.0.0",
@@ -60,8 +62,12 @@
     "@khni/utils": "^1.0.0",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "hono": "^4.10.7",
     "i18next": "^25.8.0",
-    "orval": "^7.17.0"
+    "jsonwebtoken": "^9.0.3",
+    "orval": "^7.17.0",
+    "qs": "^6.14.1",
+    "uuid": "^13.0.0"
   }
 }

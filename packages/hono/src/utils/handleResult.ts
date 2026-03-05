@@ -9,12 +9,13 @@ import {
   resultToErrorResponse,
   resultToSuccessResponse,
 } from "@avuny/utils";
-
+type ErrorKey<M extends string, E extends string> = `${M}:errors.${E}`;
 export function handleResult<
   T,
   E extends string,
   S extends ContentfulStatusCode,
   SE extends ClientErrorStatusCode,
+  ModuleName extends string,
 >({
   c,
   errorMap,
@@ -23,6 +24,7 @@ export function handleResult<
   errorTrans,
   onError,
   onSuccess,
+  moduleName,
 }: {
   c: Context;
   result: Result<T, E>;
@@ -31,14 +33,19 @@ export function handleResult<
 
   onSuccess?: (result: T) => void;
   onError?: (error: E) => void;
-  errorTrans?: (error: E) => string;
+  errorTrans?: (key: ErrorKey<typeof moduleName, E>) => string;
+  moduleName: ModuleName;
 }) {
   if (!result.success) {
+    const errMsg =
+      errorTrans?.(`${moduleName}:errors.${result.error}`) ||
+      errorMap[result.error]?.responseMessage ||
+      "An error occurred";
     const err = resultToErrorResponse(result.error, errorMap);
     onError?.(result.error);
     // ❗ critical: return directly from c.json
     return c.json(
-      { ...err.body, message: errorTrans?.(result.error) || err.body.message },
+      { ...err.body, message: errMsg || err.body.message },
       err.status,
     );
   }

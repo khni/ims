@@ -1,0 +1,7 @@
+{
+  "errors": {
+    "AUTH_LOGIN_INCORRECT_CREDENTIALS": "Incorrect email or password.",
+    "AUTH_LOGIN_USER_PASSWORD_NOT_SET": "This account does not have a password set. Please sign in using a different method or reset your password.",
+    "AUTH_SIGN_UP_USER_EXIST": "An account with this email already exists."
+  }
+}
