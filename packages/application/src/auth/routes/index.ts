@@ -1,9 +1,9 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { signupRoute } from "./signUp.route.js";
-import { signinRoute } from "./signIn.route.js";
-import { isAutenticatedRoute } from "./isAuthenticated.route.js";
+import { signupRoute } from "./sign-up.route.js";
+import { signinRoute } from "./sign-in.route.js";
+import { isAutenticatedRoute } from "./is-authenticated.route.js";
 import { logoutRoute } from "./logout.route.js";
-import { refreshTokenRoute } from "./refreshToken.route.js";
+import { refreshTokenRoute } from "./refresh-token.route.js";
 import { socialLoginRoute } from "./utils/socialLoginRoute.js";
 
 export const app = new OpenAPIHono();

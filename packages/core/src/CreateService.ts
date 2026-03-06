@@ -43,13 +43,14 @@ export class CreateService {
       hooks?: CreateHooks<TCreateInput>;
     }) =>
     async <Tx>(params: { data: TCreateInput; context: Context; tx?: Tx }) => {
+      const isCreateOrganization = options.config.moduleName === "organization";
       const canCreate = await this.resourcePermission.check({
         action: "create",
         organizationId: params.context.organizationId,
         userId: params.context.userId,
         resource: options.config.moduleName,
       });
-      if (!canCreate) {
+      if (!canCreate && !isCreateOrganization) {
         return fail(
           ModuleErrorCodes.USER_NO_PERMISSION,
           params.context,
