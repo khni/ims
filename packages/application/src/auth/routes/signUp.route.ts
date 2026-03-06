@@ -64,7 +64,7 @@ const route = createRoute({
 
 signupRoute.openapi(route, async (c) => {
   const lang = c.get("lang");
-  const errorTrans = trans(lang);
+  const errorTrans = trans({ lang });
 
   const body = c.req.valid("json");
   const bodyWithIndentifierType =
