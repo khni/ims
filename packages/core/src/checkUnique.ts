@@ -1,4 +1,5 @@
 import { fail } from "@avuny/utils";
+import { Context } from "./types.js";
 
 export const checkUnique = async <T, E>(params: {
   data: T;
@@ -7,7 +8,7 @@ export const checkUnique = async <T, E>(params: {
     keys: (keyof T)[];
     errorKey: E;
   }[];
-  context: { userId: string; requestId: string };
+  context: Context;
   repository: {
     find: (params: {
       where: Record<string, any>;

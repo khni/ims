@@ -6,9 +6,10 @@ import {
 } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { ServiceContext as Context, Resource, UniqueChecker } from "./types.js";
+import { Context, Resource, UniqueChecker } from "./types.js";
 import { IResourcePermission } from "./ServiceGuard/IResourcePermission.js";
 import { IActivityLogService } from "./IActivityLogService.js";
+import { checkCount } from "./checkCount.js";
 
 export type BeforeCreateHook<T, Tx> = (params: {
   data: T;
@@ -40,6 +41,10 @@ export class CreateService {
       };
       repository: R;
       uniqueChecker?: UniqueChecker<TCreateInput, E>;
+      countChecker?: {
+        keys: (keyof TCreateInput)[];
+        errorKey?: E;
+      }[];
       hooks?: CreateHooks<TCreateInput>;
     }) =>
     async <Tx>(params: { data: TCreateInput; context: Context; tx?: Tx }) => {
@@ -61,16 +66,17 @@ export class CreateService {
       const { uniqueChecker, hooks } = options ?? {};
 
       // 🔴 Creation limit check
-      const recordsCount = await options.repository.count({
-        where: { organizationId: context.organizationId },
+      const countError = await checkCount<TCreateInput, E>({
+        data,
+        countChecker: options.countChecker,
+        context,
+        repository: options.repository,
+        config: {
+          creationLimit: options.config.creationLimit,
+          moduleName: options.config.moduleName,
+        },
       });
-
-      if (recordsCount >= options.config.creationLimit) {
-        return creationLimitExceeded(
-          context,
-          `${options.config.moduleName}CreateService.create`,
-        );
-      }
+      if (countError) return countError;
 
       // 🔴 Unique check
       const uniqueError = await checkUnique<TCreateInput, E>({

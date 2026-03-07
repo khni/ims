@@ -47,6 +47,7 @@ export class ModuleService<R extends IRepository> {
       keys: (keyof Parameters<R["create"]>[0]["data"])[];
       errorKey: E;
     }[];
+
     hooks?: CreateHooks<Parameters<R["create"]>[0]["data"]>;
   }) => {
     const { repository, config } = this.getConfig();

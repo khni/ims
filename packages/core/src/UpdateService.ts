@@ -6,7 +6,7 @@ import {
 } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { ServiceContext as Context, Resource, UniqueChecker } from "./types.js";
+import { Context, Resource, UniqueChecker } from "./types.js";
 import { IActivityLogService } from "./IActivityLogService.js";
 import { IResourcePermission } from "./index.js";
 
