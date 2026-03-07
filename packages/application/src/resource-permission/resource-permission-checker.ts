@@ -10,7 +10,12 @@ export class ResourcePermissionChecker implements IResourcePermission {
     action: Action;
   }): Promise<boolean> {
     const { organizationId, userId, resource, action } = params;
-
+    const isCreateOrganization =
+      resource === "organization" && action === "create";
+    if (isCreateOrganization) {
+      // Allow creating an organization without checking permissions
+      return true;
+    }
     const orgUser = await prisma.organizationUser.findFirst({
       where: {
         userId,
