@@ -31,6 +31,12 @@ export class OrganizationService {
           errorKey: OrganizationErrorCode.MODULE_NAME_CONFLICT,
         },
       ],
+      countChecker: [
+        {
+          keys: ["ownerId"],
+          errorKey: OrganizationErrorCode.MODULE_CREATION_LIMIT_EXCEEDED,
+        },
+      ],
     });
     return await createOrganization({
       ...params,
@@ -75,7 +81,7 @@ export class OrganizationService {
   // ===============================
   filteredPaginatedList = async (params: {
     context: Context;
-    query: FilteredPaginatedList<
+    query?: FilteredPaginatedList<
       {
         name?: string;
       },
@@ -84,6 +90,12 @@ export class OrganizationService {
   }) => {
     const filteredPaginatedOrganizationList =
       this.moduleService.filteredPaginatedList();
-    return await filteredPaginatedOrganizationList({ ...params });
+    return await filteredPaginatedOrganizationList({
+      ...params,
+      query: {
+        ...params.query,
+        filters: { ...params.query?.filters, ownerId: params.context.userId },
+      },
+    });
   };
 }

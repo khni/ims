@@ -2,7 +2,7 @@ import { IRepository } from "./IRepository.js";
 import { CreateHooks, CreateService } from "./CreateService.js";
 import { UpdateHooks, UpdateService } from "./UpdateService.js";
 import { QueryService } from "./QueryService.js";
-import { ServiceContext as Context, Resource } from "./types.js";
+import { ServiceContext as Context, FieldRules, Resource } from "./types.js";
 
 export class ModuleService<R extends IRepository> {
   protected repository!: R;
@@ -43,10 +43,8 @@ export class ModuleService<R extends IRepository> {
   // ===============================
 
   create = <E>(options?: {
-    uniqueChecker?: {
-      keys: (keyof Parameters<R["create"]>[0]["data"])[];
-      errorKey: E;
-    }[];
+    uniqueChecker?: FieldRules<Parameters<R["create"]>[0]["data"], E>;
+    countChecker?: FieldRules<Parameters<R["create"]>[0]["data"], E>;
 
     hooks?: CreateHooks<Parameters<R["create"]>[0]["data"]>;
   }) => {
@@ -56,6 +54,7 @@ export class ModuleService<R extends IRepository> {
       repository,
       config,
       uniqueChecker: options?.uniqueChecker,
+      countChecker: options?.countChecker,
       hooks: options?.hooks,
     });
   };

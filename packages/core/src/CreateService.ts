@@ -6,7 +6,7 @@ import {
 } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { Context, Resource, UniqueChecker } from "./types.js";
+import { Context, Resource, FieldRules } from "./types.js";
 import { IResourcePermission } from "./ServiceGuard/IResourcePermission.js";
 import { IActivityLogService } from "./IActivityLogService.js";
 import { checkCount } from "./checkCount.js";
@@ -40,7 +40,7 @@ export class CreateService {
         moduleName: Resource;
       };
       repository: R;
-      uniqueChecker?: UniqueChecker<TCreateInput, E>;
+      uniqueChecker?: FieldRules<TCreateInput, E>;
       countChecker?: {
         keys: (keyof TCreateInput)[];
         errorKey?: E;
@@ -94,7 +94,7 @@ export class CreateService {
 
       const record = await options.repository.createTransaction(
         async (transaction) => {
-          let finalData = { ...data, organizationId: context.organizationId };
+          let finalData = { ...data };
           const tx = params.tx ?? transaction;
           // 🔵 beforeCreate
           if (hooks?.beforeCreate) {
@@ -106,7 +106,6 @@ export class CreateService {
             if (modified) {
               finalData = {
                 ...modified,
-                organizationId: context.organizationId,
               };
             }
           }

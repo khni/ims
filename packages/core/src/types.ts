@@ -24,7 +24,7 @@ export type Action =
   | "archive"
   | "read";
 
-export type UniqueChecker<T, E> = {
+export type FieldRules<T, E> = {
   keys: (keyof T)[];
   errorKey: E;
 }[];

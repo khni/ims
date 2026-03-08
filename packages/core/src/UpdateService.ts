@@ -6,7 +6,7 @@ import {
 } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 import { checkUnique } from "./checkUnique.js";
-import { Context, Resource, UniqueChecker } from "./types.js";
+import { Context, Resource, FieldRules } from "./types.js";
 import { IActivityLogService } from "./IActivityLogService.js";
 import { IResourcePermission } from "./index.js";
 
@@ -46,7 +46,7 @@ export class UpdateService {
       R extends IRepository,
       TUpdateInput extends Record<string, any>,
     >(options: {
-      uniqueChecker?: UniqueChecker<TUpdateInput, E>;
+      uniqueChecker?: FieldRules<TUpdateInput, E>;
       hooks?: UpdateHooks<TUpdateInput>;
       config: {
         moduleName: Resource;

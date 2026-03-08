@@ -1,13 +1,10 @@
 import { fail } from "@avuny/utils";
-import { Context } from "./types.js";
+import { Context, FieldRules } from "./types.js";
 
 export const checkUnique = async <T, E>(params: {
   data: T;
   id?: string;
-  uniqueChecker?: {
-    keys: (keyof T)[];
-    errorKey: E;
-  }[];
+  uniqueChecker?: FieldRules<T, E>;
   context: Context;
   repository: {
     find: (params: {
