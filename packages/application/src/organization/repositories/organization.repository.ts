@@ -54,7 +54,6 @@ export class OrganizationRepository
 
     return await db.organization.findUnique({
       where,
-      select: { id: true, name: true, description: true },
     });
   }
 

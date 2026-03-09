@@ -15,7 +15,7 @@ import {
 } from "@avuny/utils";
 
 import { prisma } from "@avuny/db";
-import { handleResult } from "@avuny/hono";
+import { getContext, handleResult } from "@avuny/hono";
 import { isAuthenticatedMiddleware } from "../../shared.js";
 import container from "../../container.js";
 
@@ -84,21 +84,11 @@ const route = createRoute({
 
 createOrganizationRoute.openapi(route, async (c) => {
   const organizationService = container.resolve("organizationService");
-
-  const lang = c.get("lang");
-  const errorTrans = trans({ lang });
+  const context = getContext(c);
+  const errorTrans = trans({ lang: context.lang as "en" | "ar" });
 
   const body = c.req.valid("json");
 
-  const userId = c.get("user").id;
-  const requestId = c.get("requestId");
-  const organizationId = c.get("organizationId");
-  const context = requestContextSchema.parse({
-    userId,
-    requestId,
-    organizationId,
-    lang,
-  });
   const result = await organizationService.create({
     data: body,
     context,

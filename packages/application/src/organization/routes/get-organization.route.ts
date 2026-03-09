@@ -1,22 +1,22 @@
 import {
   AuthorizationHeaderSchema,
-  createPaginatedResponseSchema,
+  createResponseSchema,
   globalErrorResponses,
   resultToSuccessResponse,
 } from "@avuny/utils";
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { organizationListResponseSchema } from "../schemas.js";
+import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { organizationSchema } from "../schemas.js";
 
 import container from "../../container.js";
 
 import { isAuthenticatedMiddleware } from "../../shared.js";
 import { getContext } from "@avuny/hono";
 
-export const organizationListRoute = new OpenAPIHono();
+export const getOrganizationByIdRoute = new OpenAPIHono();
 const route = createRoute({
   method: "get",
-  path: "/",
-  operationId: "organizationList",
+  path: "/{id}",
+  operationId: "getOrganizationById",
   tags: ["organization"],
   middleware: [isAuthenticatedMiddleware],
   request: {
@@ -24,12 +24,10 @@ const route = createRoute({
   },
   responses: {
     200: {
-      description: "User Organization List retrieved successfully.",
+      description: "Organization retrieved successfully by ID",
       content: {
         "application/json": {
-          schema: createPaginatedResponseSchema(
-            organizationListResponseSchema.array(),
-          ),
+          schema: createResponseSchema(z.union([organizationSchema, z.null()])),
         },
       },
     },
@@ -37,12 +35,13 @@ const route = createRoute({
   },
 });
 
-organizationListRoute.openapi(route, async (c) => {
+getOrganizationByIdRoute.openapi(route, async (c) => {
   const organizationService = container.resolve("organizationService");
   const context = getContext(c);
 
-  const result = await organizationService.filteredPaginatedList({
+  const result = await organizationService.findById({
     context,
+    id: c.req.param("id"),
   });
 
   const res = resultToSuccessResponse(result.data, 200);
