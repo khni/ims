@@ -22,8 +22,8 @@ import { trans } from "../../intl/Translation.js";
 
 export const updateOrganizationRoute = new OpenAPIHono();
 const route = createRoute({
-  method: "post",
-  path: "/",
+  method: "put",
+  path: "/{id}",
   operationId: "updateOrganization",
   tags: ["organization"],
   middleware: [isAuthenticatedMiddleware],

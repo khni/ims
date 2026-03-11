@@ -5,6 +5,6 @@ declare module "hono" {
     requestId: string;
     organizationId: string;
     user: { id: string };
-    lang: "en" | "ar";
+    lang: string;
   }
 }

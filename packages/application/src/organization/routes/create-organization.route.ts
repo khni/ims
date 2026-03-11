@@ -2,7 +2,6 @@ import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import {
   createOrganizationBodySchema,
   mutateOrganizationResponseSchema,
-  organizationSchema,
 } from "../schemas.js";
 import {
   AuthorizationHeaderSchema,
@@ -11,7 +10,6 @@ import {
   globalErrorResponses,
   ModuleErrorCodes,
   ModuleErrorResponseMap,
-  requestContextSchema,
 } from "@avuny/utils";
 
 import { prisma } from "@avuny/db";

@@ -51,6 +51,7 @@ export class ResourcePermissionChecker implements IResourcePermission {
       },
       select: { id: true },
     });
+    console.log("orgUser", orgUser);
 
     return Boolean(orgUser);
   }
