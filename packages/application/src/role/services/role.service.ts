@@ -58,7 +58,7 @@ export class RoleService {
     const updateRole = this.moduleService.update({
       uniqueChecker: [
         {
-          keys: ["name", "ownerId"],
+          keys: ["name", "organizationId"],
           errorKey: RoleErrorCode.MODULE_NAME_CONFLICT,
         },
       ],

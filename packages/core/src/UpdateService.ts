@@ -29,7 +29,7 @@ export type AfterUpdateHook<T, Tx> = (params: {
   context: Context;
 }) => Promise<void>;
 
-export type UpdateHooks<TUpdateInput extends Record<string, any>> = {
+export type UpdateHooks<TUpdateInput> = {
   beforeUpdate?: BeforeUpdateHook<TUpdateInput, any>;
   afterUpdate?: AfterUpdateHook<any, any>;
 };
@@ -44,21 +44,16 @@ export class UpdateService {
     <
       E,
       R extends IRepository,
-      TUpdateInput extends Record<string, any>,
+      T extends Parameters<R["update"]>[0]["data"],
     >(options: {
-      uniqueChecker?: FieldRules<TUpdateInput, E>;
-      hooks?: UpdateHooks<TUpdateInput>;
+      uniqueChecker?: FieldRules<T, E>;
+      hooks?: UpdateHooks<Parameters<R["update"]>[0]["data"]>;
       config: {
         moduleName: Resource;
       };
       repository: R;
     }) =>
-    async <Tx>(params: {
-      data: TUpdateInput;
-      id: string;
-      context: Context;
-      tx?: Tx;
-    }) => {
+    async <Tx>(params: { data: T; id: string; context: Context; tx?: Tx }) => {
       const canUpdate = await this.resourcePermission.check({
         action: "update",
         organizationId: params.context.organizationId,
@@ -76,8 +71,8 @@ export class UpdateService {
       const { uniqueChecker, hooks } = options ?? {};
 
       // 🔴 Unique check
-      const uniqueError = await checkUnique<TUpdateInput, E>({
-        data: { ...data, organizationId: context.organizationId },
+      const uniqueError = await checkUnique<T, E>({
+        data,
         uniqueChecker,
         context,
         id,
@@ -92,21 +87,20 @@ export class UpdateService {
 
       const record = await options.repository.createTransaction(
         async (transaction) => {
-          let finalData = { ...data };
+          // let finalData = { ...data };
           const tx = params.tx ?? transaction;
           // 🔵 beforeUpdate
           if (hooks?.beforeUpdate) {
             const modified = await hooks.beforeUpdate({
-              data: finalData,
+              data,
               id,
               tx,
               context,
             });
-            if (modified) finalData = modified;
           }
 
           const record = await options.repository.update({
-            data: finalData,
+            data,
             where: { id },
             tx,
           });

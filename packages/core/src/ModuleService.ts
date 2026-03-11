@@ -63,16 +63,16 @@ export class ModuleService<R extends IRepository> {
   // UPDATE
   // ===============================
 
-  update = <E, TUpdateInput extends Record<string, any>>(options?: {
+  update = <E, T extends Parameters<R["update"]>[0]["data"]>(options?: {
     uniqueChecker?: {
-      keys: (keyof (TUpdateInput & { organizationId: string }))[];
+      keys: (keyof T)[];
       errorKey: E;
     }[];
-    hooks?: UpdateHooks<TUpdateInput>;
+    hooks?: UpdateHooks<Parameters<R["update"]>[0]["data"]>;
   }) => {
     const { repository, config } = this.getConfig();
 
-    return this.updateService.update<E, R, TUpdateInput>({
+    return this.updateService.update<E, R, T>({
       repository,
       config: { moduleName: config.moduleName },
       uniqueChecker: options?.uniqueChecker,
