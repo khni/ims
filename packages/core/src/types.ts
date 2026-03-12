@@ -10,6 +10,7 @@ export type Resource =
   | "user"
   | "role"
   | "organization"
+  | "organizationUser"
   | "item"
   | "invoice"
   | "customer"

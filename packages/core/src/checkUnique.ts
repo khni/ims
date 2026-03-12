@@ -1,14 +1,17 @@
 import { fail } from "@avuny/utils";
 import { Context, FieldRules } from "./types.js";
 
-export const checkUnique = async <T, E>(params: {
+export const checkUnique = async <
+  T extends Record<string, unknown>,
+  E,
+>(params: {
   data: T;
   id?: string;
   uniqueChecker?: FieldRules<T, E>;
   context: Context;
   repository: {
     find: (params: {
-      where: Record<string, any>;
+      where: Record<string, unknown>;
     }) => Promise<{ id: string } | null>;
   };
   config: {
@@ -21,7 +24,7 @@ export const checkUnique = async <T, E>(params: {
   if (!uniqueChecker?.length) return null;
 
   for (const rule of uniqueChecker) {
-    const where: Record<string, any> = {};
+    const where: Record<string, unknown> = {};
 
     for (const key of rule.keys) {
       const k = key as keyof T;

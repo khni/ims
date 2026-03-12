@@ -2,7 +2,7 @@ import { Prisma, ResourceType } from "@avuny/db";
 import { ActivityLogRepository } from "./ActivityLogRepository.js";
 import { Tx } from "@avuny/db";
 import { ActivityActorType, ActivityEventType } from "@avuny/db/types";
-import { IActivityLogService } from "./IActivityLogService.js";
+import { IActivityLogService } from "@avuny/core";
 
 export class ActivityLogService implements IActivityLogService<Tx> {
   constructor(

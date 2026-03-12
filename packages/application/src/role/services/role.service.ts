@@ -56,12 +56,18 @@ export class RoleService {
   }) => {
     /// here we can add any role specific logic before updating an role.
     const updateRole = this.moduleService.update({
-      uniqueChecker: [
-        {
-          keys: ["name", "organizationId"],
-          errorKey: RoleErrorCode.MODULE_NAME_CONFLICT,
+      uniqueChecker: {
+        rules: [
+          {
+            keys: ["name", "organizationId"],
+            errorKey: RoleErrorCode.MODULE_NAME_CONFLICT,
+          },
+        ],
+        uniqueCheckerData: {
+          organizationId: params.context.organizationId,
+          name: params.data.name,
         },
-      ],
+      },
     });
     return await updateRole({
       ...params,

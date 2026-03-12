@@ -46,7 +46,11 @@ export class UpdateService {
       R extends IRepository,
       T extends Parameters<R["update"]>[0]["data"],
     >(options: {
-      uniqueChecker?: FieldRules<T, E>;
+      uniqueChecker?: {
+        rules: FieldRules<Parameters<R["find"]>[0]["where"], E>;
+        uniqueCheckerData: Parameters<R["find"]>[0]["where"];
+      };
+
       hooks?: UpdateHooks<Parameters<R["update"]>[0]["data"]>;
       config: {
         moduleName: Resource;
@@ -71,19 +75,24 @@ export class UpdateService {
       const { uniqueChecker, hooks } = options ?? {};
 
       // 🔴 Unique check
-      const uniqueError = await checkUnique<T, E>({
-        data,
-        uniqueChecker,
-        context,
-        id,
-        repository: options.repository,
-        config: {
-          moduleName: options.config.moduleName,
-          action: "update",
-        },
-      });
+      if (uniqueChecker) {
+        const uniqueError = await checkUnique<
+          Parameters<R["find"]>[0]["where"],
+          E
+        >({
+          data: uniqueChecker?.uniqueCheckerData,
+          uniqueChecker: uniqueChecker?.rules,
+          context,
+          id,
+          repository: options.repository,
+          config: {
+            moduleName: options.config.moduleName,
+            action: "update",
+          },
+        });
 
-      if (uniqueError) return uniqueError;
+        if (uniqueError) return uniqueError;
+      }
 
       const record = await options.repository.createTransaction(
         async (transaction) => {

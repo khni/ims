@@ -55,16 +55,22 @@ export class OrganizationService {
   }) => {
     /// here we can add any organization specific logic before updating an organization.
     const updateOrganization = this.moduleService.update({
-      uniqueChecker: [
-        {
-          keys: ["name", "ownerId"],
-          errorKey: OrganizationErrorCode.MODULE_NAME_CONFLICT,
+      uniqueChecker: {
+        rules: [
+          {
+            keys: ["name", "ownerId"],
+            errorKey: OrganizationErrorCode.MODULE_NAME_CONFLICT,
+          },
+        ],
+        uniqueCheckerData: {
+          ownerId: params.context.userId,
+          name: params.data.name,
         },
-      ],
+      },
     });
     return await updateOrganization({
       ...params,
-      data: { ...params.data, ownerId: params.context.userId },
+      data: params.data,
     });
   };
 

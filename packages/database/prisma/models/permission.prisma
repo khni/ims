@@ -23,6 +23,7 @@ enum ResourceName {
   sales_order
   warehouse
   organization
+  organization_user
   report
 }
 

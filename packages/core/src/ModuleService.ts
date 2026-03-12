@@ -65,9 +65,9 @@ export class ModuleService<R extends IRepository> {
 
   update = <E, T extends Parameters<R["update"]>[0]["data"]>(options?: {
     uniqueChecker?: {
-      keys: (keyof T)[];
-      errorKey: E;
-    }[];
+      rules: FieldRules<Parameters<R["find"]>[0]["where"], E>;
+      uniqueCheckerData: Parameters<R["find"]>[0]["where"];
+    };
     hooks?: UpdateHooks<Parameters<R["update"]>[0]["data"]>;
   }) => {
     const { repository, config } = this.getConfig();

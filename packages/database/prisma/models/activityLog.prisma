@@ -15,6 +15,7 @@ enum ResourceType {
   user
   role
   organization
+  organizationUser
   item
   invoice
   customer
