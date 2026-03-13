@@ -6,14 +6,12 @@ import {
   UpdateOrganizationUserBody,
 } from "../types.js";
 import { OrganizationUserRepository } from "../repositories/organozation-user.repository.js";
-import { IOwnerOrganizationUserService } from "../../shared/owner-oganization-user.interface.js";
 
 export class OrganizationUserService {
   ownerName = "Owner";
   constructor(
     private organizationUserRepository: OrganizationUserRepository,
     private moduleService: ModuleService<OrganizationUserRepository>,
-    private ownerOrganizationUser: IOwnerOrganizationUserService,
   ) {
     this.moduleService.setConfig({
       repository: this.organizationUserRepository,
@@ -38,15 +36,7 @@ export class OrganizationUserService {
           errorKey: OrganizationUserErrorCode.MODULE_NAME_CONFLICT,
         },
       ],
-      hooks: {
-        afterCreate: async (organization) => {
-          await this.ownerOrganizationUser.create({
-            context: params.context,
-            data: {},
-            tx: params.tx,
-          });
-        },
-      },
+
       countChecker: [
         {
           keys: ["organizationId"],

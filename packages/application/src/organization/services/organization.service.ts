@@ -2,11 +2,14 @@ import { Context, FilteredPaginatedList, ModuleService } from "@avuny/core";
 import { OrganizationRepository } from "../repositories/organization.repository.js";
 import { OrganizationErrorCode } from "../errors/errorCode.js";
 import { CreateOrganizationBody, UpdateOrganizationBody } from "../types.js";
-
+import { IOwnerOrganizationUserService } from "../../shared/owner-oganization-user.interface.js";
+import { IOwnerRoleService } from "../../shared/owner-role.interface.js";
 export class OrganizationService {
   constructor(
     private organizationRepository: OrganizationRepository,
     private moduleService: ModuleService<OrganizationRepository>,
+    private ownerOrganizationUserService: IOwnerOrganizationUserService,
+    private ownerRoleService: IOwnerRoleService,
   ) {
     this.moduleService.setConfig({
       repository: this.organizationRepository,
@@ -37,6 +40,26 @@ export class OrganizationService {
           errorKey: OrganizationErrorCode.MODULE_CREATION_LIMIT_EXCEEDED,
         },
       ],
+      hooks: {
+        afterCreate: async (organization) => {
+          const role = await this.ownerRoleService.create({
+            tx: params.tx,
+            context: params.context,
+            data: {
+              organizationId: organization.record.id,
+            },
+          });
+          await this.ownerOrganizationUserService.create({
+            context: params.context,
+            data: {
+              roleId: role.id,
+              userId: params.context.userId,
+              organizationId: organization.record.id,
+            },
+            tx: params.tx,
+          });
+        },
+      },
     });
     return await createOrganization({
       ...params,

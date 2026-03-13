@@ -40,7 +40,7 @@ export class CreateService {
         moduleName: Resource;
       };
       repository: R;
-      uniqueChecker?: FieldRules<TCreateInput, E>;
+      uniqueChecker?: FieldRules<Parameters<R["find"]>[0]["where"], E>;
       countChecker?: {
         keys: (keyof TCreateInput)[];
         errorKey?: E;
@@ -79,7 +79,10 @@ export class CreateService {
       if (countError) return countError;
 
       // 🔴 Unique check
-      const uniqueError = await checkUnique<TCreateInput, E>({
+      const uniqueError = await checkUnique<
+        Parameters<R["find"]>[0]["where"],
+        E
+      >({
         data: { ...data, organizationId: context.organizationId },
         uniqueChecker,
         context,

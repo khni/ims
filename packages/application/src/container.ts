@@ -3,8 +3,6 @@
 import {
   createContainer,
   asClass,
-  asValue,
-  asFunction,
   InjectionMode,
   AwilixContainer,
   Resolver,
@@ -19,6 +17,12 @@ import {
 } from "@avuny/core";
 import { ActivityLogService } from "./activity-log/ActivityLogService.js";
 import { ResourcePermissionChecker } from "./resource-permission/resource-permission-checker.js";
+import { OwnerRoleService } from "./role/services/owner-role.service.js";
+import { OwnerOrganizationUserService } from "./organization-user/services/owner-organization-user.service.js";
+import { RoleRepository } from "./role/repositories/role.repository.js";
+import { RoleService } from "./role/services/role.service.js";
+import { OrganizationUserRepository } from "./organization-user/repositories/organozation-user.repository.js";
+import { OrganizationUserService } from "./organization-user/services/organization-user.service.js";
 
 function enforceClass<T>(
   c: new (...args: any[]) => T,
@@ -44,6 +48,17 @@ export const appDeps = {
   // organization
   organizationRepository: asClass(OrganizationRepository).scoped(),
   organizationService: asClass(OrganizationService).scoped(),
+  // role
+  roleRepository: asClass(RoleRepository).scoped(),
+  roleService: asClass(RoleService).scoped(),
+  ownerRoleService: asClass(OwnerRoleService).scoped(),
+
+  // organization user
+  organizationUserRepository: asClass(OrganizationUserRepository).scoped(),
+  organizationUserService: asClass(OrganizationUserService).scoped(),
+  ownerOrganizationUserService: asClass(OwnerOrganizationUserService).scoped(),
+
+  //owner role
 };
 type AppDeps = {
   [K in keyof typeof appDeps]: (typeof appDeps)[K] extends Resolver<infer T>
