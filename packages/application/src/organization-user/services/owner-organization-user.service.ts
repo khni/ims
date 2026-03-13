@@ -3,6 +3,7 @@ import { Context } from "@avuny/core";
 import { OrganizationUserRepository } from "../repositories/organozation-user.repository.js";
 import { IActivityLogService } from "../../shared.js";
 import { IOwnerOrganizationUserService } from "../../shared/owner-oganization-user.interface.js";
+import { PrismaTransactionManager } from "@avuny/db";
 
 export class OwnerOrganizationUserService implements IOwnerOrganizationUserService {
   ownerName = "Owner";
@@ -14,29 +15,33 @@ export class OwnerOrganizationUserService implements IOwnerOrganizationUserServi
   create = async (params: {
     context: Context;
     data: { organizationId: string; userId: string; roleId: string };
-    tx?: unknown;
+    tx?: PrismaTransactionManager;
   }) => {
     const organizationUser =
-      await this.organizationUserRepository.createTransaction(async (tx) => {
-        const user = await tx.organizationUser.create({
-          data: {
-            name: this.ownerName,
-            status: "ACTIVE",
-            expiresAt: null,
-            ...params.data,
-          },
-        });
-        await this.activityLog.create({
-          tx,
-          data: {
-            event: "create",
-            organizationId: params.data.organizationId, // in case of organization creation, the organizationId is the record id
-            resourceId: user.id,
-            resourceType: "organizationUser",
-          },
-        });
-        return user;
-      });
+      await this.organizationUserRepository.createTransaction(
+        async (transaction) => {
+          const tx = params.tx ?? transaction;
+          const user = await this.organizationUserRepository.create({
+            data: {
+              name: this.ownerName,
+              status: "ACTIVE",
+              expiresAt: null,
+              ...params.data,
+            },
+            tx,
+          });
+          await this.activityLog.create({
+            tx,
+            data: {
+              event: "create",
+              organizationId: params.data.organizationId,
+              resourceId: user.id,
+              resourceType: "organizationUser",
+            },
+          });
+          return user;
+        },
+      );
 
     return { id: organizationUser.id };
   };

@@ -41,22 +41,23 @@ export class OrganizationService {
         },
       ],
       hooks: {
-        afterCreate: async (organization) => {
+        afterCreate: async ({ record, tx, context }) => {
           const role = await this.ownerRoleService.create({
-            tx: params.tx,
-            context: params.context,
+            tx,
+            context,
             data: {
-              organizationId: organization.record.id,
+              organizationId: record.id,
             },
           });
+
           await this.ownerOrganizationUserService.create({
-            context: params.context,
+            context,
+            tx,
             data: {
               roleId: role.id,
-              userId: params.context.userId,
-              organizationId: organization.record.id,
+              userId: context.userId,
+              organizationId: record.id,
             },
-            tx: params.tx,
           });
         },
       },

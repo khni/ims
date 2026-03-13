@@ -1,4 +1,5 @@
 import { Context } from "@avuny/core";
+import { PrismaTransactionManager } from "@avuny/db";
 
 export interface IOwnerRoleService {
   create: (params: {
@@ -6,7 +7,7 @@ export interface IOwnerRoleService {
     data: {
       organizationId: string;
     };
-    tx?: unknown;
+    tx?: PrismaTransactionManager;
   }) => Promise<{
     id: string;
   }>;
