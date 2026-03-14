@@ -25,7 +25,7 @@ export class OrganizationUserService {
   // ===============================
   create = async (params: {
     context: Context;
-    data: CreateOrganizationUserBody;
+    data: Omit<CreateOrganizationUserBody, "status">;
     tx?: unknown;
   }) => {
     /// here we can add any organizationUser specific logic before creating an organizationUser.
@@ -47,7 +47,11 @@ export class OrganizationUserService {
     return await createOrganizationUser({
       ...params,
 
-      data: { ...params.data, organizationId: params.context.organizationId! },
+      data: {
+        ...params.data,
+        status: "PENDING",
+        organizationId: params.context.organizationId!,
+      },
     });
   };
 

@@ -1,12 +1,13 @@
-import { ok } from "@avuny/utils";
+import { fail, ModuleErrorCodes, ok } from "@avuny/utils";
 
 import { IRepository } from "./IRepository.js";
 
 import { FilteredPaginatedList } from "./IQueryService.js";
 import { Context, Resource } from "./types.js";
+import { IResourcePermission } from "./ServiceGuard/IResourcePermission.js";
 
 export class QueryService {
-  constructor() {}
+  constructor(private resourcePermission: IResourcePermission) {}
 
   filteredPaginatedList = <
     R extends IRepository,
@@ -28,6 +29,19 @@ export class QueryService {
       query: FilteredPaginatedList<TFilter, TOrderBy>;
       context: Context;
     }) => {
+      const canRead = await this.resourcePermission.check({
+        action: "read",
+        organizationId: context.organizationId,
+        userId: context.userId,
+        resource: config.moduleName,
+      });
+      if (!canRead) {
+        return fail(
+          ModuleErrorCodes.USER_NO_PERMISSION,
+          context,
+          `${config.moduleName}QueryService.filteredPaginatedList`,
+        );
+      }
       let limit: number;
       if (pageSize > 500) {
         limit = 500;
@@ -67,6 +81,19 @@ export class QueryService {
     return async (params: { id: string; context: Context }) => {
       const { repository, config } = options;
       const { context, id } = params;
+      const canRead = await this.resourcePermission.check({
+        action: "read",
+        organizationId: context.organizationId,
+        userId: context.userId,
+        resource: config.moduleName,
+      });
+      if (!canRead) {
+        return fail(
+          ModuleErrorCodes.USER_NO_PERMISSION,
+          context,
+          `${config.moduleName}QueryService.filteredPaginatedList`,
+        );
+      }
 
       const record = (await repository.findUnique({
         where: { id },

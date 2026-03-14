@@ -1,0 +1,1 @@
+- any role should be include "read organization" permission to enable read organization list and data"
