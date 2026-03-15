@@ -8,6 +8,7 @@ import { OrganizationRoutes } from "./organization/routes/index.js";
 import { RoleRoutes } from "./role/routes/index.js";
 import { OrganizationUserRoutes } from "./organization-user/routes/index.js";
 import { RegionRoutes } from "./region/routes.js";
+import { PermissionRoutes } from "./permission/index.js";
 // import { createHonoErrorHandler } from "@khni/error-handler";
 // const errorHandler = createHonoErrorHandler(console);
 // src/app.ts
@@ -18,6 +19,8 @@ app.use(resolveRequestLanguageMiddleware);
 app.route("/auth", AuthRoutes);
 app.route("/organizations", OrganizationRoutes);
 app.route("/organization-users", OrganizationUserRoutes);
+app.route("/", PermissionRoutes);
+
 app.route("/regions", RegionRoutes);
 app.route("/roles", RoleRoutes);
 

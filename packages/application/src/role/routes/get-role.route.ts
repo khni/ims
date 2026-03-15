@@ -2,6 +2,7 @@ import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
   createResponseSchema,
+  getResourceByIdParamsSchema,
   globalErrorResponses,
   ModuleErrorCodes,
   ModuleErrorResponseMap,
@@ -24,6 +25,7 @@ const route = createRoute({
   middleware: [isAuthenticatedMiddleware],
   request: {
     headers: AuthorizationHeaderSchema,
+    params: getResourceByIdParamsSchema,
   },
   responses: {
     200: {

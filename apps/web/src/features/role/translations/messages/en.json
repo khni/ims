@@ -1,0 +1,22 @@
+{
+  "role": {
+    "form": {
+      "title": "{action} Role",
+      "description": "Use this form to {action} an Role. You can modify these details later if needed.",
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "permissions": "Permissions",
+        "customPermissions": "Custom Permissions"
+      }
+    },
+    "headers": {
+      "permissions": "Permissions"
+    },
+    "columnHeaders": {
+      "name": "name",
+      "description": "description",
+      "updatedAt": "Last Updated"
+    }
+  }
+}

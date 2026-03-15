@@ -1,6 +1,6 @@
 import { defineConfig } from "orval";
 
-const webTarget = "../../../apps/web/src/api";
+const webTarget = "../../apps/web/src/api";
 
 export default defineConfig({
   web: {

@@ -4,5 +4,6 @@
     // "paths": {
     //   "@/*": ["./src/*"]
     // }
-  }
+  },
+  "exclude": ["orval.config.ts"]
 }

@@ -1,0 +1,23 @@
+{
+  "organization": {
+    "form": {
+      "title": "{action} المؤسسة",
+      "description": "استخدم هذا النموذج لـ {action} مؤسسة. يمكنك تعديل هذه البيانات لاحقًا عند الحاجة.",
+      "fields": {
+        "countryId": "البلد",
+        "name": "الاسم",
+        "description": "الوصف",
+        "industryCategoryId": "فئة النشاط",
+        "fiscalYearPatternId": "نمط السنة المالية",
+        "stateId": "المحافظة",
+        "inventoryStartDate": "تاريخ بدء المخزون",
+        "ownerId": "المالك",
+        "address": "العنوان",
+        "zipCode": "الرمز البريدي"
+      }
+    },
+    "headers": {
+      "yourOrganizations": "قائمة مؤسساتك"
+    }
+  }
+}
