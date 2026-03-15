@@ -5,6 +5,7 @@ import { onError } from "./onError.js";
 import { resolveRequestLanguageMiddleware } from "@avuny/hono";
 import { AuthRoutes } from "./auth/index.js";
 import { OrganizationRoutes } from "./organization/routes/index.js";
+import { RoleRoutes } from "./role/routes/index.js";
 // import { createHonoErrorHandler } from "@khni/error-handler";
 // const errorHandler = createHonoErrorHandler(console);
 // src/app.ts
@@ -14,6 +15,7 @@ app.use(resolveRequestLanguageMiddleware);
 // routes here
 app.route("/auth", AuthRoutes);
 app.route("/organizations", OrganizationRoutes);
+app.route("/roles", RoleRoutes);
 app.onError(onError);
 
 app.doc("/openapi.json", {

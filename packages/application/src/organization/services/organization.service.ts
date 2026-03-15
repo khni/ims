@@ -49,8 +49,9 @@ export class OrganizationService {
               organizationId: record.id,
             },
           });
+          console.log(role, "role");
 
-          await this.ownerOrganizationUserService.create({
+          const user = await this.ownerOrganizationUserService.create({
             context,
             tx,
             data: {
@@ -59,6 +60,7 @@ export class OrganizationService {
               organizationId: record.id,
             },
           });
+          console.log(user, "user");
         },
       },
     });

@@ -1,14 +1,14 @@
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
-  createResponseSchema,
+  createPaginatedResponseSchema,
   globalErrorResponses,
   ModuleErrorCodes,
   ModuleErrorResponseMap,
   resultToSuccessResponse,
 } from "@avuny/utils";
-import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { organizationSchema } from "../schemas.js";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { roleListResponseSchema } from "../schemas.js";
 
 import container from "../../container.js";
 
@@ -16,27 +16,27 @@ import { isAuthenticatedMiddleware } from "../../shared.js";
 import { getContext, handleResult } from "@avuny/hono";
 import { trans } from "../../intl/Translation.js";
 
-export const getOrganizationByIdRoute = new OpenAPIHono();
+export const roleListRoute = new OpenAPIHono();
 const route = createRoute({
   method: "get",
-  path: "/{id}",
-  operationId: "getOrganizationById",
-  tags: ["organization"],
+  path: "/",
+  operationId: "roleList",
+  tags: ["role"],
   middleware: [isAuthenticatedMiddleware],
   request: {
     headers: AuthorizationHeaderSchema,
   },
   responses: {
     200: {
-      description: "Organization retrieved successfully by ID",
+      description: "User Role List retrieved successfully.",
       content: {
         "application/json": {
-          schema: createResponseSchema(z.union([organizationSchema, z.null()])),
+          schema: createPaginatedResponseSchema(roleListResponseSchema),
         },
       },
     },
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
-      description: "User has no permission to update organization",
+      description: "User has no permission to update role",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -49,21 +49,21 @@ const route = createRoute({
   },
 });
 
-getOrganizationByIdRoute.openapi(route, async (c) => {
-  const organizationService = container.resolve("organizationService");
+roleListRoute.openapi(route, async (c) => {
+  const roleService = container.resolve("roleService");
   const context = getContext(c);
   const errorTrans = trans({ lang: context.lang as "en" | "ar" });
-  const result = await organizationService.findById({
+  const result = await roleService.filteredPaginatedList({
     context,
-    id: c.req.param("id"),
   });
+
   const { USER_NO_PERMISSION } = ModuleErrorResponseMap;
   return handleResult({
     c,
     result,
     successStatus: 200,
     errorMap: { USER_NO_PERMISSION },
-    moduleName: "organization",
+    moduleName: "role",
     errorTrans,
   });
 });

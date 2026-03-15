@@ -9,6 +9,7 @@ export class ResourcePermissionChecker implements IResourcePermission {
     resource: Resource;
     action: Action;
   }): Promise<boolean> {
+    console.log(params, "resource permission params");
     const { organizationId, userId, resource, action } = params;
     const isCreateOrganization =
       resource === "organization" && action === "create";
