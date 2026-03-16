@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "clean:build": "turbo clean:build --concurrency=20",
+    "clean:packages": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && rm -f pnpm-lock.yaml",
+    "clean:all": "pnpm run clean:build && pnpm run clean:packages",
     "dev": "TURBO_UI=0  turbo dev --concurrency=20",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""

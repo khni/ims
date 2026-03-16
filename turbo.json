@@ -1,19 +1,131 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+
+  "globalEnv": ["DATABASE_URL"],
+
   "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+    /**
+     * Prisma client generation (DB package only)
+     */
+    "db:generate": {
+      "outputs": ["src/generated/prisma/**"],
+      "env": [
+        "DATABASE_URL",
+
+        "JWT_SECRET",
+
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_SECRET",
+        "GOOGLE_REDIRECT_URI",
+
+        "FACEBOOK_APP_ID",
+        "FACEBOOK_SECRET",
+        "FACEBOOK_REDIRECT_URI",
+
+        "FRONTEND_SOCIAL_REDIRECT"
+      ]
     },
+
+    /**
+     * generate openapi in json file
+     */
+    "openapi:generate": {
+      "dependsOn": ["db:generate", "^build"],
+      "outputs": ["openapi/openapi.json"],
+      "env": [
+        "DATABASE_URL",
+
+        "JWT_SECRET",
+
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_SECRET",
+        "GOOGLE_REDIRECT_URI",
+
+        "FACEBOOK_APP_ID",
+        "FACEBOOK_SECRET",
+        "FACEBOOK_REDIRECT_URI",
+
+        "FRONTEND_SOCIAL_REDIRECT"
+      ]
+    },
+    "api:generate": {
+      "dependsOn": ["openapi:generate", "^build"],
+      "inputs": ["openapi/openapi.json", "orval.config.ts"],
+      "outputs": ["../../apps/web/src/api/**"],
+      "env": [
+        "DATABASE_URL",
+
+        "JWT_SECRET",
+
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_SECRET",
+        "GOOGLE_REDIRECT_URI",
+
+        "FACEBOOK_APP_ID",
+        "FACEBOOK_SECRET",
+        "FACEBOOK_REDIRECT_URI",
+
+        "FRONTEND_SOCIAL_REDIRECT"
+      ]
+    },
+
+    /**
+     * Build task
+     */
+    "build": {
+      "dependsOn": ["^build", "db:generate", "api:generate"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": [
+        "JWT_SECRET",
+
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_SECRET",
+        "GOOGLE_REDIRECT_URI",
+
+        "FACEBOOK_APP_ID",
+        "FACEBOOK_SECRET",
+        "FACEBOOK_REDIRECT_URI",
+
+        "FRONTEND_SOCIAL_REDIRECT"
+      ]
+    },
+
+    /**
+     * Linting
+     */
     "lint": {
       "dependsOn": ["^lint"]
     },
+
+    /**
+     * Type checking
+     */
     "check-types": {
       "dependsOn": ["^check-types"]
     },
+
+    /**
+     * Dev mode (no cache)
+     */
     "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "seed": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:push": {
+      "cache": false,
+      "persistent": true
+    },
+
+    /**
+     * Clean build (manual / local)
+     */
+    "clean:build": {
       "cache": false,
       "persistent": true
     }

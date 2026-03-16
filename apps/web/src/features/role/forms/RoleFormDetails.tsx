@@ -5,7 +5,7 @@ import { Form as CustomForm, FormProps } from "@/src/components/form";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { createRoleBodySchema } from "@avuny/application/schemas";
+import { createRoleBodySchema } from "@avuny/application";
 import { z } from "@avuny/zod";
 import { useTranslations } from "next-intl";
 import { useCommonTranslations } from "@/messages/common";

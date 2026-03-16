@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { useAuthTranslations } from "@/src/features/auth/translations/hooks/useAuthTrans";
 import { useSignUp } from "@/src/api";
-import { LocalRegisterInputSchema as schema } from "@avuny/application/schemas";
+import { LocalRegisterInputSchema as schema } from "@avuny/application";
 import { useAuthSuccessHandler } from "@/src/features/auth/form/hooks/useAuthSuccessHandler";
 import Link from "next/link";
 

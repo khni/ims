@@ -29,7 +29,7 @@ export default function Page() {
   const { data: orgData, isPending } = useOrganizationList();
   const { placeholderTranslations } = useCommonTranslations();
   const organizationTranslations = useTranslations("organization");
-  const organizations = orgData?.data || [];
+  const organizations = orgData?.data.list || [];
   const { selectedOrganizationId, setSelectedOrganizationId } =
     useSelectedOrganizationContext();
   useEffect(() => {

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { useAuthTranslations } from "@/src/features/auth/translations/hooks/useAuthTrans";
 import { useLogin } from "@/src/api";
-import { localLoginInputSchema as schema } from "@avuny/application/schemas";
+import { localLoginInputSchema as schema } from "@avuny/application";
 import { useAuthSuccessHandler } from "@/src/features/auth/form/hooks/useAuthSuccessHandler";
 import Link from "next/link";
 import { GoogleOAuthURLStrategy } from "@workspace/ui/lib/social-login/url/GoogleOAuthURLStrategy";
