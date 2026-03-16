@@ -5,7 +5,7 @@ import { Form as CustomForm, FormProps } from "@/src/components/form";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { createRoleBodySchema } from "@avuny/application";
+import { createRoleBodySchema } from "@avuny/shared";
 import { z } from "@avuny/zod";
 import { useTranslations } from "next-intl";
 import { useCommonTranslations } from "@/messages/common";
@@ -15,7 +15,7 @@ import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
 import { ItemOptionMatrix } from "@workspace/ui/blocks/item-option-matrix";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { GetRoleByIdResponse } from "@avuny/application/types";
+import { GetRoleByIdResponse } from "@avuny/shared";
 const schema = createRoleBodySchema;
 export type RoleFormDetailsProps<E, S extends string> = {
   role?: GetRoleByIdResponse;

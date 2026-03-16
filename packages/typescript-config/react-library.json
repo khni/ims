@@ -4,5 +4,12 @@
   "extends": "./base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "module": "esnext",
+    "target": "esnext",
+    "allowJs": true
   }
 }

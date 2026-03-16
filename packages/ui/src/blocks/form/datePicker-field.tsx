@@ -55,7 +55,7 @@ export const DatePickerField = <T extends FieldValues, E = unknown>({
                   disabled={form.formState.isSubmitting}
                   className={cn(
                     "w-[280px] justify-start text-left font-normal",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />

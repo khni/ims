@@ -1,7 +1,7 @@
 import { useUpdateRole } from "@/src/api";
 import { GetRoleById200DataAnyOf } from "@/src/api/model";
 import RoleFormDetails from "@/src/features/role/forms/RoleFormDetails";
-import { GetRoleByIdResponse } from "@avuny/application/types";
+import { GetRoleByIdResponse } from "@avuny/shared";
 import React from "react";
 
 export const UpdateRoleForm = ({ role }: { role: GetRoleByIdResponse }) => {

@@ -38,10 +38,8 @@ export default function WorkSpaceLayout({
     },
   });
   const router = useRouter();
-  const { organizationList, isPending } = useOrganizationListHandler({
-    workspaceId,
-  });
-
+  const { organizationList, isPending } = useOrganizationListHandler();
+  const orgList = organizationList?.list;
   const { selectedOrganizationId, setSelectedOrganizationId } =
     useSelectedOrganizationContext();
   if (isPending) {
@@ -64,17 +62,17 @@ export default function WorkSpaceLayout({
       sidebarHeader={
         <Switcher
           onItemSelect={(id) => {
-            const found = organizationList?.find((org) => org.id === id);
+            const found = orgList?.find((org) => org.id === id);
             if (found) {
               router.replace(ROUTES.app.index(id));
             }
             setSelectedOrganizationId(id);
           }}
-          initialSelectedItem={organizationList?.find(
+          initialSelectedItem={orgList?.find(
             (org) => org.id === selectedOrganizationId,
           )}
           items={
-            organizationList?.map((org) => ({
+            orgList?.map((org) => ({
               name: org.name,
               description: org.description || "Admin",
               //  logo: HomeIcon,

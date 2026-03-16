@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal } from "@workspace/ui/blocks/modal";
-import { GetRoleByIdResponse } from "@avuny/application/types";
+import { GetRoleByIdResponse } from "@avuny/shared";
 import { UpdateRoleForm } from "@/src/features/role/forms/UpdateRoleForm";
 import { CreateRoleForm } from "@/src/features/role/forms/CreateRoleForm";
 import ActionButton from "@workspace/ui/blocks/buttons/action-btn";

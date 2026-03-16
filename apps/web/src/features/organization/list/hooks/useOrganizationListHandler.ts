@@ -10,7 +10,7 @@ const useOrganizationListHandler = () => {
     },
   });
   return {
-    organizationList: data?.data || [],
+    organizationList: data?.data,
     isPending,
   };
 };

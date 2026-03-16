@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@avuny/core": "workspace:*",
+    "@avuny/shared": "workspace:*",
     "@avuny/db": "workspace:*",
     "@avuny/hono": "workspace:*",
     "@avuny/utils": "workspace:*",
