@@ -1,0 +1,14 @@
+
+enum ActionName {
+  create
+  read
+  update
+  delete
+  approve
+  reject
+  export
+  import
+  share
+  archive
+  restore
+}

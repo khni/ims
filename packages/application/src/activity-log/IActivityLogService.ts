@@ -1,7 +1,7 @@
 import {
   ActivityActorType,
   ActivityEventType,
-  ResourceType,
+  ResourceName,
 } from "@avuny/db/types";
 
 export interface IActivityLogService<Tx = unknown> {
@@ -9,7 +9,7 @@ export interface IActivityLogService<Tx = unknown> {
     data: {
       organizationId?: string;
       resourceId: string;
-      resourceType: ResourceType;
+      resourceType: ResourceName;
       event: ActivityEventType;
       actorId?: string | null;
       actorType?: ActivityActorType;

@@ -9,21 +9,28 @@ export type ServiceContext = Omit<Context, "lang">;
 export type Resource =
   | "user"
   | "role"
-  | "organization"
-  | "organizationUser"
   | "item"
   | "invoice"
   | "customer"
   | "supplier"
   | "purchase_order"
-  | "sales_order";
+  | "sales_order"
+  | "warehouse"
+  | "organization"
+  | "organizationUser"
+  | "report";
 export type Action =
   | "create"
   | "update"
   | "delete"
   | "restore"
   | "archive"
-  | "read";
+  | "read"
+  | "approve"
+  | "reject"
+  | "export"
+  | "import"
+  | "share";
 
 export type FieldRules<T, E> = {
   keys: (keyof T)[];

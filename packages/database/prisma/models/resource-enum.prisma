@@ -1,0 +1,15 @@
+
+enum ResourceName {
+  user
+  role
+  item
+  invoice
+  customer
+  supplier
+  purchase_order
+  sales_order
+  warehouse
+  organization
+  organizationUser
+  report
+}

@@ -11,19 +11,6 @@ enum ActivityActorType {
   system
 }
 
-enum ResourceType {
-  user
-  role
-  organization
-  organizationUser
-  item
-  invoice
-  customer
-  supplier
-  purchase_order
-  sales_order
-}
-
 
 
 
@@ -33,9 +20,9 @@ model ActivityLog {
 
   organizationId   String?
   resourceId       String
-  resourceType     ResourceType
+  resourceType     ResourceName
 
-  event            ActivityEventType
+  event            ActionName
 
   actorId          String?
   actorType        ActivityActorType @default(user)
