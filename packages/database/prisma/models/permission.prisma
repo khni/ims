@@ -44,12 +44,6 @@ model Action {
   permissions Permission[]
 }
 
-model Resource {
-  id          String       @id @default(uuid())
-  name        ResourceName @unique
-  description String?
-  permissions Permission[]
-}
 
 // Standard CRUD permissions
 model Permission {
@@ -65,7 +59,7 @@ model Permission {
   isDangerous Boolean @default(false)
 
   rolePermissions RolePermission[]
-  SidebarOption   SidebarOption[]
+
 
   @@unique([actionId, resourceId])
   @@index([category, isDangerous])

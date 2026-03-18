@@ -1,0 +1,24 @@
+
+enum ResourceName {
+  user
+  role
+  item
+  invoice
+  customer
+  supplier
+  purchase_order
+  sales_order
+  warehouse
+  organization
+  organizationUser
+  report
+}
+
+model Resource {
+  id          String       @id @default(uuid())
+  name        ResourceName @unique
+  description String?
+  permissions Permission[]
+  sidebarOptions SidebarOption[]
+
+}
