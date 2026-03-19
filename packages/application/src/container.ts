@@ -23,6 +23,8 @@ import { RoleRepository } from "./role/repositories/role.repository.js";
 import { RoleService } from "./role/services/role.service.js";
 import { OrganizationUserRepository } from "./organization-user/repositories/organozation-user.repository.js";
 import { OrganizationUserService } from "./organization-user/services/organization-user.service.js";
+import { IsOwnerOrganizationUserQuery } from "./organization-user/queries/is-owner-organization-user.query.js";
+import { SidebarQueries } from "./sidebar/repositories/sidebar.queries.js";
 
 function enforceClass<T>(
   c: new (...args: any[]) => T,
@@ -57,6 +59,11 @@ export const appDeps = {
   organizationUserRepository: asClass(OrganizationUserRepository).scoped(),
   organizationUserService: asClass(OrganizationUserService).scoped(),
   ownerOrganizationUserService: asClass(OwnerOrganizationUserService).scoped(),
+  isOwnerOrganizationUserQuery: asClass(IsOwnerOrganizationUserQuery).scoped(),
+
+  //sidebar
+  sidebarQueries: asClass(SidebarQueries).scoped(),
+  sidebarService: asClass(SidebarQueries).scoped(),
 
   //owner role
 };

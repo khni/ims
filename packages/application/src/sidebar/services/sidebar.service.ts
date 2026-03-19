@@ -1,94 +1,66 @@
-import { IResourcePermission, Action, Resource } from "@avuny/core";
-import { prisma, PrismaClient, SystemCustomPermission } from "@avuny/db";
-export class SidebarService {
-  constructor() {}
+import { SidebarHeadingType, SidebarOption } from "@avuny/db/types";
+import { IIsOwnerOrganizationUserQuery } from "../../shared/is-owner-oganization-user.query.interface.js";
+import { SidebarQueries } from "../repositories/sidebar.queries.js";
 
-  async get(params: { organizationId: string; userId: string }) {
+type SidebarItem = {
+  id: string;
+  name: SidebarHeadingType;
+  icon?: string | null;
+  options: { id: string; name: string; icon: string | null; path?: string }[];
+};
+
+export class SidebarService {
+  constructor(
+    private readonly sidebarQueries: SidebarQueries,
+    private isOwnerOrganizationUserRepository: IIsOwnerOrganizationUserQuery,
+  ) {}
+
+  private fetch = async (params: {
+    organizationId: string;
+    userId: string;
+  }) => {
     const { organizationId, userId } = params;
 
-    return prisma.sidebarOption.findMany({
-      where: {
-        OR: [
-          // FULL ACCESS → return everything
-          {
-            // this condition will be true only if such user exists
-            AND: [
-              {
-                isActive: true, // optional depending on your logic
-              },
-              {
-                resource: {
-                  // dummy condition just to keep structure valid
-                  // real check happens below in role relation
-                  isNot: null,
-                },
-              },
-              {
-                resource: {
-                  permissions: {
-                    some: {
-                      rolePermissions: {
-                        some: {
-                          role: {
-                            organizationUsers: {
-                              some: {
-                                userId,
-                                organizationId,
-                                status: "ACTIVE",
-                                role: {
-                                  roleCustomPermissions: {
-                                    some: {
-                                      customPermission: {
-                                        code: SystemCustomPermission.FULL_ACCESS,
-                                        isActive: true,
-                                      },
-                                    },
-                                  },
-                                },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            ],
-          },
-
-          // NORMAL PERMISSIONS
-          {
-            isActive: true,
-            resource: {
-              permissions: {
-                some: {
-                  rolePermissions: {
-                    some: {
-                      role: {
-                        organizationUsers: {
-                          some: {
-                            userId,
-                            organizationId,
-                            status: "ACTIVE",
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        ],
-      },
-      include: {
-        sidebarHeading: {
-          select: {
-            name: true,
-          },
-        },
-      },
+    // 1️⃣ Check FULL_ACCESS
+    const hasFullAccess = await this.isOwnerOrganizationUserRepository.check({
+      query: { organizationId, userId },
     });
-  }
+
+    // 2️⃣ FULL ACCESS → return everything
+    if (hasFullAccess) {
+      return this.sidebarQueries.getAllSidebarOptions();
+    }
+
+    // 3️⃣ NORMAL USER → filtered sidebar
+    return this.sidebarQueries.getPermittedSidebarOptions({
+      organizationId,
+      userId,
+    });
+  };
+  get = async (params: { organizationId: string; userId: string }) => {
+    const { organizationId, userId } = params;
+    const map = new Map<string, SidebarItem>();
+    const data = await this.fetch({ organizationId, userId });
+    for (const item of data) {
+      const headingId = item.sidebarHeadingId;
+
+      if (!map.has(headingId)) {
+        map.set(headingId, {
+          id: headingId,
+          name: item.sidebarHeading.name,
+          icon: item.icon ?? null, // optional: depends on your design
+          options: [],
+        });
+      }
+
+      map.get(headingId)!.options.push({
+        id: item.id,
+        name: item.name,
+        icon: item.icon,
+        path: item.path,
+      });
+    }
+
+    return Array.from(map.values());
+  };
 }

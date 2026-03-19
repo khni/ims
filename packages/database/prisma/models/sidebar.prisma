@@ -1,11 +1,10 @@
 enum SidebarHeadingType {
-  Users
+  users
+  purchases
+  inventory
 }
 
-enum SidebarOptionType {
-  Users
-  Roles
-}
+
 
 model SidebarHeading {
   id String @id() @default(uuid())
@@ -25,7 +24,8 @@ model SidebarOption {
   id String @id() @default(uuid())
 
   resource   Resource? @relation(fields: [resourceId], references: [id], onDelete: Cascade)
-  resourceId String?
+  resourceId String? @unique
+  name        ResourceName @unique
   icon String?
   path String
 

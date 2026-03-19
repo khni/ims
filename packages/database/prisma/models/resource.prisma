@@ -6,8 +6,8 @@ enum ResourceName {
   invoice
   customer
   supplier
-  purchase_order
-  sales_order
+  purchaseOrder
+  salesOrder
   warehouse
   organization
   organizationUser
@@ -19,6 +19,6 @@ model Resource {
   name        ResourceName @unique
   description String?
   permissions Permission[]
-  sidebarOptions SidebarOption[]
+  sidebarOption SidebarOption?
 
 }
