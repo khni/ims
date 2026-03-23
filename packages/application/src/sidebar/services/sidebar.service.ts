@@ -1,18 +1,28 @@
-import { SidebarHeadingType, SidebarOption } from "@avuny/db/types";
+import {
+  ResourceName,
+  SidebarHeadingType,
+  SidebarOption,
+} from "@avuny/db/types";
 import { IIsOwnerOrganizationUserQuery } from "../../shared/is-owner-oganization-user.query.interface.js";
 import { SidebarQueries } from "../repositories/sidebar.queries.js";
+import { SidebarItem } from "../types.js";
 
-type SidebarItem = {
-  id: string;
-  name: SidebarHeadingType;
-  icon?: string | null;
-  options: { id: string; name: string; icon: string | null; path?: string }[];
-};
+// type SidebarItem = {
+//   id: string;
+//   name: SidebarHeadingType;
+//   icon?: string | null;
+//   options: {
+//     id: string;
+//     name: ResourceName;
+//     icon: string | null;
+//     path?: string;
+//   }[];
+// };
 
 export class SidebarService {
   constructor(
     private readonly sidebarQueries: SidebarQueries,
-    private isOwnerOrganizationUserRepository: IIsOwnerOrganizationUserQuery,
+    private isOwnerOrganizationUserQuery: IIsOwnerOrganizationUserQuery,
   ) {}
 
   private fetch = async (params: {
@@ -22,7 +32,7 @@ export class SidebarService {
     const { organizationId, userId } = params;
 
     // 1️⃣ Check FULL_ACCESS
-    const hasFullAccess = await this.isOwnerOrganizationUserRepository.check({
+    const hasFullAccess = await this.isOwnerOrganizationUserQuery.check({
       query: { organizationId, userId },
     });
 
