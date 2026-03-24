@@ -3,12 +3,13 @@ import type organizationUserEn from "./locales/organization-user/en.json";
 import type roleEn from "./locales/role/en.json";
 import type authEn from "./locales/auth/en.json";
 import type sidebarEn from "./locales/sidebar/en.json";
-
+import type permissionEn from "./locales/permission/en.json";
 type OrganizationMessages = typeof organizationEn;
 type OrganizationUserMessages = typeof organizationUserEn;
 type RoleMessages = typeof roleEn;
 type AuthMessages = typeof authEn;
 type SidebarMessages = typeof sidebarEn;
+type PermissionMessages = typeof permissionEn;
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -18,6 +19,7 @@ declare module "i18next" {
       auth: AuthMessages;
       role: RoleMessages;
       sidebar: SidebarMessages;
+      permission: PermissionMessages;
     };
   }
 }

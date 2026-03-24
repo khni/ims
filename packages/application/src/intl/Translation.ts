@@ -15,6 +15,9 @@ import authAr from "./locales/auth/ar.json" with { type: "json" };
 import sidebarEn from "./locales/sidebar/en.json" with { type: "json" };
 import sidebarAr from "./locales/sidebar/ar.json" with { type: "json" };
 
+import permissionEn from "./locales/permission/en.json" with { type: "json" };
+import permissionAr from "./locales/permission/ar.json" with { type: "json" };
+
 i18n.init({
   fallbackLng: "en",
   lng: "en",
@@ -26,6 +29,7 @@ i18n.init({
       role: roleEn,
       auth: authEn,
       sidebar: sidebarEn,
+      permission: permissionEn,
     },
     ar: {
       organization: organizationAr,
@@ -33,16 +37,25 @@ i18n.init({
       role: roleAr,
       auth: authAr,
       sidebar: sidebarAr,
+      permission: permissionAr,
     },
   },
 
-  ns: ["organization", "auth", "role", "organizationUser", "sidebar"],
+  ns: [
+    "organization",
+    "auth",
+    "role",
+    "organizationUser",
+    "sidebar",
+    "permission",
+  ],
 
   interpolation: {
     escapeValue: false,
   },
   keySeparator: ".",
 });
+
 export const trans = ({ lang }: { lang: "en" | "ar" }) => {
   const translation = i18n.getFixedT(lang);
   return translation;

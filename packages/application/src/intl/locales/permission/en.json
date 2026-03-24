@@ -1,0 +1,29 @@
+{
+  "actions": {
+    "create": "Create",
+    "read": "Read",
+    "update": "Update",
+    "delete": "Delete",
+    "approve": "Approve",
+    "reject": "Reject",
+    "export": "Export",
+    "import": "Import",
+    "share": "Share",
+    "archive": "Archive",
+    "restore": "Restore"
+  },
+  "resources": {
+    "user": "Users",
+    "role": "Roles",
+    "item": "Items",
+    "invoice": "Invoices",
+    "customer": "Customers",
+    "supplier": "Suppliers",
+    "purchaseOrder": "Purchase Orders",
+    "salesOrder": "Sales Orders",
+    "warehouse": "Warehouses",
+    "organization": "Organizations",
+    "organizationUser": "Organization Users",
+    "report": "Reports"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "action": {
+    "create": "إنشاء",
+    "read": "عرض",
+    "update": "تعديل",
+    "delete": "حذف",
+    "approve": "اعتماد",
+    "reject": "رفض",
+    "export": "تصدير",
+    "import": "استيراد",
+    "share": "مشاركة",
+    "archive": "أرشفة",
+    "restore": "استعادة"
+  },
+  "resource": {
+    "user": "المستخدمون",
+    "role": "الأدوار",
+    "item": "العناصر",
+    "invoice": "الفواتير",
+    "customer": "العملاء",
+    "supplier": "الموردون",
+    "purchaseOrder": "أوامر الشراء",
+    "salesOrder": "أوامر البيع",
+    "warehouse": "المخازن",
+    "organization": "المنظمات",
+    "organizationUser": "مستخدمو المنظمة",
+    "report": "التقارير"
+  }
+}
