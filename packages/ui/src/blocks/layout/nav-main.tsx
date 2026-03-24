@@ -20,15 +20,14 @@ import {
 import { cn } from "@workspace/ui/lib/utils";
 
 type SubItem = {
-  title: string;
-  url: string;
+  name: string;
+  path: string;
 };
 type Item = {
-  title: string;
-  url: string;
-  icon?: LucideIcon;
+  name: string;
+  icon?: string | null;
   isActive?: boolean;
-  items?: SubItem[];
+  options?: SubItem[];
 };
 export function NavMain({
   items,
@@ -47,33 +46,33 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
-            key={item.title}
+            key={item.name}
             asChild
             defaultOpen={isItemActive?.(item) || item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton tooltip={item.name}>
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  <span>{item.name}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
+                  {item.options?.map((subItem) => (
+                    <SidebarMenuSubItem key={subItem.name}>
                       <SidebarMenuSubButton
                         className={cn(
                           "cursor-pointer",
-                          isSubItemActive?.(subItem) && "bg-muted"
+                          isSubItemActive?.(subItem) && "bg-muted",
                         )}
                         onClick={() => {
                           onSubItemClick?.(subItem);
                         }}
                       >
-                        {subItem.title}
+                        {subItem.name}
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

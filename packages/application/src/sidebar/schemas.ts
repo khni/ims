@@ -5,7 +5,7 @@ export const sidebarOptionSchema = z.object({
   id: z.string(),
   name: z.string(),
   icon: z.string().nullable(),
-  path: z.string().optional(),
+  path: z.string(),
 });
 export const sidebarOptionsSchema = z.array(sidebarOptionSchema);
 
