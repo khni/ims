@@ -1,0 +1,21 @@
+{
+  "sidebarHeadings": {
+    "users": "إدارة المستخدمين",
+    "purchases": "المشتريات",
+    "inventory": "المخزون"
+  },
+  "sidebarOptions": {
+    "user": "المستخدمون",
+    "role": "الأدوار والصلاحيات",
+    "item": "المنتجات",
+    "invoice": "الفواتير",
+    "customer": "العملاء",
+    "supplier": "الموردون",
+    "purchaseOrder": "أوامر الشراء",
+    "salesOrder": "أوامر البيع",
+    "warehouse": "المخازن",
+    "organization": "المنظمات",
+    "organizationUser": "مستخدمو المنظمة",
+    "report": "التقارير"
+  }
+}

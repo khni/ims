@@ -1,4 +1,4 @@
-import { SidebarHeadingType } from "@avuny/db";
+import { ResourceName, SidebarHeadingType } from "@avuny/db";
 import { z } from "@avuny/zod";
 
 export const sidebarOptionSchema = z.object({
@@ -11,7 +11,7 @@ export const sidebarOptionsSchema = z.array(sidebarOptionSchema);
 
 export const sidebarItemSchema = z.object({
   id: z.string(),
-  name: z.enum(SidebarHeadingType),
+  name: z.string(),
   icon: z.string().nullable().optional(),
   options: sidebarOptionsSchema,
 });

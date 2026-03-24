@@ -39,6 +39,7 @@ getSidebarRoute.openapi(route, async (c) => {
   const result = await sidebarService.get({
     organizationId: context.organizationId,
     userId: context.userId,
+    lang: context.lang,
   });
 
   return c.json(result, 200);

@@ -1,0 +1,21 @@
+{
+  "sidebarHeadings": {
+    "users": "Users",
+    "purchases": "Purchases",
+    "inventory": "Inventory"
+  },
+  "sidebarOptions": {
+    "user": "Users",
+    "role": "Roles",
+    "item": "Items",
+    "invoice": "Invoices",
+    "customer": "Customers",
+    "supplier": "Suppliers",
+    "purchaseOrder": "Purchase Orders",
+    "salesOrder": "Sales Orders",
+    "warehouse": "Warehouses",
+    "organization": "Organizations",
+    "organizationUser": "Organization Users",
+    "report": "Reports"
+  }
+}

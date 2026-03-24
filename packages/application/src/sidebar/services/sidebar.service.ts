@@ -6,6 +6,7 @@ import {
 import { IIsOwnerOrganizationUserQuery } from "../../shared/is-owner-oganization-user.query.interface.js";
 import { SidebarQueries } from "../repositories/sidebar.queries.js";
 import { SidebarItem } from "../types.js";
+import { trans } from "../../intl/Translation.js";
 
 // type SidebarItem = {
 //   id: string;
@@ -47,8 +48,13 @@ export class SidebarService {
       userId,
     });
   };
-  get = async (params: { organizationId: string; userId: string }) => {
-    const { organizationId, userId } = params;
+  get = async (params: {
+    organizationId: string;
+    userId: string;
+    lang: string;
+  }) => {
+    const { organizationId, userId, lang } = params;
+    const t = trans({ lang: lang as "en" | "ar" });
     const map = new Map<string, SidebarItem>();
     const data = await this.fetch({ organizationId, userId });
     for (const item of data) {
@@ -57,15 +63,15 @@ export class SidebarService {
       if (!map.has(headingId)) {
         map.set(headingId, {
           id: headingId,
-          name: item.sidebarHeading.name,
-          icon: item.icon ?? null, // optional: depends on your design
+          name: t(`sidebar:sidebarHeadings.${item.sidebarHeading.name}`),
+          icon: item.icon ?? null,
           options: [],
         });
       }
 
       map.get(headingId)!.options.push({
         id: item.id,
-        name: item.name,
+        name: t(`sidebar:sidebarOptions.${item.name}`),
         icon: item.icon,
         path: item.path,
       });
