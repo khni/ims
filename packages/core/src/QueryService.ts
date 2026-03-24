@@ -25,11 +25,11 @@ export class QueryService {
     return async ({
       query: { page = 0, pageSize = 499, filters, orderBy },
       context,
-      passResourcePermission,
+      passResourcePermissionChecker: passResourcePermission,
     }: {
       query: FilteredPaginatedList<TFilter, TOrderBy>;
       context: Context;
-      passResourcePermission?: boolean;
+      passResourcePermissionChecker?: boolean;
     }) => {
       let canRead;
       if (!passResourcePermission) {

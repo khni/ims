@@ -66,6 +66,7 @@ export class OrganizationService {
     });
     return await createOrganization({
       ...params,
+      passResourcePermissionChecker: true,
       data: { ...params.data, ownerId: params.context.userId },
     });
   };
@@ -124,7 +125,7 @@ export class OrganizationService {
       this.moduleService.filteredPaginatedList();
     return await filteredPaginatedOrganizationList({
       ...params,
-      passResourcePermission: true,
+      passResourcePermissionChecker: true,
       query: {
         ...params.query,
 
