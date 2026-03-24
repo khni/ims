@@ -25,23 +25,29 @@ export class QueryService {
     return async ({
       query: { page = 0, pageSize = 499, filters, orderBy },
       context,
+      passResourcePermission,
     }: {
       query: FilteredPaginatedList<TFilter, TOrderBy>;
       context: Context;
+      passResourcePermission?: boolean;
     }) => {
-      const canRead = await this.resourcePermission.check({
-        action: "read",
-        organizationId: context.organizationId,
-        userId: context.userId,
-        resource: config.moduleName,
-      });
-      if (!canRead) {
-        return fail(
-          ModuleErrorCodes.USER_NO_PERMISSION,
-          context,
-          `${config.moduleName}QueryService.filteredPaginatedList`,
-        );
+      let canRead;
+      if (!passResourcePermission) {
+        canRead = await this.resourcePermission.check({
+          action: "read",
+          organizationId: context.organizationId,
+          userId: context.userId,
+          resource: config.moduleName,
+        });
+        if (!canRead) {
+          return fail(
+            ModuleErrorCodes.USER_NO_PERMISSION,
+            context,
+            `${config.moduleName}QueryService.filteredPaginatedList`,
+          );
+        }
       }
+
       let limit: number;
       if (pageSize > 500) {
         limit = 500;

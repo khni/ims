@@ -124,8 +124,10 @@ export class OrganizationService {
       this.moduleService.filteredPaginatedList();
     return await filteredPaginatedOrganizationList({
       ...params,
+      passResourcePermission: true,
       query: {
         ...params.query,
+
         filters: { ...params.query?.filters, ownerId: params.context.userId },
       },
     });
