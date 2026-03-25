@@ -67,6 +67,7 @@ export const getRoleByIdResponseSchema = roleSchema
   .pick({
     id: true,
     name: true,
+    description: true,
   })
   .extend({
     rolePermissions: z.array(

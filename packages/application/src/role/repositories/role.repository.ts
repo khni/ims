@@ -62,6 +62,7 @@ export class RoleRepository extends PrismaTransaction implements IRepository {
       select: {
         id: true,
         name: true,
+        description: true,
         rolePermissions: {
           select: {
             id: true,

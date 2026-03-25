@@ -1,8 +1,9 @@
 "use client";
 
 import { CustomBreadCrumb } from "@workspace/ui/blocks/custom-bread-crumb";
-import { ReactNode } from "react";
-
+import { Button } from "@workspace/ui/components/button";
+import { ComponentType, ReactNode } from "react";
+//this will be migrate to page layout
 type BreadCrumbItem = {
   href: string;
   name: string;
@@ -16,13 +17,17 @@ type ListPageLayoutProps = {
   breadCrumbItems: BreadCrumbItem[];
 
   /** Button or element for creating new resource entries */
-  createResourceButton: ReactNode;
+  createResourceButton?: ReactNode;
 
   /** Main data table or list component */
   dataTable: ReactNode;
 
   /** Optional header actions (filters, search, etc.) */
   headerActions?: ReactNode;
+  LinkWrapper?: ComponentType<{
+    href: string;
+    children: ReactNode;
+  }>;
 };
 
 /**
@@ -35,18 +40,26 @@ const ListPageLayout = ({
   createResourceButton,
   dataTable,
   headerActions,
+  LinkWrapper,
 }: ListPageLayoutProps) => {
   return (
     <section className="flex flex-col gap-4">
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="w-full sm:w-auto">
-          <CustomBreadCrumb pageName={resourceName} items={breadCrumbItems} />
+          <CustomBreadCrumb
+            LinkWrapper={LinkWrapper}
+            pageName={resourceName}
+            items={breadCrumbItems}
+          />
         </div>
 
         <div className="flex items-center justify-end gap-2 w-full sm:w-auto">
           {headerActions}
-          {createResourceButton}
+          {
+            createResourceButton ?? <Button variant="ghost" />
+            //for space fixing
+          }
         </div>
       </header>
 

@@ -9,6 +9,7 @@ export const UpdateRoleForm = ({ role }: { role: GetRoleByIdResponse }) => {
   return (
     <div>
       <RoleFormDetails
+        role={role}
         customForm={{
           api: {
             onSubmit: async (data) => mutateAsync({ data: data, id: role.id }),

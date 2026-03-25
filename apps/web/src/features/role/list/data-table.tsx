@@ -2,10 +2,13 @@
 
 import { useRoleList } from "@/src/api";
 import { RoleList200Data } from "@/src/api/model";
+import { RoleFormButton } from "@/src/features/role/forms";
 import { RoleColumns } from "@/src/features/role/list/columns";
 import { DataTable } from "@workspace/ui/blocks/data-table";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 export const RoleDataTable = () => {
+  const router = useRouter();
   const roleColumnHeaderTranslations = useTranslations("role.columnHeaders");
   const { data, isPending } = useRoleList({
     query: {
@@ -24,6 +27,7 @@ export const RoleDataTable = () => {
         ) => string,
       })}
       data={data.data.list}
+      onRowClick={(row) => router.push(`roles/${row.original.id}`)}
     />
   );
 };

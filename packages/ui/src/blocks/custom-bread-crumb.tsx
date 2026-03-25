@@ -41,9 +41,7 @@ export function CustomBreadCrumb({
           <>
             <BreadcrumbItem key={item.href}>
               {LinkWrapper ? (
-                <LinkWrapper href={item.href}>
-                  <BreadcrumbLink asChild>{item.name}</BreadcrumbLink>
-                </LinkWrapper>
+                <LinkWrapper href={item.href}>{item.name}</LinkWrapper>
               ) : (
                 <BreadcrumbLink href={item.href}>{item.name}</BreadcrumbLink>
               )}
