@@ -1,5 +1,8 @@
 {
   "common": {
+    "headers": {
+      "home": "Home"
+    },
     "errors": {
       "MODULE_NAME_CONFLICT": " Name is already in use",
       "MODULE_CREATION_LIMIT_EXCEEDED": "You have reached the maximum number of creating more {thing} allowed in your plan. Please upgrade your plan to create more {thing}s."

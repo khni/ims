@@ -11,7 +11,8 @@
       }
     },
     "headers": {
-      "permissions": "Permissions"
+      "permissions": "Permissions",
+      "roles": "Roles"
     },
     "columnHeaders": {
       "name": "name",

@@ -3,15 +3,20 @@
 import { RoleDataTable, RoleFormButton } from "@/src/features/role";
 import { ROUTES } from "@/src/features/routes";
 import ListPageLayout from "@workspace/ui/blocks/list-page-layout";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 function Page() {
+  const commonHeadersT = useTranslations("common.headers");
+  const roleHeadersT = useTranslations("role.headers");
   return (
     <ListPageLayout
-      breadCrumbItems={[{ name: "home", href: ROUTES.app.index() }]}
+      breadCrumbItems={[
+        { name: commonHeadersT("home"), href: ROUTES.app.index() },
+      ]}
       createResourceButton={<RoleFormButton />}
       dataTable={<RoleDataTable />}
-      resourceName="Role List"
+      resourceName={roleHeadersT("roles")}
     />
   );
 }

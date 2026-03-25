@@ -11,7 +11,8 @@
       }
     },
     "headers": {
-      "permissions": "الصلاحيات"
+      "permissions": "الصلاحيات",
+      "roles": "الأدوار"
     },
     "columnHeaders": {
       "name": "الاسم",

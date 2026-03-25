@@ -1,5 +1,8 @@
 {
   "common": {
+    "headers": {
+      "home": "الرئيسية"
+    },
     "errors": {
       "MODULE_NAME_CONFLICT": "الاسم مستخدم بالفعل",
       "MODULE_CREATION_LIMIT_EXCEEDED": "لقد وصلت إلى الحد الأقصى المسموح به لإنشاء المزين من {thing}  ضمن خطتك الحالية."
