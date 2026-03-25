@@ -1,5 +1,5 @@
 {
-  "action": {
+  "actions": {
     "create": "إنشاء",
     "read": "عرض",
     "update": "تعديل",
@@ -12,7 +12,7 @@
     "archive": "أرشفة",
     "restore": "استعادة"
   },
-  "resource": {
+  "resources": {
     "user": "المستخدمون",
     "role": "الأدوار",
     "item": "العناصر",

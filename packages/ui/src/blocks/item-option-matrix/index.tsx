@@ -1,12 +1,12 @@
 import React from "react";
 export type Action = {
   id: string;
-  name: string;
+  label: string;
 };
 
 export type Resource = {
   id: string;
-  name: string;
+  label: string;
 };
 
 export type Permission = {
@@ -62,7 +62,7 @@ export const ItemOptionMatrix = <T extends SelectedPermission>({
     <div className="space-y-4">
       {resources.map((resource) => (
         <div key={resource.id} className="space-y-2">
-          <div className="font-medium">{resource.name}</div>
+          <div className="font-medium">{resource.label}</div>
 
           <div className="flex gap-4 pl-4">
             {actions.map((action) => {
@@ -84,7 +84,7 @@ export const ItemOptionMatrix = <T extends SelectedPermission>({
                     checked={checked}
                     onChange={() => togglePermission(permission.id)}
                   />
-                  <span>{action.name}</span>
+                  <span>{action.label}</span>
                 </label>
               );
             })}

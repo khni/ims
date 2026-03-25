@@ -2,6 +2,9 @@ import { prisma } from "@avuny/db";
 import { createResponseSchema, resultToSuccessResponse } from "@avuny/utils";
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { PermissionsMatrixSchema } from "../schemas.js";
+import { trans } from "../../intl/Translation.js";
+import { getContext } from "@avuny/hono";
+import { isAuthenticatedMiddleware } from "../../shared.js";
 
 export const permissionsMatrixRoute = new OpenAPIHono();
 
@@ -9,7 +12,7 @@ const route = createRoute({
   method: "get",
   operationId: "getPermissionsMatrix",
   path: "/permissions/matrix",
-
+  middleware: [isAuthenticatedMiddleware],
   responses: {
     200: {
       description: "Returns the permissions matrix",
@@ -23,8 +26,17 @@ const route = createRoute({
 });
 
 permissionsMatrixRoute.openapi(route, async (c) => {
-  const actions = await prisma.action.findMany();
-  const resources = await prisma.resource.findMany();
+  const context = getContext(c);
+  const t = trans({ lang: context.lang as "en" | "ar" });
+
+  const actions = (await prisma.action.findMany()).map((act) => ({
+    ...act,
+    label: t(`permission:actions.${act.name}`),
+  }));
+  const resources = (await prisma.resource.findMany()).map((res) => ({
+    ...res,
+    label: t(`permission:resources.${res.name}`),
+  }));
   const permissions = await prisma.permission.findMany();
   const http = resultToSuccessResponse(
     { actions, resources, permissions },

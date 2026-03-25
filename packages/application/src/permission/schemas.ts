@@ -3,12 +3,14 @@ import { z } from "@avuny/zod";
 
 export const ActionSchema = z.object({
   id: z.string(),
+  label: z.string(),
   name: z.enum(ActionName),
   description: z.string().nullable(),
 });
 
 export const ResourceSchema = z.object({
   id: z.string(),
+  label: z.string(),
   name: z.enum(ResourceName),
   description: z.string().nullable(),
 });
