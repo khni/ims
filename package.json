@@ -9,7 +9,8 @@
     "clean:all": "pnpm run clean:build && pnpm run clean:packages",
     "dev": "TURBO_UI=0  turbo dev --concurrency=20",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "api:generate": "turbo api:generate"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
