@@ -20,4 +20,8 @@ const organizationErrorMap = defineErrorMapping<OrganizationErrorCodeKeys>({
     statusCode: 409,
     responseMessage: "The user does not have permission to perform this action",
   },
+  [OrganizationErrorCode.RESOURCE_NOT_FOUND]: {
+    statusCode: 404,
+    responseMessage: "Resource is not found",
+  },
 });

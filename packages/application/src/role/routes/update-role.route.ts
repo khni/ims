@@ -82,8 +82,11 @@ updateRoleRoute.openapi(route, async (c) => {
     context,
     id,
   });
-  const { MODULE_CREATION_LIMIT_EXCEEDED, ...restModuleErrorResponseMap } =
-    ModuleErrorResponseMap;
+  const {
+    MODULE_CREATION_LIMIT_EXCEEDED,
+    RESOURCE_NOT_FOUND,
+    ...restModuleErrorResponseMap
+  } = ModuleErrorResponseMap;
   return handleResult({
     c,
     result,

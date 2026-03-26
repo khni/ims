@@ -17,4 +17,8 @@ const roleErrorMap = defineErrorMapping<RoleErrorCodeKeys>({
     statusCode: 409,
     responseMessage: "The user does not have permission to perform this action",
   },
+  [RoleErrorCode.RESOURCE_NOT_FOUND]: {
+    statusCode: 404,
+    responseMessage: "Resource is not found",
+  },
 });

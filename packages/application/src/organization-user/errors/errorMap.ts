@@ -22,4 +22,8 @@ const organizationUserErrorMap =
       responseMessage:
         "The user does not have permission to perform this action",
     },
+    [OrganizationUserErrorCode.RESOURCE_NOT_FOUND]: {
+      statusCode: 404,
+      responseMessage: "Resource is not found",
+    },
   });

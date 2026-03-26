@@ -91,11 +91,13 @@ createOrganizationUserRoute.openapi(route, async (c) => {
     data: body,
     context,
   });
+  const { RESOURCE_NOT_FOUND, ...restModuleErrorResponseMap } =
+    ModuleErrorResponseMap;
   return handleResult({
     c,
     result,
     successStatus: 201,
-    errorMap: ModuleErrorResponseMap,
+    errorMap: restModuleErrorResponseMap,
     moduleName: "organizationUser",
     errorTrans,
   });

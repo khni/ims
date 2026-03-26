@@ -10,9 +10,12 @@ export const ModuleErrorResponseMap = {
     responseMessage: "Module name already exists",
   },
 
-  // NEW
   [ModuleErrorCodes.USER_NO_PERMISSION]: {
     statusCode: 403,
     responseMessage: "User has no permission",
+  },
+  [ModuleErrorCodes.RESOURCE_NOT_FOUND]: {
+    statusCode: 404,
+    responseMessage: "Resource is not found",
   },
 } as const satisfies Record<ModuleErrorCode, ErrorMeta>;

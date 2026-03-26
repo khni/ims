@@ -93,17 +93,25 @@ export class QueryService {
         userId: context.userId,
         resource: config.moduleName,
       });
+
       if (!canRead) {
         return fail(
           ModuleErrorCodes.USER_NO_PERMISSION,
           context,
-          `${config.moduleName}QueryService.filteredPaginatedList`,
+          `${config.moduleName}QueryService.findById`,
         );
       }
 
       const record = (await repository.findUnique({
         where: { id },
       })) as Awaited<ReturnType<R["findUnique"]>>;
+      if (!record) {
+        return fail(
+          ModuleErrorCodes.RESOURCE_NOT_FOUND,
+          context,
+          `${config.moduleName}QueryService.findById`,
+        );
+      }
 
       return ok(record, context, `${config.moduleName}QueryService.findById`);
     };

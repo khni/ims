@@ -33,16 +33,26 @@ const route = createRoute({
       description: "Organization retrieved successfully by ID",
       content: {
         "application/json": {
-          schema: createResponseSchema(z.union([organizationSchema, z.null()])),
+          schema: createResponseSchema(organizationSchema),
         },
       },
     },
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
-      description: "User has no permission to update organization",
+      description: "User has no permission to view organization",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
             ModuleErrorCodes.USER_NO_PERMISSION,
+          ]),
+        },
+      },
+    },
+    [ModuleErrorResponseMap.RESOURCE_NOT_FOUND.statusCode]: {
+      description: "Organization is not found",
+      content: {
+        "application/json": {
+          schema: createDomainErrorResponseSchema([
+            ModuleErrorCodes.RESOURCE_NOT_FOUND,
           ]),
         },
       },
@@ -59,12 +69,12 @@ getOrganizationByIdRoute.openapi(route, async (c) => {
     context,
     id: c.req.param("id"),
   });
-  const { USER_NO_PERMISSION } = ModuleErrorResponseMap;
+  const { USER_NO_PERMISSION, RESOURCE_NOT_FOUND } = ModuleErrorResponseMap;
   return handleResult({
     c,
     result,
     successStatus: 200,
-    errorMap: { USER_NO_PERMISSION },
+    errorMap: { USER_NO_PERMISSION, RESOURCE_NOT_FOUND },
     moduleName: "organization",
     errorTrans,
   });
