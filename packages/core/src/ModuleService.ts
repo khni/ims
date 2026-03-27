@@ -9,11 +9,23 @@ export class ModuleService<R extends IRepository> {
   protected creationLimit!: number;
   protected moduleName!: Resource;
 
-  constructor(
-    private createService: CreateService,
-    private updateService: UpdateService,
-    private queryService: QueryService,
-  ) {}
+  private createService: CreateService;
+  private updateService: UpdateService;
+  private queryService: QueryService;
+
+  constructor({
+    createService,
+    updateService,
+    queryService,
+  }: {
+    createService: CreateService;
+    updateService: UpdateService;
+    queryService: QueryService;
+  }) {
+    this.createService = createService;
+    this.updateService = updateService;
+    this.queryService = queryService;
+  }
 
   /**
    * Inject module configuration once

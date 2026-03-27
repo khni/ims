@@ -35,10 +35,19 @@ export type UpdateHooks<TUpdateInput> = {
 };
 
 export class UpdateService {
-  constructor(
-    private activityLog: IActivityLogService,
-    private resourcePermission: IResourcePermission,
-  ) {}
+  private activityLog: IActivityLogService;
+  private resourcePermission: IResourcePermission;
+
+  constructor({
+    activityLog,
+    resourcePermission,
+  }: {
+    activityLog: IActivityLogService;
+    resourcePermission: IResourcePermission;
+  }) {
+    this.activityLog = activityLog;
+    this.resourcePermission = resourcePermission;
+  }
 
   update =
     <

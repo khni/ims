@@ -21,10 +21,19 @@ import { trans } from "../../intl/Translation.js";
 // };
 
 export class SidebarService {
-  constructor(
-    private readonly sidebarQueries: SidebarQueries,
-    private isOwnerOrganizationUserQuery: IIsOwnerOrganizationUserQuery,
-  ) {}
+  private readonly sidebarQueries: SidebarQueries;
+  private isOwnerOrganizationUserQuery: IIsOwnerOrganizationUserQuery;
+
+  constructor({
+    sidebarQueries,
+    isOwnerOrganizationUserQuery,
+  }: {
+    sidebarQueries: SidebarQueries;
+    isOwnerOrganizationUserQuery: IIsOwnerOrganizationUserQuery;
+  }) {
+    this.sidebarQueries = sidebarQueries;
+    this.isOwnerOrganizationUserQuery = isOwnerOrganizationUserQuery;
+  }
 
   private fetch = async (params: {
     organizationId: string;

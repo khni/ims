@@ -28,10 +28,19 @@ export type CreateHooks<TCreateInput> = {
   afterCreate?: AfterCreateHook<any, any>;
 };
 export class CreateService {
-  constructor(
-    private activityLog: IActivityLogService,
-    private resourcePermission: IResourcePermission,
-  ) {}
+  private activityLog: IActivityLogService;
+  private resourcePermission: IResourcePermission;
+
+  constructor({
+    activityLog,
+    resourcePermission,
+  }: {
+    activityLog: IActivityLogService;
+    resourcePermission: IResourcePermission;
+  }) {
+    this.activityLog = activityLog;
+    this.resourcePermission = resourcePermission;
+  }
 
   create =
     <E, R extends IRepository, TCreateInput>(options: {

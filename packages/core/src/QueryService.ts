@@ -7,7 +7,15 @@ import { Context, Resource } from "./types.js";
 import { IResourcePermission } from "./ServiceGuard/IResourcePermission.js";
 
 export class QueryService {
-  constructor(private resourcePermission: IResourcePermission) {}
+  private resourcePermission: IResourcePermission;
+
+  constructor({
+    resourcePermission,
+  }: {
+    resourcePermission: IResourcePermission;
+  }) {
+    this.resourcePermission = resourcePermission;
+  }
 
   filteredPaginatedList = <
     R extends IRepository,

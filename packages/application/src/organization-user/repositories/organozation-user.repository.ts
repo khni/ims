@@ -12,8 +12,11 @@ export class OrganizationUserRepository
   extends PrismaTransaction
   implements IRepository
 {
-  constructor(private readonly db: DB = prisma) {
+  private readonly db: DB;
+
+  constructor({ db }: { db: DB }) {
     super();
+    this.db = db;
   }
 
   private getDB(tx?: Tx): DB {

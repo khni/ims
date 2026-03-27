@@ -6,6 +6,7 @@ import {
   InjectionMode,
   AwilixContainer,
   Resolver,
+  asValue,
 } from "awilix";
 import { OrganizationRepository } from "./organization/repositories/organization.repository.js";
 import { OrganizationService } from "./organization/services/organization.service.js";
@@ -26,6 +27,8 @@ import { OrganizationUserService } from "./organization-user/services/organizati
 import { IsOwnerOrganizationUserQuery } from "./organization-user/queries/is-owner-organization-user.query.js";
 import { SidebarQueries } from "./sidebar/repositories/sidebar.queries.js";
 import { SidebarService } from "./sidebar/services/sidebar.service.js";
+import { prisma, PrismaN } from "@avuny/db";
+import { ActivityLogRepository } from "./activity-log/ActivityLogRepository.js";
 
 function enforceClass<T>(
   c: new (...args: any[]) => T,
@@ -41,6 +44,9 @@ function enforceFunction<T extends (...args: any[]) => any>(f: T): T {
   return f;
 }
 export const appDeps = {
+  //infra
+  db: asClass(PrismaN),
+  activityLogRepository: asClass(ActivityLogRepository).scoped(),
   //core
   createService: asClass(CreateService).scoped(),
   updateService: asClass(UpdateService).scoped(),
@@ -48,6 +54,7 @@ export const appDeps = {
   moduleService: asClass(ModuleService).scoped(),
   activityLog: asClass(ActivityLogService).scoped(),
   resourcePermission: asClass(ResourcePermissionChecker).scoped(),
+
   // organization
   organizationRepository: asClass(OrganizationRepository).scoped(),
   organizationService: asClass(OrganizationService).scoped(),
@@ -77,7 +84,7 @@ type AppDeps = {
 export type AppContainer = AwilixContainer<AppDeps>;
 
 const container: AppContainer = createContainer({
-  injectionMode: InjectionMode.CLASSIC,
+  injectionMode: InjectionMode.PROXY,
 });
 container.register(appDeps);
 

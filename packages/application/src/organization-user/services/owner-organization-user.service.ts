@@ -7,10 +7,19 @@ import { PrismaTransactionManager } from "@avuny/db";
 
 export class OwnerOrganizationUserService implements IOwnerOrganizationUserService {
   ownerName = "Owner";
-  constructor(
-    private organizationUserRepository: OrganizationUserRepository,
-    private activityLog: IActivityLogService,
-  ) {}
+  private organizationUserRepository: OrganizationUserRepository;
+  private activityLog: IActivityLogService;
+
+  constructor({
+    organizationUserRepository,
+    activityLog,
+  }: {
+    organizationUserRepository: OrganizationUserRepository;
+    activityLog: IActivityLogService;
+  }) {
+    this.organizationUserRepository = organizationUserRepository;
+    this.activityLog = activityLog;
+  }
 
   create = async (params: {
     context: Context;

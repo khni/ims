@@ -9,10 +9,19 @@ import { OrganizationUserRepository } from "../repositories/organozation-user.re
 
 export class OrganizationUserService {
   ownerName = "Owner";
-  constructor(
-    private organizationUserRepository: OrganizationUserRepository,
-    private moduleService: ModuleService<OrganizationUserRepository>,
-  ) {
+  private organizationUserRepository: OrganizationUserRepository;
+  private moduleService: ModuleService<OrganizationUserRepository>;
+
+  constructor({
+    organizationUserRepository,
+    moduleService,
+  }: {
+    organizationUserRepository: OrganizationUserRepository;
+    moduleService: ModuleService<OrganizationUserRepository>;
+  }) {
+    this.organizationUserRepository = organizationUserRepository;
+    this.moduleService = moduleService;
+
     this.moduleService.setConfig({
       repository: this.organizationUserRepository,
       creationLimit: 10,

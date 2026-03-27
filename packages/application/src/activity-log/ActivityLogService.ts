@@ -9,9 +9,15 @@ import {
 import { IActivityLogService } from "@avuny/core";
 
 export class ActivityLogService implements IActivityLogService<Tx> {
-  constructor(
-    private repository: ActivityLogRepository = new ActivityLogRepository(),
-  ) {}
+  private activityLogRepository: ActivityLogRepository;
+
+  constructor({
+    activityLogRepository = new ActivityLogRepository(),
+  }: {
+    activityLogRepository: ActivityLogRepository;
+  }) {
+    this.activityLogRepository = activityLogRepository;
+  }
 
   create = async ({
     data,
@@ -29,6 +35,6 @@ export class ActivityLogService implements IActivityLogService<Tx> {
     };
     tx?: Tx;
   }) => {
-    return await this.repository.create({ data, tx });
+    return await this.activityLogRepository.create({ data, tx });
   };
 }

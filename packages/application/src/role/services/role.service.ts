@@ -5,10 +5,19 @@ import { CreateRoleBody, UpdateRoleBody } from "../types.js";
 import { RoleRepository } from "../repositories/role.repository.js";
 
 export class RoleService {
-  constructor(
-    private roleRepository: RoleRepository,
-    private moduleService: ModuleService<RoleRepository>,
-  ) {
+  private roleRepository: RoleRepository;
+  private moduleService: ModuleService<RoleRepository>;
+
+  constructor({
+    roleRepository,
+    moduleService,
+  }: {
+    roleRepository: RoleRepository;
+    moduleService: ModuleService<RoleRepository>;
+  }) {
+    this.roleRepository = roleRepository;
+    this.moduleService = moduleService;
+
     this.moduleService.setConfig({
       repository: this.roleRepository,
       creationLimit: 10,

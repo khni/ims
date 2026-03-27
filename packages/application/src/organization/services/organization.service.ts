@@ -5,12 +5,27 @@ import { CreateOrganizationBody, UpdateOrganizationBody } from "../types.js";
 import { IOwnerOrganizationUserService } from "../../shared/owner-oganization-user.interface.js";
 import { IOwnerRoleService } from "../../shared/owner-role.interface.js";
 export class OrganizationService {
-  constructor(
-    private organizationRepository: OrganizationRepository,
-    private moduleService: ModuleService<OrganizationRepository>,
-    private ownerOrganizationUserService: IOwnerOrganizationUserService,
-    private ownerRoleService: IOwnerRoleService,
-  ) {
+  private organizationRepository: OrganizationRepository;
+  private moduleService: ModuleService<OrganizationRepository>;
+  private ownerOrganizationUserService: IOwnerOrganizationUserService;
+  private ownerRoleService: IOwnerRoleService;
+
+  constructor({
+    organizationRepository,
+    moduleService,
+    ownerOrganizationUserService,
+    ownerRoleService,
+  }: {
+    organizationRepository: OrganizationRepository;
+    moduleService: ModuleService<OrganizationRepository>;
+    ownerOrganizationUserService: IOwnerOrganizationUserService;
+    ownerRoleService: IOwnerRoleService;
+  }) {
+    this.organizationRepository = organizationRepository;
+    this.moduleService = moduleService;
+    this.ownerOrganizationUserService = ownerOrganizationUserService;
+    this.ownerRoleService = ownerRoleService;
+
     this.moduleService.setConfig({
       repository: this.organizationRepository,
       creationLimit: 10,
