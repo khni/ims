@@ -1,82 +1,97 @@
 "use client";
-import React, { useEffect } from "react";
-import { Navbar } from "@workspace/ui/blocks/layout/navbar";
-import ModeSwitcherBtn from "@/src/components/buttons/mode-switcher-btn";
-import HomeButton from "@/src/components/buttons/home-btn";
-import LangaugeSwitcherBtn from "@/src/components/buttons/langauge-switcher-btn";
-import { useIsAuthenticated, useOrganizationList } from "@/src/api";
-import UserButton from "@/src/components/buttons/user-btn";
-import { useLogoutHandler } from "@/src/features/auth/logout/useLogoutHook";
-import CreateOrganizationForm from "@/src/features/organization/forms/CreateOrganizationForm";
-import { useSelectedOrganizationContext } from "@/src/providers/selected-org-provider";
+import React, { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
+
+import { useIsAuthenticated, useOrganizationList } from "@/src/api";
+import { useSelectedOrganizationContext } from "@/src/providers/selected-org-provider";
 import { ROUTES } from "@/src/features/routes";
+
+import NavbarContainer from "@/src/features/auth/NavbarContainer";
+import CreateOrganizationForm from "@/src/features/organization/forms/CreateOrganizationForm";
 import ComboBox from "@workspace/ui/blocks/combo-box";
-import { is } from "zod/v4/locales";
 import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
+
 import { useCommonTranslations } from "@/messages/common";
 import { useTranslations } from "next-intl";
-import NavbarContainer from "@/src/features/auth/NavbarContainer";
-//snp rfc
+
 export default function Page() {
   const router = useRouter();
-  const { data, isLoading } = useIsAuthenticated({
-    query: {
-      queryKey: ["getAuthenticatedUser"],
-      retry: 1,
-    },
+
+  // 🔹 API calls
+  const { data: authData, isLoading: isAuthLoading } = useIsAuthenticated({
+    query: { queryKey: ["getAuthenticatedUser"], retry: 1 },
   });
-  const { data: orgData, isPending } = useOrganizationList();
-  const { placeholderTranslations } = useCommonTranslations();
-  const organizationTranslations = useTranslations("organization");
-  const organizations = orgData?.data.list || [];
+
+  const { data: orgData, isPending: isOrgLoading } = useOrganizationList();
+
+  const organizations = orgData?.data.list ?? [];
+
+  // 🔹 Context
   const { selectedOrganizationId, setSelectedOrganizationId } =
     useSelectedOrganizationContext();
+
+  // 🔹 Translations
+  const { placeholderTranslations } = useCommonTranslations();
+  const tOrg = useTranslations("organization");
+
+  // 🔹 Memoized options (prevents re-creation on every render)
+  const orgOptions = useMemo(
+    () =>
+      organizations.map((org) => ({
+        value: org.id,
+        label: org.name,
+      })),
+    [organizations],
+  );
+
+  // 🔹 Redirect logic (split for clarity + fewer triggers)
   useEffect(() => {
-    if (!data?.data) {
+    if (authData && !authData.data) {
       router.replace(ROUTES.auth.index);
     }
-    if (!organizations || organizations.length === 0) return;
+  }, [authData, router]);
 
-    const found = organizations.find(
+  useEffect(() => {
+    if (!organizations.length) return;
+
+    const found = organizations.some(
       (org) => org.id === selectedOrganizationId,
     );
+
     if (found) {
       router.replace(ROUTES.app.index(selectedOrganizationId));
     }
-  }, [organizations, selectedOrganizationId, router]);
+  }, [selectedOrganizationId, organizations.length, router]);
 
-  if (isPending) {
-    return <LoadingPage />;
-  }
+  // 🔹 Loading state
+  if (isOrgLoading) return <LoadingPage />;
 
-  if (organizations.length === 0) {
+  // 🔹 Empty state
+  if (!organizations.length) {
     return (
-      <NavbarContainer isLoading={isLoading} user={data?.data}>
-        {<CreateOrganizationForm />}
+      <NavbarContainer isLoading={isAuthLoading} user={authData?.data}>
+        <CreateOrganizationForm />
       </NavbarContainer>
     );
   }
+
+  // 🔹 UI
   return (
-    <NavbarContainer isLoading={isLoading} user={data?.data}>
+    <NavbarContainer isLoading={isAuthLoading} user={authData?.data}>
       <div className="flex-1 flex flex-col gap-4 bg-muted items-center justify-center p-6 md:p-4">
         <div className="p-4">
           <h1 className="text-2xl text-center font-bold mb-4">
-            {organizationTranslations("headers.yourOrganizations")}
+            {tOrg("headers.yourOrganizations")}
           </h1>
-          <ul className="space-y-2">
-            <ComboBox
-              selectText={placeholderTranslations("select")}
-              list={organizations.map((org) => ({
-                value: org.id,
-                label: org.name,
-              }))}
-              onSelect={(value) => {
-                setSelectedOrganizationId(value);
-                router.push(ROUTES.app.index(value));
-              }}
-            />
-          </ul>
+
+          <ComboBox
+            selectText={placeholderTranslations("select")}
+            list={orgOptions}
+            onSelect={(value) => {
+              setSelectedOrganizationId(value);
+              router.push(ROUTES.app.index(value));
+            }}
+          />
         </div>
       </div>
     </NavbarContainer>
