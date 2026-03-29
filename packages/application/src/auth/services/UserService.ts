@@ -167,3 +167,17 @@ export const socialSignIn = async (code: string, provider: Provider) => {
 
   return mapAuthResponse({ data: user }, tokensResult);
 };
+
+export const findUserByIdentifier = async (identifier: string) => {
+  const user = await userRepository.findUnique({
+    where: {
+      identifier,
+    },
+  });
+  if (user) {
+    return {
+      id: user.id,
+      name: user.name,
+    };
+  } else return null;
+};

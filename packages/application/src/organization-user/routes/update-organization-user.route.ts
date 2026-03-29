@@ -2,7 +2,7 @@ import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import {
   updateOrganizationUserBodySchema,
   mutateOrganizationUserResponseSchema,
-} from "../schemas.js";
+} from "@avuny/shared";
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
@@ -13,7 +13,6 @@ import {
   ModuleErrorResponseMap,
 } from "@avuny/utils";
 
-import { prisma } from "@avuny/db";
 import { getContext, handleResult } from "@avuny/hono";
 import { isAuthenticatedMiddleware } from "../../shared.js";
 import container from "../../container.js";

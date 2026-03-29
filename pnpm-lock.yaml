@@ -17,8 +17,11 @@ importers:
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
       turbo:
-        specifier: ^2.8.1
+        specifier: ^2.6.3
         version: 2.8.17
       typescript:
         specifier: 5.9.3

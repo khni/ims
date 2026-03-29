@@ -41,6 +41,7 @@
     "entities": {
       "role": "Role",
       "organization": "Organization",
+      "organizationUser": "Organization User",
       "account": "Account",
       "item": "Item",
       "invoice": "Invoice",

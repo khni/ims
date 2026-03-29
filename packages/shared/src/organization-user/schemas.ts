@@ -8,19 +8,36 @@ export const organizationUserSchema = z.object({
   userId: z.string(),
   roleId: z.string(),
   organizationId: z.string(),
-  status: z.nativeEnum(OrganizationUserStatus),
-  expiresAt: z.date().nullable(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  status: z.enum(OrganizationUserStatus),
+  expiresAt: z.iso.datetime().nullable(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 // body schemas
-export const mutateOrganizationUserSchema = organizationUserSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  organizationId: true,
-});
+export const mutateOrganizationUserSchema = organizationUserSchema
+  .omit({
+    id: true,
+    userId: true,
+    createdAt: true,
+    updatedAt: true,
+    organizationId: true,
+    status: true,
+  })
+  .extend({
+    identifier: z.email(),
+  });
+
+export const createOrganizationUserRepositorySchema =
+  mutateOrganizationUserSchema
+    .extend({
+      organizationId: z.string(),
+      status: z.enum(OrganizationUserStatus),
+      userId: z.string(),
+    })
+    .omit({
+      identifier: true,
+    });
 
 export const createOrganizationUserBodySchema = mutateOrganizationUserSchema;
 
@@ -52,4 +69,6 @@ export const getOrganizationUserByIdResponseSchema =
   organizationUserSchema.pick({
     id: true,
     name: true,
+    expiresAt: true,
+    roleId: true,
   });

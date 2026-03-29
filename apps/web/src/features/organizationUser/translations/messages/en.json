@@ -1,0 +1,25 @@
+{
+  "organizationUser": {
+    "form": {
+      "headings": {
+        "title": "{action} OrganizationUser",
+        "description": "Use this form to {action} an OrganizationUser."
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "identifier": "Email",
+        "expiresAt": "Expiration Date",
+        "roleId": "Role"
+      }
+    },
+    "headers": {
+      "list": "List"
+    },
+    "columnHeaders": {
+      "name": "name",
+      "description": "description",
+      "updatedAt": "Last Updated"
+    }
+  }
+}

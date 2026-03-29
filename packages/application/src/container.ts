@@ -29,6 +29,8 @@ import { SidebarQueries } from "./sidebar/repositories/sidebar.queries.js";
 import { SidebarService } from "./sidebar/services/sidebar.service.js";
 import { prisma, PrismaN } from "@avuny/db";
 import { ActivityLogRepository } from "./activity-log/ActivityLogRepository.js";
+import { UserRepository } from "./user/repositories/user.repository.js";
+import { UserService } from "./user/services/user.services.js";
 
 function enforceClass<T>(
   c: new (...args: any[]) => T,
@@ -54,6 +56,10 @@ export const appDeps = {
   moduleService: asClass(ModuleService).scoped(),
   activityLog: asClass(ActivityLogService).scoped(),
   resourcePermission: asClass(ResourcePermissionChecker).scoped(),
+
+  //user
+  userRepository: asClass(UserRepository).scoped(),
+  userService: asClass(UserService).scoped(),
 
   // organization
   organizationRepository: asClass(OrganizationRepository).scoped(),

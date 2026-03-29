@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export type FormProps<T extends FieldValues, E, S extends string> = {
   children?: React.ReactNode;
   actionName?: "create" | "add" | "update";
-  resourceName?: "organization" | "role" | "item";
+  resourceName?: "organization" | "role" | "item" | "organizationUser";
 } & Omit<
   CustomFormProps<T, E>,
   "isLoadingText" | "submitButtonText" | "children"

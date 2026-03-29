@@ -8,6 +8,7 @@ import {
   mutateOrganizationUserResponseSchema,
   organizationUserListResponseSchema,
   mutateOrganizationUserSchema,
+  createOrganizationUserRepositorySchema,
 } from "./schemas.js";
 
 /* =========================
@@ -21,6 +22,10 @@ export type OrganizationUser = z.infer<typeof organizationUserSchema>;
 ========================= */
 export type MutateOrganizationUserBody = z.infer<
   typeof mutateOrganizationUserSchema
+>;
+
+export type CreateOrganizationUserRepository = z.infer<
+  typeof createOrganizationUserRepositorySchema
 >;
 
 export type CreateOrganizationUserBody = z.infer<

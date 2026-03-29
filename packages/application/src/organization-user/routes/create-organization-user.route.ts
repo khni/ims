@@ -2,7 +2,7 @@ import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import {
   createOrganizationUserBodySchema,
   mutateOrganizationUserResponseSchema,
-} from "../schemas.js";
+} from "@avuny/shared";
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
@@ -12,12 +12,13 @@ import {
   ModuleErrorResponseMap,
 } from "@avuny/utils";
 
-import { prisma } from "@avuny/db";
 import { getContext, handleResult } from "@avuny/hono";
 import { isAuthenticatedMiddleware } from "../../shared.js";
 import container from "../../container.js";
 
 import { trans } from "../../intl/Translation.js";
+import { OrganizationUserErrorCode } from "../errors/errorCode.js";
+import { OrganizationUserErrorMap } from "../errors/errorMap.js";
 
 export const createOrganizationUserRoute = new OpenAPIHono();
 const route = createRoute({
@@ -76,6 +77,16 @@ const route = createRoute({
         },
       },
     },
+    [OrganizationUserErrorMap.USER_NOT_FOUND.statusCode]: {
+      description: "User ist not exists",
+      content: {
+        "application/json": {
+          schema: createDomainErrorResponseSchema([
+            OrganizationUserErrorCode.USER_NOT_FOUND,
+          ]),
+        },
+      },
+    },
     ...globalErrorResponses,
   },
 });
@@ -92,7 +103,7 @@ createOrganizationUserRoute.openapi(route, async (c) => {
     context,
   });
   const { RESOURCE_NOT_FOUND, ...restModuleErrorResponseMap } =
-    ModuleErrorResponseMap;
+    OrganizationUserErrorMap;
   return handleResult({
     c,
     result,

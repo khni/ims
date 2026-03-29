@@ -9,7 +9,7 @@ import {
   resultToSuccessResponse,
 } from "@avuny/utils";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { organizationUserSchema } from "../schemas.js";
+import { organizationUserSchema } from "@avuny/shared";
 
 import container from "../../container.js";
 

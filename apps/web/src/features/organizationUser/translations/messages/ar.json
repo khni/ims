@@ -1,0 +1,25 @@
+{
+  "organizationUser": {
+    "form": {
+      "headings": {
+        "title": "{action} OrganizationUser",
+        "description": "استخدم هذا النموذج لـ {action} OrganizationUser"
+      },
+      "fields": {
+        "name": "الاسم",
+        "description": "الوصف",
+        "identifier": "البريد الإلكتروني",
+        "expiresAt": "تاريخ الانتهاء",
+        "roleId": "الدور"
+      }
+    },
+    "headers": {
+      "list": "قائمة"
+    },
+    "columnHeaders": {
+      "name": "الاسم",
+      "description": "الوصف",
+      "updatedAt": "آخر تحديث"
+    }
+  }
+}

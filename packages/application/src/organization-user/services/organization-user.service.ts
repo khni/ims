@@ -4,23 +4,29 @@ import { OrganizationUserErrorCode } from "../errors/errorCode.js";
 import {
   CreateOrganizationUserBody,
   UpdateOrganizationUserBody,
-} from "../types.js";
+} from "@avuny/shared";
 import { OrganizationUserRepository } from "../repositories/organozation-user.repository.js";
+import { IUserService } from "../../shared.js";
+import { fail } from "@avuny/utils";
 
 export class OrganizationUserService {
   ownerName = "Owner";
   private organizationUserRepository: OrganizationUserRepository;
   private moduleService: ModuleService<OrganizationUserRepository>;
+  private userService: IUserService;
 
   constructor({
     organizationUserRepository,
     moduleService,
+    userService,
   }: {
     organizationUserRepository: OrganizationUserRepository;
     moduleService: ModuleService<OrganizationUserRepository>;
+    userService: IUserService;
   }) {
     this.organizationUserRepository = organizationUserRepository;
     this.moduleService = moduleService;
+    this.userService = userService;
 
     this.moduleService.setConfig({
       repository: this.organizationUserRepository,
@@ -34,7 +40,7 @@ export class OrganizationUserService {
   // ===============================
   create = async (params: {
     context: Context;
-    data: Omit<CreateOrganizationUserBody, "status">;
+    data: CreateOrganizationUserBody;
     tx?: unknown;
   }) => {
     /// here we can add any organizationUser specific logic before creating an organizationUser.
@@ -53,6 +59,16 @@ export class OrganizationUserService {
         },
       ],
     });
+    const user = await this.userService.findByIdentifier(
+      params.data.identifier,
+    );
+    if (!user) {
+      return fail(
+        OrganizationUserErrorCode.USER_NOT_FOUND,
+        params.context,
+        `OrganizationUserService.create`,
+      );
+    }
     return await createOrganizationUser({
       ...params,
 
@@ -60,6 +76,7 @@ export class OrganizationUserService {
         ...params.data,
         status: "PENDING",
         organizationId: params.context.organizationId!,
+        userId: user.id,
       },
     });
   };

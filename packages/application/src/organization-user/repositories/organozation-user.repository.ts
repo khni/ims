@@ -5,9 +5,13 @@ import {
   DB,
   OrganizationUser,
   PrismaTransaction,
+  OrganizationUserStatus,
 } from "@avuny/db";
 import { IRepository } from "@avuny/core";
-import { CreateOrganizationUserBody } from "../types.js";
+import {
+  CreateOrganizationUserBody,
+  CreateOrganizationUserRepository,
+} from "@avuny/shared";
 export class OrganizationUserRepository
   extends PrismaTransaction
   implements IRepository
@@ -24,10 +28,7 @@ export class OrganizationUserRepository
   }
 
   /** Create OrganizationUser */
-  async create(params: {
-    data: CreateOrganizationUserBody & { organizationId: string };
-    tx?: Tx;
-  }) {
+  async create(params: { data: CreateOrganizationUserRepository; tx?: Tx }) {
     const { data, tx } = params;
     const db = this.getDB(tx);
 
