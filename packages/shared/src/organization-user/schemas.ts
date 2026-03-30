@@ -42,7 +42,10 @@ export const createOrganizationUserRepositorySchema =
 export const createOrganizationUserBodySchema = mutateOrganizationUserSchema;
 
 // params schema
-export const updateOrganizationUserBodySchema = mutateOrganizationUserSchema;
+export const updateOrganizationUserBodySchema =
+  mutateOrganizationUserSchema.omit({
+    identifier: true,
+  });
 
 export const getOrganizationUserByIdSchema = organizationUserSchema.pick({
   id: true,

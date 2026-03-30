@@ -1,19 +1,57 @@
-// CreateOrganizationUserForm.tsx
 "use client";
-import React from "react";
-import { useCreateOrganizationUser } from "@/src/api";
-import OrganizationUserDetailsForm from "./OrganizationUserDetailsForm";
 
-export const CreateOrganizationUserForm: React.FC = () => {
-  const { mutateAsync, isPending, error } = useCreateOrganizationUser();
-  return (
-    <div>
-      <OrganizationUserDetailsForm
-        customForm={{
-          api: { onSubmit: async (data) => await mutateAsync({ data }), isLoading: isPending },
-          error,
-        }}
-      />
-    </div>
-  );
+import { useCreateOrganizationUser } from "@/src/api";
+import { GetOrganizationUserByIdResponse } from "@avuny/shared";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "@avuny/zod";
+import { Form as CustomForm, FormProps } from "@/src/components/form";
+import { createOrganizationUserBodySchema as schema } from "@avuny/shared";
+import { useOrganizationUserTranslations } from "@/src/features/organizationUser/translations/hooks/useOrganizationUserTranslations";
+
+export type OrganizationUserFormDetailsProps = {
+  organizationUser: GetOrganizationUserByIdResponse;
 };
+
+export default function OrganizationUserDetailsForm() {
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {},
+  });
+
+  const { organizationUserFormFieldsTranslations } =
+    useOrganizationUserTranslations();
+  const { mutateAsync, isPending, error } = useCreateOrganizationUser();
+
+  return (
+    <CustomForm
+      error={error}
+      api={{
+        onSubmit: async (data) => mutateAsync({ data: data }),
+        isLoading: isPending,
+      }}
+      form={form}
+      getLabel={organizationUserFormFieldsTranslations}
+      resourceName="organizationUser"
+      actionName={"create"}
+      fields={[
+        {
+          key: "identifier",
+          content: { name: "identifier", type: "text" },
+          spans: { base: 4, md: 2 },
+        },
+        {
+          key: "name",
+          content: { name: "name", type: "text" },
+          spans: { base: 4, md: 2 },
+        },
+        {
+          key: "roleId",
+          content: { name: "roleId", type: "select", options: [] },
+          spans: { base: 4, md: 2 },
+        },
+      ]}
+    />
+  );
+}
