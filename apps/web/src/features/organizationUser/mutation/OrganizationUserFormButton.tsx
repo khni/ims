@@ -5,10 +5,12 @@ import { Modal } from "@workspace/ui/blocks/modal";
 import ActionButton from "@workspace/ui/blocks/buttons/action-btn";
 import { useCommonTranslations } from "@/messages/common";
 import { GetOrganizationUserByIdResponse } from "@avuny/shared";
-import { CreateOrganizationUserForm } from "./CreateOrganizationUserForm";
-import { UpdateOrganizationUserForm } from "./UpdateOrganizationUserForm";
+import UpdateOrganizationUserForm from "@/src/features/organizationUser/mutation/UpdateOrganizationUserForm";
+import CreateOrganizationUserForm from "@/src/features/organizationUser/mutation/CreateOrganizationUserForm";
 
-export const OrganizationUserFormButton: React.FC<{ organizationUser?: GetOrganizationUserByIdResponse }> = ({ organizationUser }) => {
+export const OrganizationUserFormButton: React.FC<{
+  organizationUser?: GetOrganizationUserByIdResponse;
+}> = ({ organizationUser }) => {
   const [open, setOpen] = useState(false);
   const { actionTranslations } = useCommonTranslations();
   const add = actionTranslations("add");
@@ -27,7 +29,11 @@ export const OrganizationUserFormButton: React.FC<{ organizationUser?: GetOrgani
         open={open}
         onOpenChange={setOpen}
       >
-        {organizationUser ? <UpdateOrganizationUserForm organizationUser={organizationUser} /> : <CreateOrganizationUserForm />}
+        {organizationUser ? (
+          <UpdateOrganizationUserForm organizationUser={organizationUser} />
+        ) : (
+          <CreateOrganizationUserForm />
+        )}
       </Modal>
     </div>
   );

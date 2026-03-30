@@ -14,7 +14,8 @@
       }
     },
     "headers": {
-      "list": "قائمة"
+      "list": "قائمة",
+      "organizationUsers": "مستخدموا  المؤسسة"
     },
     "columnHeaders": {
       "name": "الاسم",

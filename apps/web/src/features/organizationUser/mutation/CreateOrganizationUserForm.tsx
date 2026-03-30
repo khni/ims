@@ -10,11 +10,11 @@ import { Form as CustomForm, FormProps } from "@/src/components/form";
 import { createOrganizationUserBodySchema as schema } from "@avuny/shared";
 import { useOrganizationUserTranslations } from "@/src/features/organizationUser/translations/hooks/useOrganizationUserTranslations";
 
-export type OrganizationUserFormDetailsProps = {
+export type CreateOrganizationUserFormProps = {
   organizationUser: GetOrganizationUserByIdResponse;
 };
 
-export default function OrganizationUserDetailsForm() {
+export default function CreateOrganizationUserForm() {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {},

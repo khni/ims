@@ -14,7 +14,8 @@
       }
     },
     "headers": {
-      "list": "List"
+      "list": "List",
+      "organizationUsers": "Organization Users"
     },
     "columnHeaders": {
       "name": "name",
