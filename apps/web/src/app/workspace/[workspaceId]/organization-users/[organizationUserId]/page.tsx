@@ -37,7 +37,7 @@ export default function Page({
             name: t("common.headers.home"),
           },
           {
-            href: `/workspace/${selectedOrganizationId}/organizationUsers`,
+            href: `/workspace/${selectedOrganizationId}/organization-users`,
             name: t("organizationUser.headers.organizationUsers"),
           },
         ]}

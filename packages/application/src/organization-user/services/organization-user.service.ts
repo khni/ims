@@ -62,6 +62,7 @@ export class OrganizationUserService {
     const user = await this.userService.findByIdentifier(
       params.data.identifier,
     );
+
     if (!user) {
       return fail(
         OrganizationUserErrorCode.USER_NOT_FOUND,
@@ -73,7 +74,9 @@ export class OrganizationUserService {
       ...params,
 
       data: {
-        ...params.data,
+        roleId: params.data.roleId,
+        name: params.data.name,
+        expiresAt: params.data.expiresAt,
         status: "PENDING",
         organizationId: params.context.organizationId!,
         userId: user.id,
@@ -107,7 +110,11 @@ export class OrganizationUserService {
     });
     return await updateOrganizationUser({
       ...params,
-      data: params.data,
+      data: {
+        roleId: params.data.roleId,
+        name: params.data.name,
+        expiresAt: params.data.expiresAt,
+      },
     });
   };
 

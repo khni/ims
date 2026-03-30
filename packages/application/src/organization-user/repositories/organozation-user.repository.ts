@@ -11,6 +11,7 @@ import { IRepository } from "@avuny/core";
 import {
   CreateOrganizationUserBody,
   CreateOrganizationUserRepository,
+  UpdateOrganizationUserBody,
 } from "@avuny/shared";
 export class OrganizationUserRepository
   extends PrismaTransaction
@@ -90,7 +91,7 @@ export class OrganizationUserRepository
   /** Update OrganizationUser */
   async update(params: {
     where: Prisma.OrganizationUserWhereUniqueInput;
-    data: Prisma.OrganizationUserUpdateInput;
+    data: UpdateOrganizationUserBody;
     tx?: Tx;
   }) {
     const { where, data, tx } = params;

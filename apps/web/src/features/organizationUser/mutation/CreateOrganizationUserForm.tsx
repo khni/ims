@@ -1,6 +1,6 @@
 "use client";
 
-import { useCreateOrganizationUser } from "@/src/api";
+import { useCreateOrganizationUser, useRoleList } from "@/src/api";
 import { GetOrganizationUserByIdResponse } from "@avuny/shared";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -17,13 +17,17 @@ export type CreateOrganizationUserFormProps = {
 export default function CreateOrganizationUserForm() {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {},
+    defaultValues: {
+      expiresAt: null,
+    },
   });
 
   const { organizationUserFormFieldsTranslations } =
     useOrganizationUserTranslations();
   const { mutateAsync, isPending, error } = useCreateOrganizationUser();
 
+  // <WIP> this will be changed to role labels
+  const { data: roleList } = useRoleList();
   return (
     <CustomForm
       error={error}
@@ -48,7 +52,11 @@ export default function CreateOrganizationUserForm() {
         },
         {
           key: "roleId",
-          content: { name: "roleId", type: "select", options: [] },
+          content: {
+            name: "roleId",
+            type: "select",
+            options: roleList?.data.list || [],
+          },
           spans: { base: 4, md: 2 },
         },
       ]}

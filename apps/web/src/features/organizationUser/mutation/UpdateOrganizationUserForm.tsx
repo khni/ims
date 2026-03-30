@@ -1,7 +1,7 @@
 // UpdateOrganizationUserForm.tsx
 "use client";
 
-import { useUpdateOrganizationUser } from "@/src/api";
+import { useRoleList, useUpdateOrganizationUser } from "@/src/api";
 import { GetOrganizationUserByIdResponse } from "@avuny/shared";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -10,6 +10,7 @@ import { z } from "@avuny/zod";
 import { Form as CustomForm, FormProps } from "@/src/components/form";
 import { updateOrganizationUserBodySchema as schema } from "@avuny/shared";
 import { useOrganizationUserTranslations } from "@/src/features/organizationUser/translations/hooks/useOrganizationUserTranslations";
+import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
 
 export type UpdateOrganizationUserFormProps = {
   organizationUser: GetOrganizationUserByIdResponse;
@@ -20,18 +21,25 @@ export default function UpdateOrganizationUserForm({
 }: UpdateOrganizationUserFormProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {},
+    defaultValues: {
+      expiresAt: null,
+      name: "",
+      roleId: "",
+    },
   });
+  const { data: roleList, isPending: isRoleListPending } = useRoleList();
 
   useEffect(() => {
     if (organizationUser) form.reset(organizationUser);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organizationUser]);
+  }, [organizationUser, form]);
 
   const { organizationUserFormFieldsTranslations } =
     useOrganizationUserTranslations();
   const { mutateAsync, isPending, error } = useUpdateOrganizationUser();
-
+  if (isRoleListPending) {
+    return <LoadingPage />;
+  }
   return (
     <CustomForm
       error={error}
@@ -52,7 +60,12 @@ export default function UpdateOrganizationUserForm({
         },
         {
           key: "roleId",
-          content: { name: "roleId", type: "select", options: [] },
+          content: {
+            name: "roleId",
+            type: "select",
+
+            options: roleList?.data.list || [],
+          },
           spans: { base: 4, md: 2 },
         },
       ]}

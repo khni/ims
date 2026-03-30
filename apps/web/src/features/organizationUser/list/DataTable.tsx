@@ -6,8 +6,10 @@ import type { OrganizationUserListResponse } from "@avuny/shared";
 import { OrganizationUserColumns } from "./Columns";
 import { DataTable } from "@workspace/ui/blocks/data-table";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 export const OrganizationUserDataTable: React.FC = () => {
+  const router = useRouter();
   const organizationUserColumnHeaderTranslations = useTranslations(
     "organizationUser.columnHeaders",
   );
@@ -25,6 +27,7 @@ export const OrganizationUserDataTable: React.FC = () => {
         ) => string,
       })}
       data={data.data.list}
+      onRowClick={(row) => router.push(`organization-users/${row.original.id}`)}
     />
   );
 };
