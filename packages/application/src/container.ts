@@ -53,7 +53,7 @@ export const appDeps = {
   createService: asClass(CreateService).scoped(),
   updateService: asClass(UpdateService).scoped(),
   queryService: asClass(QueryService).scoped(),
-  moduleService: asClass(ModuleService).scoped(),
+  moduleService: asClass(ModuleService).transient(),
   activityLog: asClass(ActivityLogService).scoped(),
   resourcePermission: asClass(ResourcePermissionChecker).scoped(),
 
