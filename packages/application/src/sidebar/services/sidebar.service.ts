@@ -72,7 +72,8 @@ export class SidebarService {
       if (!map.has(headingId)) {
         map.set(headingId, {
           id: headingId,
-          name: t(`sidebar:sidebarHeadings.${item.sidebarHeading.name}`),
+          label: t(`sidebar:sidebarHeadings.${item.sidebarHeading.name}`),
+          name: item.sidebarHeading.name,
           icon: item.icon ?? null,
           options: [],
         });
@@ -80,7 +81,8 @@ export class SidebarService {
 
       map.get(headingId)!.options.push({
         id: item.id,
-        name: t(`sidebar:sidebarOptions.${item.name}`),
+        label: t(`sidebar:sidebarOptions.${item.name}`),
+        name: item.name,
         icon: item.icon,
         path: item.path,
       });

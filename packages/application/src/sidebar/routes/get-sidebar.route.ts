@@ -6,7 +6,6 @@ import container from "../../container.js";
 
 import { isAuthenticatedMiddleware } from "../../shared.js";
 import { getContext, handleResult } from "@avuny/hono";
-import { trans } from "../../intl/Translation.js";
 
 export const getSidebarRoute = new OpenAPIHono();
 const route = createRoute({

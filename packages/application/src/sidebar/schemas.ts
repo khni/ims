@@ -3,7 +3,8 @@ import { z } from "@avuny/zod";
 
 export const sidebarOptionSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.enum(ResourceName),
+  label: z.string(),
   icon: z.string().nullable(),
   path: z.string(),
 });
@@ -11,7 +12,8 @@ export const sidebarOptionsSchema = z.array(sidebarOptionSchema);
 
 export const sidebarItemSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.enum(SidebarHeadingType),
+  label: z.string(),
   icon: z.string().nullable().optional(),
   options: sidebarOptionsSchema,
 });

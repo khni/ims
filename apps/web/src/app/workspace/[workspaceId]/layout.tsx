@@ -1,6 +1,6 @@
 "use client";
 import React, { ReactNode } from "react";
-
+import { Users2Icon, Activity } from "lucide-react";
 import { CustomLayout } from "@workspace/ui/blocks/layout/custom-layout";
 import { NavMain } from "@workspace/ui/blocks/layout/nav-main";
 import { Switcher } from "@workspace/ui/blocks/layout/switcher";
@@ -26,6 +26,7 @@ import { ROUTES } from "@/src/features/routes";
 import { usePathname, useRouter } from "next/navigation";
 import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
 import useOrganizationListHandler from "@/src/features/organization/list/hooks/useOrganizationListHandler";
+import { GetSidebar200Item, GetSidebar200ItemName } from "@/src/api/model";
 
 export default function WorkSpaceLayout({
   children,
@@ -52,6 +53,16 @@ export default function WorkSpaceLayout({
   if (isPending) {
     return <LoadingPage />;
   }
+
+  const iconSwitch = (name: GetSidebar200ItemName) => {
+    switch (name) {
+      case "users":
+        return <Users2Icon />;
+
+      default:
+        return <Activity />;
+    }
+  };
 
   return (
     <CustomLayout
@@ -107,7 +118,14 @@ export default function WorkSpaceLayout({
                 pathName.includes(subItem.name.toLowerCase()),
               )
             }
-            items={sidebarData ?? []}
+            items={
+              sidebarData?.map((sb) => {
+                return {
+                  ...sb,
+                  icon: iconSwitch(sb.name),
+                };
+              }) ?? []
+            }
           />
         </>
       }
