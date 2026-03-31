@@ -31,8 +31,9 @@ export default function UpdateOrganizationUserForm({
 
   useEffect(() => {
     if (organizationUser) form.reset(organizationUser);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organizationUser, form]);
+  }, [organizationUser, roleList]);
 
   const { organizationUserFormFieldsTranslations } =
     useOrganizationUserTranslations();
@@ -40,6 +41,7 @@ export default function UpdateOrganizationUserForm({
   if (isRoleListPending) {
     return <LoadingPage />;
   }
+  console.log("roleId", form.getValues("roleId"));
   return (
     <CustomForm
       error={error}
@@ -63,7 +65,7 @@ export default function UpdateOrganizationUserForm({
           content: {
             name: "roleId",
             type: "select",
-
+            setValue: (value) => form.setValue("roleId", value),
             options: roleList?.data.list || [],
           },
           spans: { base: 4, md: 2 },

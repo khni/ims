@@ -18,6 +18,9 @@ export default function CreateOrganizationUserForm() {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
+      identifier: "",
+      name: "",
+      roleId: "",
       expiresAt: null,
     },
   });

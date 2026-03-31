@@ -48,8 +48,10 @@ const SelectFormField = <T extends FieldValues, E>({
   setValue,
   errorResponse,
 }: SelectFormFieldProps<T, E>) => {
+  let forceRefresh = new Date().getTime();
   return (
     <FormField
+      key={forceRefresh}
       control={form?.control}
       name={name}
       render={({ field }) => (
@@ -60,6 +62,7 @@ const SelectFormField = <T extends FieldValues, E>({
               field.onChange(value);
               setValue && setValue(value);
             }}
+            value={field.value}
             defaultValue={field.value}
             disabled={disabled}
           >
