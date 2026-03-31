@@ -9,9 +9,14 @@ export class UserRepository implements IUserRepository {
   }
 
   findByIdentifier = async (identifier: string) => {
-    console.log(identifier, "identifier");
     return await this.db.user.findUnique({
       where: { email: identifier },
+      select: { id: true, email: true, name: true },
+    });
+  };
+  findById = async (userId: string) => {
+    return await this.db.user.findUnique({
+      where: { id: userId },
       select: { id: true, email: true, name: true },
     });
   };

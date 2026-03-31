@@ -11,4 +11,7 @@ export class UserService implements IUserService {
   findByIdentifier = async (identifier: string) => {
     return await this.userRepository.findByIdentifier(identifier);
   };
+  findById = async (userId: string) => {
+    return await this.userRepository.findById(userId);
+  };
 }
