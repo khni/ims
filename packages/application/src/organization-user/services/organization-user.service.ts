@@ -70,6 +70,24 @@ export class OrganizationUserService {
         `OrganizationUserService.create`,
       );
     }
+
+    const existingOrganizationUser =
+      await this.organizationUserRepository.findUnique({
+        where: {
+          userId_organizationId: {
+            organizationId: params.context.organizationId!,
+            userId: user.id,
+          },
+        },
+      });
+
+    if (existingOrganizationUser) {
+      return fail(
+        OrganizationUserErrorCode.USER_ALREADY_EXISTS,
+        params.context,
+        `OrganizationUserService.create`,
+      );
+    }
     return await createOrganizationUser({
       ...params,
 

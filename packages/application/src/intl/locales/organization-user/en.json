@@ -4,6 +4,7 @@
     "MODULE_CREATION_LIMIT_EXCEEDED": "You have reached the maximum number of creating more Organizations allowed in your plan. Please upgrade your plan to create more {thing}s.",
     "USER_NO_PERMISSION": "You don't have permission to perform this action",
     "RESOURCE_NOT_FOUND": "Resource is not found",
-    "USER_NOT_FOUND": "User is not found"
+    "USER_NOT_FOUND": "User is not found",
+    "USER_ALREADY_EXISTS": "User is already exists"
   }
 }

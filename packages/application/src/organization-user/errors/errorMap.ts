@@ -28,4 +28,8 @@ export const OrganizationUserErrorMap = {
     statusCode: 400,
     responseMessage: "User is not found",
   },
+  [OrganizationUserErrorCode.USER_ALREADY_EXISTS]: {
+    statusCode: 400,
+    responseMessage: "User is already exists",
+  },
 } as const satisfies Record<OrganizationUserErrorCodeKeys, ErrorMeta>;
