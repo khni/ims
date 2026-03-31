@@ -8,6 +8,7 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@workspace/ui/components/breadcrumb";
+import React from "react";
 import { ReactNode, ComponentType } from "react";
 
 type BreadCrumbItem = {
@@ -38,8 +39,8 @@ export function CustomBreadCrumb({
     <Breadcrumb className="">
       <BreadcrumbList>
         {items.map((item, index) => (
-          <>
-            <BreadcrumbItem key={item.href}>
+          <React.Fragment key={index}>
+            <BreadcrumbItem>
               {LinkWrapper ? (
                 <LinkWrapper href={item.href}>{item.name}</LinkWrapper>
               ) : (
@@ -48,7 +49,7 @@ export function CustomBreadCrumb({
             </BreadcrumbItem>
 
             <BreadcrumbSeparator />
-          </>
+          </React.Fragment>
         ))}
 
         <BreadcrumbItem>
