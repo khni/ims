@@ -4,21 +4,25 @@ import { RoleRepository } from "../repositories/role.repository.js";
 import { IActivityLogService } from "../../shared.js";
 import { IOwnerRoleService } from "../../shared/owner-role.interface.js";
 import { PrismaTransactionManager } from "@avuny/db";
+import { RoleConfig } from "../role.config.js";
 
 export class OwnerRoleService implements IOwnerRoleService {
-  ownerName = "Owner";
+  private roleConfig: RoleConfig;
   private roleRepository: RoleRepository;
   private activityLog: IActivityLogService;
 
   constructor({
     roleRepository,
     activityLog,
+    roleConfig,
   }: {
     roleRepository: RoleRepository;
     activityLog: IActivityLogService;
+    roleConfig: RoleConfig;
   }) {
     this.roleRepository = roleRepository;
     this.activityLog = activityLog;
+    this.roleConfig = roleConfig;
   }
 
   create = async (params: {
@@ -31,7 +35,7 @@ export class OwnerRoleService implements IOwnerRoleService {
         const tx = params.tx ?? transaction;
         const user = await this.roleRepository.create({
           data: {
-            name: this.ownerName,
+            name: this.roleConfig.ownerName,
             customPermissions: [{ code: "FULL_ACCESS" }],
             permissions: [],
             ...params.data,

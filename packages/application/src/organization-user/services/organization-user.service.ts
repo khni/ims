@@ -8,25 +8,29 @@ import {
 import { OrganizationUserRepository } from "../repositories/organozation-user.repository.js";
 import { IUserService } from "../../shared.js";
 import { fail } from "@avuny/utils";
+import { organizationUserConfig } from "../organization-user.config.js";
 
 export class OrganizationUserService {
-  ownerName = "Owner";
   private organizationUserRepository: OrganizationUserRepository;
   private moduleService: ModuleService<OrganizationUserRepository>;
   private userService: IUserService;
+  private organizationUserConfig: organizationUserConfig;
 
   constructor({
     organizationUserRepository,
     moduleService,
     userService,
+    organizationUserConfig,
   }: {
     organizationUserRepository: OrganizationUserRepository;
     moduleService: ModuleService<OrganizationUserRepository>;
     userService: IUserService;
+    organizationUserConfig: organizationUserConfig;
   }) {
     this.organizationUserRepository = organizationUserRepository;
     this.moduleService = moduleService;
     this.userService = userService;
+    this.organizationUserConfig = organizationUserConfig;
 
     this.moduleService.setConfig({
       repository: this.organizationUserRepository,
@@ -165,6 +169,7 @@ export class OrganizationUserService {
         filters: {
           ...params.query?.filters,
           organizationId: params.context.organizationId!,
+          NOT: { name: this.organizationUserConfig.ownerName },
         },
       },
     });
@@ -177,7 +182,7 @@ export class OrganizationUserService {
   }) => {
     const organizationUser = await this.organizationUserRepository.create({
       data: {
-        name: this.ownerName,
+        name: this.organizationUserConfig.ownerName,
         organizationId: "",
         roleId: "",
         status: "ACTIVE",

@@ -97,7 +97,7 @@ export class RoleRepository extends PrismaTransaction implements IRepository {
 
   /** Find many roles */
   async findMany(params: {
-    where?: Prisma.RoleWhereInput;
+    where?: { organizationId?: string; NOT?: { name?: string } };
     orderBy?: Prisma.RoleOrderByWithRelationInput;
     skip?: number;
     take?: number;

@@ -4,21 +4,25 @@ import { OrganizationUserRepository } from "../repositories/organozation-user.re
 import { IActivityLogService } from "../../shared.js";
 import { IOwnerOrganizationUserService } from "../../shared/owner-oganization-user.interface.js";
 import { PrismaTransactionManager } from "@avuny/db";
+import { organizationUserConfig } from "../organization-user.config.js";
 
 export class OwnerOrganizationUserService implements IOwnerOrganizationUserService {
-  ownerName = "Owner";
   private organizationUserRepository: OrganizationUserRepository;
   private activityLog: IActivityLogService;
+  private organizationUserConfig: organizationUserConfig;
 
   constructor({
     organizationUserRepository,
     activityLog,
+    organizationUserConfig,
   }: {
     organizationUserRepository: OrganizationUserRepository;
     activityLog: IActivityLogService;
+    organizationUserConfig: organizationUserConfig;
   }) {
     this.organizationUserRepository = organizationUserRepository;
     this.activityLog = activityLog;
+    this.organizationUserConfig = organizationUserConfig;
   }
 
   create = async (params: {
@@ -32,7 +36,7 @@ export class OwnerOrganizationUserService implements IOwnerOrganizationUserServi
           const tx = params.tx ?? transaction;
           const user = await this.organizationUserRepository.create({
             data: {
-              name: this.ownerName,
+              name: this.organizationUserConfig.ownerName,
               status: "ACTIVE",
               expiresAt: null,
               ...params.data,

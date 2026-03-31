@@ -74,7 +74,7 @@ export class OrganizationUserRepository
 
   /** Find many OrganizationUsers */
   async findMany(params: {
-    where?: Prisma.OrganizationUserWhereInput;
+    where?: { organizationId?: string; NOT?: { name?: string } };
     orderBy?: Prisma.OrganizationUserOrderByWithRelationInput;
     skip?: number;
     take?: number;

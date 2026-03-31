@@ -3,20 +3,25 @@ import { Context, FilteredPaginatedList, ModuleService } from "@avuny/core";
 import { RoleErrorCode } from "../errors/errorCode.js";
 import { CreateRoleBody, UpdateRoleBody } from "../types.js";
 import { RoleRepository } from "../repositories/role.repository.js";
+import { RoleConfig } from "../role.config.js";
 
 export class RoleService {
   private roleRepository: RoleRepository;
   private moduleService: ModuleService<RoleRepository>;
+  private roleConfig: RoleConfig;
 
   constructor({
     roleRepository,
     moduleService,
+    roleConfig,
   }: {
+    roleConfig: RoleConfig;
     roleRepository: RoleRepository;
     moduleService: ModuleService<RoleRepository>;
   }) {
     this.roleRepository = roleRepository;
     this.moduleService = moduleService;
+    this.roleConfig = roleConfig;
 
     this.moduleService.setConfig({
       repository: this.roleRepository,
@@ -113,6 +118,7 @@ export class RoleService {
         filters: {
           ...params.query?.filters,
           organizationId: params.context.organizationId!,
+          NOT: { name: this.roleConfig.ownerName },
         },
       },
     });
