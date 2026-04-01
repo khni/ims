@@ -1,6 +1,10 @@
 "use client";
 
-import { useCreateOrganizationUser, useRoleList } from "@/src/api";
+import {
+  getOrganizationUserListQueryKey,
+  useCreateOrganizationUser,
+  useRoleList,
+} from "@/src/api";
 import { GetOrganizationUserByIdResponse } from "@avuny/shared";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -31,13 +35,17 @@ export default function CreateOrganizationUserForm() {
 
   // <WIP> this will be changed to role labels
   const { data: roleList } = useRoleList();
+
   return (
     <CustomForm
       error={error}
       api={{
-        onSubmit: async (data) => mutateAsync({ data: data }),
+        onSubmit: async (data) => {
+          await mutateAsync({ data: data });
+        },
         isLoading: isPending,
       }}
+      queryInvalidateKey={getOrganizationUserListQueryKey()}
       form={form}
       getLabel={organizationUserFormFieldsTranslations}
       resourceName="organizationUser"

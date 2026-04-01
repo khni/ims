@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import CustomForm, {
   CustomFormProps,
 } from "@workspace/ui/blocks/form/custom-form";
@@ -13,6 +14,7 @@ export type FormProps<T extends FieldValues, E, S extends string> = {
   children?: React.ReactNode;
   actionName?: "create" | "add" | "update";
   resourceName?: "organization" | "role" | "item" | "organizationUser";
+  queryInvalidateKey?: readonly [string, ...any[]] | [string, ...any[]];
 } & Omit<
   CustomFormProps<T, E>,
   "isLoadingText" | "submitButtonText" | "children"
@@ -30,6 +32,7 @@ export const Form = <T extends FieldValues, E, S extends string>({
   children,
   actionName,
   resourceName,
+  queryInvalidateKey,
 }: FormProps<T, E, S>) => {
   const {
     placeholderTranslations,
@@ -57,6 +60,7 @@ export const Form = <T extends FieldValues, E, S extends string>({
   const successToast = msgTranslations(actionName || "save", {
     thing,
   });
+  const queryClient = useQueryClient();
 
   return (
     <CustomForm
@@ -65,6 +69,10 @@ export const Form = <T extends FieldValues, E, S extends string>({
       api={api}
       onSuccess={(data) => {
         toast.success(successToast);
+        queryInvalidateKey &&
+          queryClient.invalidateQueries({
+            queryKey: queryInvalidateKey,
+          });
       }}
       fields={fields}
       isLoadingText={placeholderTranslations("loading")}

@@ -1,7 +1,7 @@
 // DataTable.tsx
 "use client";
 import React from "react";
-import { useOrganizationUserList } from "@/src/api";
+import { getRoleListQueryKey, useOrganizationUserList } from "@/src/api";
 import type { OrganizationUserListResponse } from "@avuny/shared";
 import { OrganizationUserColumns } from "./Columns";
 import { DataTable } from "@workspace/ui/blocks/data-table";
@@ -16,9 +16,7 @@ export const OrganizationUserDataTable: React.FC = () => {
   const organizationUserStatusTranslations = useTranslations(
     "organizationUser.status",
   );
-  const { data, isPending } = useOrganizationUserList({
-    query: { queryKey: ["organizationUserList"] },
-  });
+  const { data, isPending } = useOrganizationUserList();
 
   if (!data) return null;
 

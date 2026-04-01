@@ -1,7 +1,11 @@
 // UpdateOrganizationUserForm.tsx
 "use client";
 
-import { useRoleList, useUpdateOrganizationUser } from "@/src/api";
+import {
+  getOrganizationUserListQueryKey,
+  useRoleList,
+  useUpdateOrganizationUser,
+} from "@/src/api";
 import { GetOrganizationUserByIdResponse } from "@avuny/shared";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -46,15 +50,15 @@ export default function UpdateOrganizationUserForm({
   if (isRoleListPending) {
     return <LoadingPage />;
   }
-  console.log("roleId", form.getValues("roleId"));
   return (
     <CustomForm
       error={error}
       api={{
         onSubmit: async (data) =>
-          mutateAsync({ data: data, id: organizationUser.id }),
+          await mutateAsync({ data: data, id: organizationUser.id }),
         isLoading: isPending,
       }}
+      queryInvalidateKey={getOrganizationUserListQueryKey()}
       form={form}
       getLabel={organizationUserFormFieldsTranslations}
       resourceName="organizationUser"
