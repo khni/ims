@@ -30,7 +30,12 @@ export default function UpdateOrganizationUserForm({
   const { data: roleList, isPending: isRoleListPending } = useRoleList();
 
   useEffect(() => {
-    if (organizationUser) form.reset(organizationUser);
+    if (organizationUser)
+      form.reset({
+        name: organizationUser.name,
+        roleId: organizationUser.role.id,
+        expiresAt: organizationUser.expiresAt,
+      });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizationUser, roleList]);

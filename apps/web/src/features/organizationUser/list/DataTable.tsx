@@ -13,6 +13,9 @@ export const OrganizationUserDataTable: React.FC = () => {
   const organizationUserColumnHeaderTranslations = useTranslations(
     "organizationUser.columnHeaders",
   );
+  const organizationUserStatusTranslations = useTranslations(
+    "organizationUser.status",
+  );
   const { data, isPending } = useOrganizationUserList({
     query: { queryKey: ["organizationUserList"] },
   });
@@ -22,9 +25,8 @@ export const OrganizationUserDataTable: React.FC = () => {
   return (
     <DataTable
       columns={OrganizationUserColumns({
-        getHeader: organizationUserColumnHeaderTranslations as (
-          key: keyof OrganizationUserListResponse[number],
-        ) => string,
+        getHeader: organizationUserColumnHeaderTranslations,
+        organizationUserStatusTranslations,
       })}
       data={data.data.list}
       onRowClick={(row) => router.push(`organization-users/${row.original.id}`)}

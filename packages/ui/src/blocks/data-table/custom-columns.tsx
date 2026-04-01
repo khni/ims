@@ -25,6 +25,7 @@ export function createColumns<T extends object>({
     header: getHeader(col.key),
     cell: ({ row }) => {
       const value = row.getValue(col.key as string);
+
       const Wrapper = col.wrapperElement ?? "div";
 
       if (col.render) {

@@ -59,6 +59,24 @@ export class OrganizationUserRepository
 
     return await db.organizationUser.findUnique({
       where,
+      select: {
+        name: true,
+        id: true,
+        status: true,
+        updatedAt: true,
+        expiresAt: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
+        role: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
     });
   }
 
@@ -69,6 +87,24 @@ export class OrganizationUserRepository
 
     return db.organizationUser.findUnique({
       where: { id },
+      select: {
+        name: true,
+        id: true,
+        status: true,
+        updatedAt: true,
+        expiresAt: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
+        role: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
     });
   }
 
@@ -85,6 +121,24 @@ export class OrganizationUserRepository
 
     return db.organizationUser.findMany({
       ...query,
+      select: {
+        name: true,
+        id: true,
+        status: true,
+        updatedAt: true,
+        expiresAt: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
+        role: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
     });
   }
 

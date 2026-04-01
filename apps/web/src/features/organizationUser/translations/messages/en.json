@@ -19,8 +19,19 @@
     },
     "columnHeaders": {
       "name": "name",
-      "description": "description",
-      "updatedAt": "Last Updated"
+      "updatedAt": "Last Updated",
+      "role": "Role",
+      "status": "Status",
+      "user": "Email",
+      "expiresAt": "Expiration Date",
+      "id": "ID"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "ACTIVE": "Active",
+      "INACTIVE": "Inactive",
+      "REJECTED": "Rejected",
+      "SUSPENDED": "Suspended"
     }
   }
 }

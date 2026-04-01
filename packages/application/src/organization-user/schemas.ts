@@ -39,17 +39,18 @@ export const mutateOrganizationUserResponseSchema = organizationUserSchema.pick(
   },
 );
 
-export const organizationUserListResponseSchema = organizationUserSchema
+export const getOrganizationUserByIdResponseSchema = organizationUserSchema
   .pick({
     id: true,
     name: true,
-
+    status: true,
     updatedAt: true,
   })
-  .array();
-
-export const getOrganizationUserByIdResponseSchema =
-  organizationUserSchema.pick({
-    id: true,
-    name: true,
+  .extend({
+    role: z.object({
+      name: z.string(),
+      id: z.string(),
+    }),
   });
+export const organizationUserListResponseSchema = organizationUserSchema;
+getOrganizationUserByIdResponseSchema.array();

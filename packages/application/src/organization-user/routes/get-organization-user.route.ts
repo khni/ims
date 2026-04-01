@@ -9,7 +9,10 @@ import {
   resultToSuccessResponse,
 } from "@avuny/utils";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { organizationUserSchema } from "@avuny/shared";
+import {
+  getOrganizationUserByIdResponseSchema,
+  organizationUserSchema,
+} from "@avuny/shared";
 
 import container from "../../container.js";
 
@@ -33,7 +36,7 @@ const route = createRoute({
       description: "OrganizationUser retrieved successfully by ID",
       content: {
         "application/json": {
-          schema: createResponseSchema(organizationUserSchema),
+          schema: createResponseSchema(getOrganizationUserByIdResponseSchema),
         },
       },
     },

@@ -19,8 +19,19 @@
     },
     "columnHeaders": {
       "name": "الاسم",
-      "description": "الوصف",
-      "updatedAt": "آخر تحديث"
+      "updatedAt": "آخر تحديث",
+      "role": "الدور",
+      "status": "الحالة",
+      "user": "البريد الإلكتروني",
+      "expiresAt": "تاريخ الانتهاء",
+      "id": "المعرف"
+    },
+    "status": {
+      "PENDING": "قيد الانتظار",
+      "ACTIVE": "نشط",
+      "INACTIVE": "غير نشط",
+      "REJECTED": "مرفوض",
+      "SUSPENDED": "موقوف"
     }
   }
 }
