@@ -1,10 +1,16 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, RowData } from "@tanstack/react-table";
 import React from "react";
 
 type CellRenderFn<T> = (value: any, row: T) => React.ReactNode;
-
+declare module "@tanstack/react-table" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ColumnMeta<TData extends RowData, TValue> {
+    filterKey: string;
+    filterVariant?: "text" | "number" | "date";
+  }
+}
 interface CustomColumn<T> {
   key: keyof T;
 
@@ -12,7 +18,9 @@ interface CustomColumn<T> {
   render?: CellRenderFn<T>;
 }
 export interface CreateColumnsProps<T> {
-  columns: CustomColumn<T>[];
+  columns: (CustomColumn<T> & {
+    meta?: { filterVariant?: "text" | "number" | "date"; filterKey: string };
+  })[];
   getHeader: (key: keyof T) => string;
 }
 
@@ -33,6 +41,10 @@ export function createColumns<T extends object>({
       }
 
       return <Wrapper>{String(value ?? "")}</Wrapper>;
+    },
+    meta: {
+      filterKey: col.meta?.filterKey || (col.key as string),
+      filterVariant: col.meta?.filterVariant || "text",
     },
   }));
 }

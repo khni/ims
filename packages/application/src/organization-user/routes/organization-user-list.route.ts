@@ -2,6 +2,7 @@ import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
   createPaginatedResponseSchema,
+  findManyQuerySchema,
   globalErrorResponses,
   ModuleErrorCodes,
   ModuleErrorResponseMap,
@@ -9,7 +10,7 @@ import {
 } from "@avuny/utils";
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { organizationUserListResponseSchema } from "@avuny/shared";
-
+import { parseFindManyQuery } from "@avuny/hono";
 import container from "../../container.js";
 
 import { isAuthenticatedMiddleware } from "../../shared.js";
@@ -22,9 +23,10 @@ const route = createRoute({
   path: "/",
   operationId: "organizationUserList",
   tags: ["organizationUser"],
-  middleware: [isAuthenticatedMiddleware],
+  middleware: [isAuthenticatedMiddleware, parseFindManyQuery],
   request: {
     headers: AuthorizationHeaderSchema,
+    query: findManyQuerySchema,
   },
   responses: {
     200: {
@@ -55,10 +57,13 @@ organizationUserListRoute.openapi(route, async (c) => {
   const organizationUserService = container.resolve("organizationUserService");
   const context = getContext(c);
   const errorTrans = trans({ lang: context.lang as "en" | "ar" });
+
+  const query = c.get("findManyQuery") as any;
+  console.log("Received organization user query parameters in route:", query);
   const result = await organizationUserService.filteredPaginatedList({
     context,
+    query,
   });
-
   const { USER_NO_PERMISSION } = ModuleErrorResponseMap;
   return handleResult({
     c,

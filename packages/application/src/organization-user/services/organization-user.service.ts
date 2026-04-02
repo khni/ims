@@ -160,6 +160,7 @@ export class OrganizationUserService {
       { createdAt: "asc" | "desc" }
     >;
   }) => {
+    console.log("Received params for filteredPaginatedList:", params);
     const filteredPaginatedOrganizationUserList =
       this.moduleService.filteredPaginatedList();
     return await filteredPaginatedOrganizationUserList({

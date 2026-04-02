@@ -16,7 +16,7 @@ export const OrganizationUserColumns = ({
 }) =>
   createColumns<OrganizationUserListResponse[number]>({
     columns: [
-      { key: "name" },
+      { key: "name", meta: { filterKey: "name", filterVariant: "text" } },
       { key: "role", render: (_, row) => row.role.name },
       { key: "user", render: (_, row) => row.user.email },
       {
@@ -26,6 +26,7 @@ export const OrganizationUserColumns = ({
       {
         key: "updatedAt",
         render: (value) => new Date(value).toLocaleDateString(),
+        meta: { filterKey: "updatedAt", filterVariant: "date" },
       },
     ],
     getHeader,

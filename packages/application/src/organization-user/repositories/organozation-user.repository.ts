@@ -110,7 +110,7 @@ export class OrganizationUserRepository
 
   /** Find many OrganizationUsers */
   async findMany(params: {
-    where?: { organizationId?: string; NOT?: { name?: string } };
+    where?: { name?: string; organizationId?: string; NOT?: { name?: string } };
     orderBy?: Prisma.OrganizationUserOrderByWithRelationInput;
     skip?: number;
     take?: number;
@@ -118,9 +118,13 @@ export class OrganizationUserRepository
   }) {
     const { tx, ...query } = params ?? {};
     const db = this.getDB(tx);
-
+    console.log("Querying OrganizationUsers with params:", params);
     return db.organizationUser.findMany({
       ...query,
+      where: {
+        ...query.where,
+        name: { contains: query.where?.name, mode: "insensitive" },
+      },
       select: {
         name: true,
         id: true,

@@ -6,5 +6,11 @@ declare module "hono" {
     organizationId: string;
     user: { id: string };
     lang: "en" | "ar";
+    findManyQuery: {
+      page: number;
+      pageSize: number;
+      filters: Record<string, unknown>;
+      orderBy: Record<string, unknown>;
+    };
   }
 }
