@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { DatePickerWithRange } from "@workspace/ui/blocks/form/date-picker-range";
 import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
+import { Button } from "@workspace/ui/components/button";
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     filterKey: string;
@@ -108,6 +109,7 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 const fieldMeta = header.column.columnDef.meta;
+                console.log("fieldMeta:", fieldMeta);
                 return (
                   <TableHead
                     key={header.id}
@@ -134,33 +136,32 @@ export function DataTable<TData, TValue>({
                             const sortState = header.column.getIsSorted();
                             return sortState === "asc" ? (
                               <ArrowUpNarrowWide
-                                className="cursor-pointer   hover:bg-muted "
+                                className="cursor-pointer hover:bg-muted"
                                 size={20}
                               />
                             ) : sortState === "desc" ? (
                               <ArrowDownNarrowWide
-                                className="cursor-pointer  hover:bg-muted "
+                                className="cursor-pointer hover:bg-muted"
                                 size={20}
                               />
                             ) : (
                               <ArrowUpDown
-                                className="cursor-pointer  hover:bg-muted "
+                                className="cursor-pointer hover:bg-muted"
                                 size={20}
                               />
                             );
                           })()}
                         </div>
+
                         {header.column.getCanFilter() &&
                           fieldMeta?.filterKey !== undefined &&
                           (fieldMeta.filterVariant === "date" ? (
                             <DatePickerWithRange
-                              // className="w-72 border shadow rounded"
                               onChange={(value) => {
                                 if (!value?.lte || !value.gte) {
                                   onFilterChange({
                                     [fieldMeta.filterKey]: undefined,
                                   });
-
                                   return;
                                 }
 
@@ -168,12 +169,12 @@ export function DataTable<TData, TValue>({
                                   [fieldMeta.filterKey]: value,
                                 });
                               }}
-                              value={
-                                filters[fieldMeta.filterKey] &&
-                                filters[fieldMeta.filterKey]
-                              }
+                              value={filters[fieldMeta.filterKey]}
                             />
-                          ) : (
+                          ) : header.column.getCanFilter() &&
+                            fieldMeta?.filterKey !== undefined &&
+                            (fieldMeta.filterVariant === "text" ||
+                              fieldMeta.filterVariant === "number") ? (
                             <DebouncedInput
                               className="w-36 border shadow rounded"
                               onChange={(value) => {
@@ -189,6 +190,8 @@ export function DataTable<TData, TValue>({
                               }
                               value={filters[fieldMeta.filterKey] ?? ""}
                             />
+                          ) : (
+                            <Button variant="ghost"></Button>
                           ))}
                       </>
                     )}

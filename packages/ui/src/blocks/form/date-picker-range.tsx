@@ -90,7 +90,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-75 my-3 flex h-7 gap-2  bg-secondary rounded-md border border-input px-3 py-2 text-sm transition duration-300 ease-in-out transform ring-2 ring-offset-background focus:border-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+              " my-3 flex h-7 gap-2  bg-secondary rounded-md border border-input px-3 py-2 text-sm transition duration-300 ease-in-out transform ring-2 ring-offset-background focus:border-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
               !date && "text-muted-foreground",
             )}
           >

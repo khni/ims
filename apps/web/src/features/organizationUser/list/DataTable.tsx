@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import { SortingState } from "@tanstack/react-table";
 import { useFilters } from "@/src/hooks/use-filters.hook";
 import { mapSortingArray } from "@workspace/ui/lib/utils";
+import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
+import { set } from "zod";
+import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
 
 export const OrganizationUserDataTable: React.FC = () => {
   const router = useRouter();
@@ -39,23 +42,38 @@ export const OrganizationUserDataTable: React.FC = () => {
   console.log("filters:", filters);
   console.log("orderBy", mapSortingArray(sortingState));
 
-  if (!data) return null;
-
   return (
-    <DataTable
-      columns={OrganizationUserColumns({
-        getHeader: organizationUserColumnHeaderTranslations,
-        organizationUserStatusTranslations,
-      })}
-      data={data.data.list}
-      onRowClick={(row) => router.push(`organization-users/${row.original.id}`)}
-      pagination={pagination}
-      rowCount={data.data.totalCount}
-      setPagination={setPagination}
-      sorting={sortingState}
-      onSortingChange={setSortingState}
-      filters={filters}
-      onFilterChange={(filters) => setFilters(filters)}
-    />
+    <>
+      <DebouncedInput
+        className="w-36 border shadow rounded"
+        onChange={(value) => {
+          setFilters({ name: String(value) });
+        }}
+        placeholder="Search..."
+        type={"text"}
+        value={filters["name"] ? String(filters["name"]) : ""}
+      />
+      {isPending || !data ? (
+        <LoadingPage />
+      ) : (
+        <DataTable
+          columns={OrganizationUserColumns({
+            getHeader: organizationUserColumnHeaderTranslations,
+            organizationUserStatusTranslations,
+          })}
+          data={data.data.list}
+          onRowClick={(row) =>
+            router.push(`organization-users/${row.original.id}`)
+          }
+          pagination={pagination}
+          rowCount={data.data.totalCount}
+          setPagination={setPagination}
+          sorting={sortingState}
+          onSortingChange={setSortingState}
+          filters={filters}
+          onFilterChange={(filters) => setFilters(filters)}
+        />
+      )}
+    </>
   );
 };

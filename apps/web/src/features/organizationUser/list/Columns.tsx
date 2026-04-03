@@ -16,7 +16,7 @@ export const OrganizationUserColumns = ({
 }) =>
   createColumns<OrganizationUserListResponse[number]>({
     columns: [
-      { key: "name", meta: { filterKey: "name", filterVariant: "text" } },
+      { key: "name" },
       { key: "role", render: (_, row) => row.role.name },
       { key: "user", render: (_, row) => row.user.email },
       {
