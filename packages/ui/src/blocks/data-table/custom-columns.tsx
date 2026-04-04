@@ -9,6 +9,7 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     filterKey: string;
     filterVariant?: "text" | "number" | "date";
+    showFilter?: boolean;
   }
 }
 interface CustomColumn<T> {
@@ -19,7 +20,11 @@ interface CustomColumn<T> {
 }
 export interface CreateColumnsProps<T> {
   columns: (CustomColumn<T> & {
-    meta?: { filterVariant?: "text" | "number" | "date"; filterKey: string };
+    meta?: {
+      filterVariant?: "text" | "number" | "date";
+      filterKey: string;
+      showFilter?: boolean;
+    };
   })[];
   getHeader: (key: keyof T) => string;
 }
@@ -45,6 +50,7 @@ export function createColumns<T extends object>({
     meta: {
       filterKey: col.meta?.filterKey || (col.key as string),
       filterVariant: col.meta?.filterVariant || "text",
+      showFilter: col.meta?.showFilter,
     },
   }));
 }

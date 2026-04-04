@@ -36,6 +36,7 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     filterKey: string;
     filterVariant?: "text" | "number" | "date";
+    showFilter?: boolean;
   }
 }
 
@@ -89,6 +90,7 @@ export function DataTable<TData, TValue>({
     },
     manualSorting: true,
     onSortingChange,
+
     meta: {
       //   updateData: (rowIndex: number, columnId: string, value: string) => {
       //     setData((prev) =>
@@ -109,7 +111,8 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 const fieldMeta = header.column.columnDef.meta;
-                console.log("fieldMeta:", fieldMeta);
+                const showFilter = fieldMeta?.showFilter;
+                console.log("showFilter", showFilter);
                 return (
                   <TableHead
                     key={header.id}
@@ -153,9 +156,10 @@ export function DataTable<TData, TValue>({
                           })()}
                         </div>
 
-                        {header.column.getCanFilter() &&
-                          fieldMeta?.filterKey !== undefined &&
-                          (fieldMeta.filterVariant === "date" ? (
+                        {showFilter &&
+                        header.column.getCanFilter() &&
+                        fieldMeta?.filterKey !== undefined ? (
+                          fieldMeta.filterVariant === "date" ? (
                             <DatePickerWithRange
                               onChange={(value) => {
                                 if (!value?.lte || !value.gte) {
@@ -171,10 +175,8 @@ export function DataTable<TData, TValue>({
                               }}
                               value={filters[fieldMeta.filterKey]}
                             />
-                          ) : header.column.getCanFilter() &&
-                            fieldMeta?.filterKey !== undefined &&
-                            (fieldMeta.filterVariant === "text" ||
-                              fieldMeta.filterVariant === "number") ? (
+                          ) : fieldMeta.filterVariant === "text" ||
+                            fieldMeta.filterVariant === "number" ? (
                             <DebouncedInput
                               className="w-36 border shadow rounded"
                               onChange={(value) => {
@@ -191,8 +193,9 @@ export function DataTable<TData, TValue>({
                               value={filters[fieldMeta.filterKey] ?? ""}
                             />
                           ) : (
-                            <Button variant="ghost"></Button>
-                          ))}
+                            <Button variant="ghost" />
+                          )
+                        ) : null}
                       </>
                     )}
                   </TableHead>

@@ -26,7 +26,11 @@ export const OrganizationUserColumns = ({
       {
         key: "updatedAt",
         render: (value) => new Date(value).toLocaleDateString(),
-        meta: { filterKey: "updatedAt", filterVariant: "date" },
+        meta: {
+          filterKey: "updatedAt",
+          filterVariant: "date",
+          showFilter: true,
+        },
       },
     ],
     getHeader,
