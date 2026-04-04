@@ -16,9 +16,17 @@ export const OrganizationUserColumns = ({
 }) =>
   createColumns<OrganizationUserListResponse[number]>({
     columns: [
-      { key: "name" },
+      {
+        key: "name",
+        meta: { filterKey: "name", filterVariant: "text", showFilter: true },
+        render: (_, row) => (
+          <div className="flex flex-col">
+            <div>{row.name}</div>
+            <div className="text-muted-foreground">{row.user.email}</div>
+          </div>
+        ),
+      },
       { key: "role", render: (_, row) => row.role.name },
-      { key: "user", render: (_, row) => row.user.email },
       {
         key: "status",
         render: (_, row) => organizationUserStatusTranslations(row.status),

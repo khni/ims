@@ -67,6 +67,7 @@ export class QueryService {
       const totalCount = await repository.count({
         where: filters,
       });
+      console.log("totalCount:", totalCount);
       const list = (await repository.findMany({
         skip: offset,
         where: filters,

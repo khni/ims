@@ -17,16 +17,19 @@ const TablePagination: React.FC<TablePaginationProps> = ({
   const totalPages = Math.ceil(rowCount / pagination.pageSize) || 1;
 
   return (
-    <div className="flex items-center justify-between gap-4 p-4 border-t dark:border-gray-700">
-      {/* Page Navigation Buttons */}
-      <div className="flex items-center gap-2">
+    <div
+      className="flex flex-col gap-3 p-4 border-t dark:border-gray-700 
+                    sm:flex-row sm:items-center sm:justify-between"
+    >
+      {/* Navigation */}
+      <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
         <Button
           onClick={() => setPagination((prev) => ({ ...prev, pageIndex: 0 }))}
           disabled={pagination.pageIndex === 0}
-          aria-label="First Page"
         >
           {"<<"}
         </Button>
+
         <Button
           onClick={() =>
             setPagination((prev) => ({
@@ -35,13 +38,14 @@ const TablePagination: React.FC<TablePaginationProps> = ({
             }))
           }
           disabled={pagination.pageIndex === 0}
-          aria-label="Previous Page"
         >
           {"<"}
         </Button>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Page {pagination.pageIndex + 1} of {totalPages}
+
+        <span className="text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">
+          Page {pagination.pageIndex + 1} / {totalPages}
         </span>
+
         <Button
           onClick={() =>
             setPagination((prev) => ({
@@ -50,31 +54,29 @@ const TablePagination: React.FC<TablePaginationProps> = ({
             }))
           }
           disabled={pagination.pageIndex + 1 >= totalPages}
-          aria-label="Next Page"
         >
           {">"}
         </Button>
+
         <Button
           onClick={() =>
-            setPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))
+            setPagination((prev) => ({
+              ...prev,
+              pageIndex: totalPages - 1,
+            }))
           }
           disabled={pagination.pageIndex + 1 >= totalPages}
-          aria-label="Last Page"
         >
           {">>"}
         </Button>
       </div>
 
-      {/* Page Size Selector */}
-      <div className="flex items-center gap-2">
-        <label
-          htmlFor="pageSize"
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
-          Rows per page:
+      {/* Page Size */}
+      <div className="flex items-center justify-center sm:justify-start gap-2">
+        <label className="text-sm text-gray-700 dark:text-gray-300">
+          Rows:
         </label>
         <select
-          id="pageSize"
           className="border rounded-md p-1 text-sm dark:bg-gray-800 dark:text-gray-300"
           value={pagination.pageSize}
           onChange={(e) =>
@@ -89,9 +91,9 @@ const TablePagination: React.FC<TablePaginationProps> = ({
         </select>
       </div>
 
-      {/* Total Rows Count */}
-      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-        Total: {rowCount} rows
+      {/* Total */}
+      <div className="text-center sm:text-right text-sm text-gray-700 dark:text-gray-300">
+        Total: {rowCount}
       </div>
     </div>
   );

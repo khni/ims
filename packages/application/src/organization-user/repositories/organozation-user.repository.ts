@@ -176,11 +176,19 @@ export class OrganizationUserRepository
   }
 
   /** Count OrganizationUsers */
-  async count(params?: { where?: Prisma.OrganizationUserWhereInput; tx?: Tx }) {
+  async count(params?: {
+    where?: { name?: string; organizationId?: string; NOT?: { name?: string } };
+    tx?: Tx;
+  }) {
     const { tx, where } = params ?? {};
     const db = this.getDB(tx);
 
-    return db.organizationUser.count({ where });
+    return db.organizationUser.count({
+      where: {
+        ...where,
+        name: { contains: where?.name, mode: "insensitive" },
+      },
+    });
   }
 
   /** Create many OrganizationUsers */

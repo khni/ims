@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   useReactTable,
   ColumnDef,
@@ -20,8 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import clsx from "clsx";
 
+import clsx from "clsx";
 import TablePagination from "./pagigation-control";
 
 import {
@@ -29,31 +29,41 @@ import {
   ArrowUpDown,
   ArrowUpNarrowWide,
 } from "lucide-react";
+
 import { DatePickerWithRange } from "@workspace/ui/blocks/form/date-picker-range";
 import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
 import { Button } from "@workspace/ui/components/button";
+import Loading from "@workspace/ui/blocks/loading/loading";
+
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
     filterKey: string;
     filterVariant?: "text" | "number" | "date";
     showFilter?: boolean;
+
+    // ✅ NEW
+    hideOnMobile?: boolean;
   }
 }
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  rowCount: number;
+  isLoading?: boolean;
+  data?: { list: TData[]; totalCount: number };
+
   setData?: React.Dispatch<React.SetStateAction<TData[]>>;
   onRowClick?: (row: Row<TData>) => void;
+
   pagination: {
     pageIndex: number;
     pageSize: number;
   };
+
   sorting?: SortingState;
   filters: any;
   onFilterChange: (dataFilters: any) => void;
   onSortingChange?: OnChangeFn<SortingState>;
+
   setPagination: React.Dispatch<
     React.SetStateAction<{
       pageIndex: number;
@@ -66,177 +76,200 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   onRowClick,
-  rowCount,
-  setData,
   pagination,
   setPagination,
   sorting,
   onSortingChange,
   filters,
   onFilterChange,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
-    data,
+    data: data?.list || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     columnResizeMode: "onChange",
     manualPagination: true,
-    rowCount,
-    onPaginationChange: setPagination, //update the pagination state when internal APIs mutate the pagination state
+    rowCount: data?.totalCount || 0,
+    onPaginationChange: setPagination,
     state: {
-      //...
       pagination,
       sorting,
     },
     manualSorting: true,
     onSortingChange,
-
-    meta: {
-      //   updateData: (rowIndex: number, columnId: string, value: string) => {
-      //     setData((prev) =>
-      //       prev.map((row, index) =>
-      //         index === rowIndex ? { ...row, [columnId]: value } : row
-      //       )
-      //     );
-      //   },
-      //
-    },
   });
 
   return (
-    <div>
-      <Table style={{ minWidth: `${table.getTotalSize()}px`, width: "100%" }}>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                const fieldMeta = header.column.columnDef.meta;
-                const showFilter = fieldMeta?.showFilter;
-                console.log("showFilter", showFilter);
-                return (
-                  <TableHead
-                    key={header.id}
-                    style={{
-                      width: `${header.getSize()}px`,
-                      position: "relative",
-                    }}
-                  >
-                    {!header.isPlaceholder && (
-                      <>
-                        <div
-                          className={
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none flex items-center gap-2"
-                              : "flex items-center gap-2"
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                          {(() => {
-                            const sortState = header.column.getIsSorted();
-                            return sortState === "asc" ? (
-                              <ArrowUpNarrowWide
-                                className="cursor-pointer hover:bg-muted"
-                                size={20}
-                              />
-                            ) : sortState === "desc" ? (
-                              <ArrowDownNarrowWide
-                                className="cursor-pointer hover:bg-muted"
-                                size={20}
+    <div className="w-full">
+      {/* ✅ Scroll wrapper */}
+      <div className="w-full overflow-x-auto">
+        <Table
+          className="min-w-max"
+          style={{ minWidth: `${table.getTotalSize()}px` }}
+        >
+          {/* HEADER */}
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  const meta = header.column.columnDef.meta;
+
+                  return (
+                    <TableHead
+                      key={header.id}
+                      className={clsx(
+                        "p-2 text-xs sm:text-sm",
+                        meta?.hideOnMobile && "hidden sm:table-cell",
+                      )}
+                      style={{
+                        width: `${header.getSize()}px`,
+                      }}
+                    >
+                      {!header.isPlaceholder && (
+                        <div className="flex flex-col gap-2">
+                          {/* Sortable header */}
+                          <div
+                            className={clsx(
+                              "flex items-center gap-2",
+                              header.column.getCanSort() &&
+                                "cursor-pointer select-none",
+                            )}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+
+                            {(() => {
+                              const sortState = header.column.getIsSorted();
+                              return sortState === "asc" ? (
+                                <ArrowUpNarrowWide size={16} />
+                              ) : sortState === "desc" ? (
+                                <ArrowDownNarrowWide size={16} />
+                              ) : (
+                                <ArrowUpDown size={16} />
+                              );
+                            })()}
+                          </div>
+
+                          {/* Filters */}
+                          {meta?.showFilter &&
+                          header.column.getCanFilter() &&
+                          meta?.filterKey ? (
+                            meta.filterVariant === "date" ? (
+                              <DatePickerWithRange
+                                onChange={(value) => {
+                                  if (!value?.lte || !value.gte) {
+                                    onFilterChange({
+                                      [meta.filterKey]: undefined,
+                                    });
+                                    return;
+                                  }
+
+                                  onFilterChange({
+                                    [meta.filterKey]: value,
+                                  });
+                                }}
+                                value={filters[meta.filterKey]}
                               />
                             ) : (
-                              <ArrowUpDown
-                                className="cursor-pointer hover:bg-muted"
-                                size={20}
-                              />
-                            );
-                          })()}
-                        </div>
-
-                        {showFilter &&
-                        header.column.getCanFilter() &&
-                        fieldMeta?.filterKey !== undefined ? (
-                          fieldMeta.filterVariant === "date" ? (
-                            <DatePickerWithRange
-                              onChange={(value) => {
-                                if (!value?.lte || !value.gte) {
+                              <DebouncedInput
+                                className="w-full sm:w-36 border shadow rounded text-xs"
+                                onChange={(value) =>
                                   onFilterChange({
-                                    [fieldMeta.filterKey]: undefined,
-                                  });
-                                  return;
+                                    [meta.filterKey]: value,
+                                  })
                                 }
-
-                                onFilterChange({
-                                  [fieldMeta.filterKey]: value,
-                                });
-                              }}
-                              value={filters[fieldMeta.filterKey]}
-                            />
-                          ) : fieldMeta.filterVariant === "text" ||
-                            fieldMeta.filterVariant === "number" ? (
-                            <DebouncedInput
-                              className="w-36 border shadow rounded"
-                              onChange={(value) => {
-                                onFilterChange({
-                                  [fieldMeta.filterKey]: value,
-                                });
-                              }}
-                              placeholder="Search..."
-                              type={
-                                fieldMeta.filterVariant === "number"
-                                  ? "number"
-                                  : "text"
-                              }
-                              value={filters[fieldMeta.filterKey] ?? ""}
-                            />
+                                placeholder="Search..."
+                                type={
+                                  meta.filterVariant === "number"
+                                    ? "number"
+                                    : "text"
+                                }
+                                value={filters[meta.filterKey] ?? ""}
+                              />
+                            )
                           ) : (
-                            <Button variant="ghost" />
-                          )
-                        ) : null}
-                      </>
-                    )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                onClick={() => onRowClick && onRowClick(row)}
-                className={clsx({ "cursor-pointer": !!onRowClick })}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    style={{ width: `${cell.column.getSize()}px` }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                            <Button variant="ghost" className="h-6 w-full" />
+                          )}
+                        </div>
+                      )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                List is empty.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableHeader>
 
+          {/* BODY */}
+          {isLoading ? (
+            <TableBody>
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex justify-center items-center">
+                    <Loading />
+                  </div>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          ) : (
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    onClick={() => onRowClick?.(row)}
+                    className={clsx({
+                      "cursor-pointer": !!onRowClick,
+                    })}
+                  >
+                    {row.getVisibleCells().map((cell) => {
+                      const meta = cell.column.columnDef.meta;
+
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          className={clsx(
+                            "p-2 text-xs sm:text-sm whitespace-nowrap",
+                            meta?.hideOnMobile && "hidden sm:table-cell",
+                          )}
+                          style={{
+                            width: `${cell.column.getSize()}px`,
+                          }}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    List is empty.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          )}
+        </Table>
+      </div>
+
+      {/* PAGINATION */}
       <TablePagination
         pagination={pagination}
-        rowCount={rowCount}
+        rowCount={isLoading ? 0 : data?.totalCount || 0}
         setPagination={setPagination}
       />
     </div>

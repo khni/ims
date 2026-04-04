@@ -18,7 +18,7 @@
       "organizationUsers": "مستخدمي  المؤسسة"
     },
     "columnHeaders": {
-      "name": "الاسم",
+      "name": "المستخدم",
       "updatedAt": "آخر تحديث",
       "role": "الدور",
       "status": "الحالة",

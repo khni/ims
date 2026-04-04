@@ -13,6 +13,7 @@ import { mapSortingArray } from "@workspace/ui/lib/utils";
 import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
 import { set } from "zod";
 import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
+import FilterComponent from "@/src/features/organizationUser/list/filter";
 
 export const OrganizationUserDataTable: React.FC = () => {
   const router = useRouter();
@@ -39,41 +40,47 @@ export const OrganizationUserDataTable: React.FC = () => {
     filters: filters,
     orderBy: mapSortingArray(sortingState),
   });
-  console.log("filters:", filters);
-  console.log("orderBy", mapSortingArray(sortingState));
 
   return (
     <>
-      <DebouncedInput
-        className="w-36 border shadow rounded"
-        onChange={(value) => {
-          setFilters({ name: String(value) });
-        }}
-        placeholder="Search..."
-        type={"text"}
-        value={filters["name"] ? String(filters["name"]) : ""}
+      <div className="flex">
+        {" "}
+        {/* <DebouncedInput
+          className="w-36 border shadow rounded"
+          onChange={(value) => {
+            setFilters({ name: String(value) });
+          }}
+          placeholder="Search..."
+          type={"text"}
+          value={filters["name"] ? String(filters["name"]) : ""}
+        /> */}
+        {/* <FilterComponent
+          onApply={(filters) => {
+            console.log(filters);
+
+            // Example with React Query / API call
+            // refetch({ filters })
+          }}
+        /> */}
+      </div>
+
+      <DataTable
+        isLoading={isPending}
+        columns={OrganizationUserColumns({
+          getHeader: organizationUserColumnHeaderTranslations,
+          organizationUserStatusTranslations,
+        })}
+        data={data?.data}
+        onRowClick={(row) =>
+          router.push(`organization-users/${row.original.id}`)
+        }
+        pagination={pagination}
+        setPagination={setPagination}
+        sorting={sortingState}
+        onSortingChange={setSortingState}
+        filters={filters}
+        onFilterChange={(filters) => setFilters(filters)}
       />
-      {isPending || !data ? (
-        <LoadingPage />
-      ) : (
-        <DataTable
-          columns={OrganizationUserColumns({
-            getHeader: organizationUserColumnHeaderTranslations,
-            organizationUserStatusTranslations,
-          })}
-          data={data.data.list}
-          onRowClick={(row) =>
-            router.push(`organization-users/${row.original.id}`)
-          }
-          pagination={pagination}
-          rowCount={data.data.totalCount}
-          setPagination={setPagination}
-          sorting={sortingState}
-          onSortingChange={setSortingState}
-          filters={filters}
-          onFilterChange={(filters) => setFilters(filters)}
-        />
-      )}
     </>
   );
 };
