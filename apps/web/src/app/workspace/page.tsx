@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useIsAuthenticated, useOrganizationList } from "@/src/api";
@@ -55,22 +55,39 @@ export default function Page() {
     selectedOrganizationId &&
     organizations.some((org) => org.id === selectedOrganizationId);
 
-  // Redirects (before render)
+  const isUnauthenticated = authData && !authData.data;
+
+  // ✅ Handle redirects safely
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (isUnauthenticated) {
+      router.replace(ROUTES.auth.index);
+      return;
+    }
+
+    if (hasValidSelection) {
+      router.replace(ROUTES.app.index(selectedOrganizationId));
+    }
+  }, [
+    isLoading,
+    isUnauthenticated,
+    hasValidSelection,
+    selectedOrganizationId,
+    router,
+  ]);
+
+  // ✅ Loading state
   if (isLoading) {
     return <LoadingPage />;
   }
 
-  if (authData && !authData.data) {
-    router.replace(ROUTES.auth.index);
-    return null;
+  // ✅ While redirecting, avoid flicker
+  if (isUnauthenticated || hasValidSelection) {
+    return <LoadingPage />;
   }
 
-  if (hasValidSelection) {
-    router.replace(ROUTES.app.index(selectedOrganizationId));
-    return null;
-  }
-
-  // Empty state
+  // ✅ Empty state
   if (!hasOrganizations) {
     return (
       <NavbarContainer isLoading={isAuthLoading} user={authData?.data}>
@@ -79,7 +96,7 @@ export default function Page() {
     );
   }
 
-  // Main UI
+  // ✅ Main UI
   return (
     <NavbarContainer isLoading={isAuthLoading} user={authData?.data}>
       <div className="flex-1 flex flex-col gap-4 bg-muted items-center justify-center p-6 md:p-4">
