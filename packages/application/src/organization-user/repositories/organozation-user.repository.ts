@@ -11,6 +11,7 @@ import { IRepository } from "@avuny/core";
 import {
   CreateOrganizationUserBody,
   CreateOrganizationUserRepository,
+  OrganizationUserRepoFilters,
   UpdateOrganizationUserBody,
 } from "@avuny/shared";
 export class OrganizationUserRepository
@@ -110,21 +111,21 @@ export class OrganizationUserRepository
 
   /** Find many OrganizationUsers */
   async findMany(params: {
-    where?: { name?: string; organizationId?: string; NOT?: { name?: string } };
-    orderBy?: Prisma.OrganizationUserOrderByWithRelationInput;
+    where?: OrganizationUserRepoFilters;
+    orderBy?: { role?: "asc" | "desc" };
     skip?: number;
     take?: number;
     tx?: Tx;
   }) {
+    console.log("orderBy", params.orderBy);
+    const roleOrderBy = params.orderBy?.role
+      ? { name: params.orderBy.role }
+      : undefined;
     const { tx, ...query } = params ?? {};
     const db = this.getDB(tx);
-    console.log("Querying OrganizationUsers with params:", params);
     return db.organizationUser.findMany({
       ...query,
-      where: {
-        ...query.where,
-        name: { contains: query.where?.name, mode: "insensitive" },
-      },
+      orderBy: { ...query.orderBy, role: roleOrderBy },
       select: {
         name: true,
         id: true,
@@ -176,18 +177,12 @@ export class OrganizationUserRepository
   }
 
   /** Count OrganizationUsers */
-  async count(params?: {
-    where?: { name?: string; organizationId?: string; NOT?: { name?: string } };
-    tx?: Tx;
-  }) {
+  async count(params?: { where?: OrganizationUserRepoFilters; tx?: Tx }) {
     const { tx, where } = params ?? {};
     const db = this.getDB(tx);
 
     return db.organizationUser.count({
-      where: {
-        ...where,
-        name: { contains: where?.name, mode: "insensitive" },
-      },
+      where,
     });
   }
 

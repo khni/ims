@@ -9,6 +9,8 @@ import {
   organizationUserListResponseSchema,
   mutateOrganizationUserSchema,
   createOrganizationUserRepositorySchema,
+  OrganizationUserFiltersSchema,
+  OrganizationUserRepoFiltersSchema,
 } from "./schemas.js";
 
 /* =========================
@@ -58,4 +60,16 @@ export type OrganizationUserListResponse = z.infer<
 
 export type GetOrganizationUserByIdResponse = z.infer<
   typeof getOrganizationUserByIdResponseSchema
+>;
+
+/* =========================
+   Filters
+========================= */
+
+export type OrganizationUserFilters = z.infer<
+  typeof OrganizationUserFiltersSchema
+>;
+
+export type OrganizationUserRepoFilters = z.infer<
+  typeof OrganizationUserRepoFiltersSchema
 >;

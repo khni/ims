@@ -50,7 +50,7 @@ export interface IRepository<
   }): Promise<TEntity | null>;
   findMany(params: {
     where?: TWhere;
-    orderBy?: Partial<Record<keyof TEntity, "asc" | "desc">>;
+    orderBy?: unknown;
     skip?: number;
     take?: number;
     tx?: Tx;

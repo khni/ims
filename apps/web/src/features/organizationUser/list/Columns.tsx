@@ -26,7 +26,15 @@ export const OrganizationUserColumns = ({
           </div>
         ),
       },
-      { key: "role", render: (_, row) => row.role.name },
+      {
+        key: "role",
+        render: (_, row) => row.role.name,
+        meta: {
+          filterKey: "roleName",
+          filterVariant: "text",
+          showFilter: true,
+        },
+      },
       {
         key: "status",
         render: (_, row) => organizationUserStatusTranslations(row.status),

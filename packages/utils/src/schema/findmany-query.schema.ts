@@ -17,3 +17,21 @@ export const findManyQuerySchema = z.object({
   filters: z.object({}).optional().default({}),
   orderBy: z.object({}).optional().default({}),
 });
+
+export const createFindManyQuerySchema = <
+  F extends z._ZodType,
+  O extends z._ZodType,
+>({
+  filtersSchema,
+  orderBySchema,
+}: {
+  filtersSchema: F;
+  orderBySchema?: O;
+}) => {
+  return z.object({
+    page: z.coerce.number().int().min(0).default(0),
+    pageSize: z.coerce.number().int().min(1).default(10),
+    filters: z.object({}).optional().default({}),
+    orderBy: z.object({}).optional().default({}),
+  });
+};

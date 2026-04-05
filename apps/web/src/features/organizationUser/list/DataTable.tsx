@@ -2,7 +2,10 @@
 "use client";
 import React, { useState } from "react";
 import { getRoleListQueryKey, useOrganizationUserList } from "@/src/api";
-import type { OrganizationUserListResponse } from "@avuny/shared";
+import type {
+  OrganizationUserFilters,
+  OrganizationUserListResponse,
+} from "@avuny/shared";
 import { OrganizationUserColumns } from "./Columns";
 import { DataTable } from "@workspace/ui/blocks/data-table/data-table";
 import { useTranslations } from "next-intl";
@@ -28,12 +31,14 @@ export const OrganizationUserDataTable: React.FC = () => {
   ]); //this will be removed later when i make orderBy optional
   const [filter, setFilter] = React.useState({});
 
-  const { filters, resetFilters, setFilters } = useFilters();
+  const { filters, resetFilters, setFilters } =
+    useFilters<OrganizationUserFilters>();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 5, //default page size
   });
+
   const { data, isPending } = useOrganizationUserList({
     page: pagination.pageIndex,
     pageSize: pagination.pageSize,

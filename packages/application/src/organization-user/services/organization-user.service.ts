@@ -3,6 +3,8 @@ import { Context, FilteredPaginatedList, ModuleService } from "@avuny/core";
 import { OrganizationUserErrorCode } from "../errors/errorCode.js";
 import {
   CreateOrganizationUserBody,
+  OrganizationUserFilters,
+  OrganizationUserRepoFilters,
   UpdateOrganizationUserBody,
 } from "@avuny/shared";
 import { OrganizationUserRepository } from "../repositories/organozation-user.repository.js";
@@ -37,6 +39,38 @@ export class OrganizationUserService {
       creationLimit: 10,
       moduleName: "organizationUser",
     });
+  }
+
+  serializeFilters(
+    input: OrganizationUserFilters & { organizationId: string },
+  ): OrganizationUserRepoFilters {
+    return {
+      ...(input.name
+        ? {
+            OR: [
+              { name: { contains: input.name, mode: "insensitive" } },
+              {
+                user: { email: { contains: input.name, mode: "insensitive" } },
+              },
+            ],
+          }
+        : {}),
+
+      ...(input.status ? { status: input.status } : {}),
+
+      ...(input.roleName
+        ? {
+            role: {
+              name: {
+                contains: input.roleName,
+                mode: "insensitive",
+              },
+            },
+          }
+        : {}),
+      organizationId: input.organizationId,
+      NOT: { name: this.organizationUserConfig.ownerName },
+    };
   }
 
   // ===============================
@@ -154,24 +188,21 @@ export class OrganizationUserService {
   filteredPaginatedList = async (params: {
     context: Context;
     query?: FilteredPaginatedList<
-      {
-        name?: string;
-      },
-      { createdAt: "asc" | "desc" }
+      OrganizationUserFilters,
+      { role?: "asc" | "desc" }
     >;
   }) => {
-    console.log("Received params for filteredPaginatedList:", params);
+    const filters = this.serializeFilters({
+      ...params.query?.filters,
+      organizationId: params.context.organizationId!,
+    });
     const filteredPaginatedOrganizationUserList =
       this.moduleService.filteredPaginatedList();
     return await filteredPaginatedOrganizationUserList({
       ...params,
       query: {
         ...params.query,
-        filters: {
-          ...params.query?.filters,
-          organizationId: params.context.organizationId!,
-          NOT: { name: this.organizationUserConfig.ownerName },
-        },
+        filters,
       },
     });
   };

@@ -1,6 +1,7 @@
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
+  createFindManyQuerySchema,
   createPaginatedResponseSchema,
   findManyQuerySchema,
   globalErrorResponses,
@@ -9,7 +10,10 @@ import {
   resultToSuccessResponse,
 } from "@avuny/utils";
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { organizationUserListResponseSchema } from "@avuny/shared";
+import {
+  OrganizationUserFiltersSchema,
+  organizationUserListResponseSchema,
+} from "@avuny/shared";
 import { parseFindManyQuery } from "@avuny/hono";
 import container from "../../container.js";
 
@@ -26,7 +30,9 @@ const route = createRoute({
   middleware: [isAuthenticatedMiddleware, parseFindManyQuery],
   request: {
     headers: AuthorizationHeaderSchema,
-    query: findManyQuerySchema,
+    query: createFindManyQuerySchema({
+      filtersSchema: OrganizationUserFiltersSchema,
+    }),
   },
   responses: {
     200: {

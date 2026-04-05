@@ -76,3 +76,58 @@ export const getOrganizationUserByIdResponseSchema = organizationUserSchema
   });
 export const organizationUserListResponseSchema =
   getOrganizationUserByIdResponseSchema.array();
+
+//filters
+export const OrganizationUserFiltersSchema = z.object({
+  name: z.string().optional(),
+  status: z.enum(OrganizationUserStatus).optional(),
+  roleName: z.string().optional(),
+});
+const StringFilter = z.object({
+  contains: z.string(),
+  mode: z.enum(["default", "insensitive"]).optional(),
+});
+
+export const OrFilterSchema = z.object({
+  OR: z.array(
+    z.union([
+      z.object({
+        name: StringFilter,
+      }),
+      z.object({
+        user: z.object({
+          email: StringFilter,
+        }),
+      }),
+    ]),
+  ),
+});
+export const OrganizationUserRepoFiltersSchema = z.object({
+  OR: z
+    .array(
+      z.union([
+        z.object({
+          name: StringFilter,
+        }),
+        z.object({
+          user: z.object({
+            email: StringFilter,
+          }),
+        }),
+      ]),
+    )
+    .optional(),
+  status: z.enum(OrganizationUserStatus).optional(),
+  role: z
+    .object({
+      name: z.object({
+        contains: z.string(),
+        mode: z.literal("insensitive"),
+      }),
+    })
+    .optional(),
+  organizationId: z.uuid(),
+  NOT: z.object({
+    name: z.string(),
+  }),
+});
