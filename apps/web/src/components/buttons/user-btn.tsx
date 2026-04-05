@@ -25,6 +25,7 @@ export default function UserButton({
   useLogoutHandler,
 }: UserButtonProps) {
   const router = useRouter();
+  const { submit } = useLogoutHandler();
   if (isLoading) {
     <Button variant="outline" size="icon" className="cursor-pointer">
       <Loading />
@@ -42,7 +43,7 @@ export default function UserButton({
       </Button>
     );
   }
-  const { submit } = useLogoutHandler();
+
   return (
     <UserNav
       iconOnly
