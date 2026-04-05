@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useMemo } from "react";
+
+import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import { useIsAuthenticated, useOrganizationList } from "@/src/api";
@@ -17,7 +18,7 @@ import { useTranslations } from "next-intl";
 export default function Page() {
   const router = useRouter();
 
-  // 🔹 API calls
+  // API
   const { data: authData, isLoading: isAuthLoading } = useIsAuthenticated({
     query: { queryKey: ["getAuthenticatedUser"], retry: 1 },
   });
@@ -26,15 +27,15 @@ export default function Page() {
 
   const organizations = orgData?.data.list ?? [];
 
-  // 🔹 Context
+  // Context
   const { selectedOrganizationId, setSelectedOrganizationId } =
     useSelectedOrganizationContext();
 
-  // 🔹 Translations
+  // Translations
   const { placeholderTranslations } = useCommonTranslations();
   const tOrg = useTranslations("organization");
 
-  // 🔹 Memoized options (prevents re-creation on every render)
+  // Memoized options
   const orgOptions = useMemo(
     () =>
       organizations.map((org) => ({
@@ -44,30 +45,33 @@ export default function Page() {
     [organizations],
   );
 
-  // 🔹 Redirect logic (split for clarity + fewer triggers)
-  useEffect(() => {
-    if (authData && !authData.data) {
-      router.replace(ROUTES.auth.index);
-    }
-  }, [authData, router]);
+  // Derived state
+  const isLoading = isAuthLoading || isOrgLoading;
 
-  useEffect(() => {
-    if (!organizations.length) return;
+  const hasOrganizations = organizations.length > 0;
 
-    const found = organizations.some(
-      (org) => org.id === selectedOrganizationId,
-    );
+  const hasValidSelection =
+    hasOrganizations &&
+    selectedOrganizationId &&
+    organizations.some((org) => org.id === selectedOrganizationId);
 
-    if (found) {
-      router.replace(ROUTES.app.index(selectedOrganizationId));
-    }
-  }, [selectedOrganizationId, organizations.length, router]);
+  // Redirects (before render)
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
-  // 🔹 Loading state
-  if (isOrgLoading) return <LoadingPage />;
+  if (authData && !authData.data) {
+    router.replace(ROUTES.auth.index);
+    return null;
+  }
 
-  // 🔹 Empty state
-  if (!organizations.length) {
+  if (hasValidSelection) {
+    router.replace(ROUTES.app.index(selectedOrganizationId));
+    return null;
+  }
+
+  // Empty state
+  if (!hasOrganizations) {
     return (
       <NavbarContainer isLoading={isAuthLoading} user={authData?.data}>
         <CreateOrganizationForm />
@@ -75,7 +79,7 @@ export default function Page() {
     );
   }
 
-  // 🔹 UI
+  // Main UI
   return (
     <NavbarContainer isLoading={isAuthLoading} user={authData?.data}>
       <div className="flex-1 flex flex-col gap-4 bg-muted items-center justify-center p-6 md:p-4">
