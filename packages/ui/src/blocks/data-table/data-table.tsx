@@ -34,6 +34,7 @@ import { DatePickerWithRange } from "@workspace/ui/blocks/form/date-picker-range
 import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
 import { Button } from "@workspace/ui/components/button";
 import Loading from "@workspace/ui/blocks/loading/loading";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -206,16 +207,49 @@ export function DataTable<TData, TValue>({
           {/* BODY */}
           {isLoading ? (
             <TableBody>
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  <div className="flex justify-center items-center">
-                    <Loading />
-                  </div>
-                </TableCell>
-              </TableRow>
+              {Array.from({ length: pagination.pageSize }).map(
+                (_, rowIndex) => (
+                  <TableRow key={`skeleton-row-${rowIndex}`}>
+                    {table.getAllLeafColumns().map((column, colIndex) => {
+                      const meta = column.columnDef.meta;
+
+                      return (
+                        <TableCell
+                          key={`skeleton-cell-${colIndex}`}
+                          className={clsx(
+                            "p-2",
+                            meta?.hideOnMobile && "hidden sm:table-cell",
+                          )}
+                          style={{
+                            width: `${column.getSize()}px`,
+                          }}
+                        >
+                          <Skeleton
+                            className={clsx(
+                              "h-4 rounded",
+                              colIndex % 3 === 0
+                                ? "w-[60%]"
+                                : colIndex % 3 === 1
+                                  ? "w-[80%]"
+                                  : "w-[40%]",
+                            )}
+                          />
+                          <Skeleton
+                            className={clsx(
+                              "h-4 rounded ",
+                              colIndex % 3 === 0
+                                ? "w-[60%]"
+                                : colIndex % 3 === 1
+                                  ? "w-[80%]"
+                                  : "w-[40%]",
+                            )}
+                          />
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ),
+              )}
             </TableBody>
           ) : (
             <TableBody>
