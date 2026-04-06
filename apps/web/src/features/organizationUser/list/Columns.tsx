@@ -3,6 +3,15 @@
 import type { OrganizationUserListResponse } from "@avuny/shared";
 import { createColumns } from "@workspace/ui/blocks/data-table/custom-columns";
 import { Messages } from "next-intl";
+
+enum OrganizationUserStatus {
+  PENDING = "PENDING",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  REJECTED = "REJECTED",
+  SUSPENDED = "SUSPENDED",
+}
+
 export const OrganizationUserColumns = ({
   getHeader,
   organizationUserStatusTranslations,
@@ -38,6 +47,16 @@ export const OrganizationUserColumns = ({
       {
         key: "status",
         render: (_, row) => organizationUserStatusTranslations(row.status),
+        meta: {
+          filterOptions: Object.values(OrganizationUserStatus).map(
+            (status) => ({
+              label: organizationUserStatusTranslations(status),
+              value: status,
+            }),
+          ),
+          filterKey: "status",
+          showFilter: true,
+        },
       },
       {
         key: "updatedAt",

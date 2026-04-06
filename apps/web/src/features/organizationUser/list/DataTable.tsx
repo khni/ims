@@ -14,9 +14,6 @@ import { SortingState } from "@tanstack/react-table";
 import { useFilters } from "@/src/hooks/use-filters.hook";
 import { mapSortingArray } from "@workspace/ui/lib/utils";
 import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
-import { set } from "zod";
-import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
-import FilterComponent from "@/src/features/organizationUser/list/filter";
 
 export const OrganizationUserDataTable: React.FC = () => {
   const router = useRouter();
@@ -42,10 +39,10 @@ export const OrganizationUserDataTable: React.FC = () => {
   const { data, isPending } = useOrganizationUserList({
     page: pagination.pageIndex,
     pageSize: pagination.pageSize,
-    filters: filters,
+    filters,
     orderBy: mapSortingArray(sortingState),
   });
-
+  console.log(filters, "filters");
   return (
     <>
       <div className="flex">

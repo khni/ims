@@ -80,7 +80,7 @@ export const organizationUserListResponseSchema =
 //filters
 export const OrganizationUserFiltersSchema = z.object({
   name: z.string().optional(),
-  status: z.enum(OrganizationUserStatus).optional(),
+  status: z.array(z.enum(OrganizationUserStatus)).optional(),
   roleName: z.string().optional(),
 });
 const StringFilter = z.object({
@@ -117,7 +117,7 @@ export const OrganizationUserRepoFiltersSchema = z.object({
       ]),
     )
     .optional(),
-  status: z.enum(OrganizationUserStatus).optional(),
+  status: z.object({ in: z.array(z.enum(OrganizationUserStatus)) }).optional(),
   role: z
     .object({
       name: z.object({

@@ -56,8 +56,6 @@ export class OrganizationUserService {
           }
         : {}),
 
-      ...(input.status ? { status: input.status } : {}),
-
       ...(input.roleName
         ? {
             role: {
@@ -70,6 +68,9 @@ export class OrganizationUserService {
         : {}),
       organizationId: input.organizationId,
       NOT: { name: this.organizationUserConfig.ownerName },
+      ...(input.status && Array.isArray(input.status)
+        ? { status: { in: input.status } }
+        : undefined),
     };
   }
 

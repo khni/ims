@@ -5,25 +5,31 @@ import React from "react";
 
 type CellRenderFn<T> = (value: any, row: T) => React.ReactNode;
 declare module "@tanstack/react-table" {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     filterKey: string;
     filterVariant?: "text" | "number" | "date";
     showFilter?: boolean;
+
+    // 👇 use TValue instead of custom T
+    filterOptions?: { label: string; value: TValue }[];
+
+    hideOnMobile?: boolean;
   }
 }
+
 interface CustomColumn<T> {
   key: keyof T;
 
   wrapperElement?: React.ElementType;
   render?: CellRenderFn<T>;
 }
-export interface CreateColumnsProps<T> {
+export interface CreateColumnsProps<T, F = unknown> {
   columns: (CustomColumn<T> & {
     meta?: {
       filterVariant?: "text" | "number" | "date";
       filterKey: string;
       showFilter?: boolean;
+      filterOptions?: { label: string; value: F }[];
     };
   })[];
   getHeader: (key: keyof T) => string;
@@ -51,6 +57,7 @@ export function createColumns<T extends object>({
       filterKey: col.meta?.filterKey || (col.key as string),
       filterVariant: col.meta?.filterVariant || "text",
       showFilter: col.meta?.showFilter,
+      filterOptions: col.meta?.filterOptions,
     },
   }));
 }

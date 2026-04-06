@@ -35,6 +35,7 @@ import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
 import { Button } from "@workspace/ui/components/button";
 import Loading from "@workspace/ui/blocks/loading/loading";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import FilterComponent from "@workspace/ui/blocks/data-table/filter";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -42,11 +43,12 @@ declare module "@tanstack/react-table" {
     filterVariant?: "text" | "number" | "date";
     showFilter?: boolean;
 
-    // ✅ NEW
+    // 👇 use TValue instead of custom T
+    filterOptions?: { label: string; value: TValue }[];
+
     hideOnMobile?: boolean;
   }
 }
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
@@ -175,6 +177,29 @@ export function DataTable<TData, TValue>({
                                 }}
                                 value={filters[meta.filterKey]}
                               />
+                            ) : meta.filterOptions ? (
+                              <div>
+                                <FilterComponent
+                                  onApply={(newFilters) =>
+                                    onFilterChange({
+                                      ...filters,
+                                      ...newFilters,
+                                    })
+                                  }
+                                  filterConfigs={[
+                                    {
+                                      type: "checkbox",
+                                      options: meta.filterOptions as {
+                                        label: string;
+                                        value: string;
+                                      }[],
+                                      key: meta.filterKey,
+                                      title: header.column.columnDef
+                                        .header as string,
+                                    },
+                                  ]}
+                                />
+                              </div>
                             ) : (
                               <DebouncedInput
                                 className="w-full sm:w-36 border shadow rounded text-xs"
