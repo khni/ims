@@ -3,6 +3,7 @@ import { CreateHooks, CreateService } from "./CreateService.js";
 import { UpdateHooks, UpdateService } from "./UpdateService.js";
 import { QueryService } from "./QueryService.js";
 import { ServiceContext as Context, FieldRules, Resource } from "./types.js";
+import { DeleteHooks, DeleteService } from "./DeleteService.js";
 
 export class ModuleService<R extends IRepository> {
   protected repository!: R;
@@ -12,19 +13,23 @@ export class ModuleService<R extends IRepository> {
   private createService: CreateService;
   private updateService: UpdateService;
   private queryService: QueryService;
+  private deleteService: DeleteService;
 
   constructor({
     createService,
     updateService,
     queryService,
+    deleteService,
   }: {
     createService: CreateService;
     updateService: UpdateService;
     queryService: QueryService;
+    deleteService: DeleteService;
   }) {
     this.createService = createService;
     this.updateService = updateService;
     this.queryService = queryService;
+    this.deleteService = deleteService;
   }
 
   /**
@@ -95,6 +100,17 @@ export class ModuleService<R extends IRepository> {
   // ===============================
   // DELETE
   // ===============================
+
+  delete = <E>(options?: { hooks?: DeleteHooks<unknown> }) => {
+    const { repository, config } = this.getConfig();
+
+    return this.deleteService.delete<E, R, unknown>({
+      repository,
+      config,
+
+      hooks: options?.hooks,
+    });
+  };
 
   // delete = () => {
   //   const { repository, config } = this.getConfig();

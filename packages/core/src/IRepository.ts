@@ -64,5 +64,7 @@ export interface IRepository<
 
   count(params?: { where?: TWhere; tx?: Tx }): Promise<number>;
 
+  delete(params?: { where: TWhere; tx?: Tx }): Promise<{ id: string }>;
+
   createTransaction<T>(callback: (tx: Tx) => Promise<T>): Promise<T>;
 }

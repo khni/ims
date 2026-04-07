@@ -36,6 +36,7 @@ import { Button } from "@workspace/ui/components/button";
 import Loading from "@workspace/ui/blocks/loading/loading";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import FilterComponent from "@workspace/ui/blocks/data-table/filter";
+import { CustomDropdownMenu } from "@workspace/ui/blocks/menus/custom-dropdown-menu";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -53,6 +54,10 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
   data?: { list: TData[]; totalCount: number };
+  dropdownActions?: {
+    delete?: (row: Row<TData>) => void;
+    edit?: (row: Row<TData>) => void;
+  };
 
   setData?: React.Dispatch<React.SetStateAction<TData[]>>;
   onRowClick?: (row: Row<TData>) => void;
@@ -86,6 +91,7 @@ export function DataTable<TData, TValue>({
   filters,
   onFilterChange,
   isLoading,
+  dropdownActions,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data: data?.list || [],
@@ -279,37 +285,47 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    onClick={() => onRowClick?.(row)}
-                    className={clsx({
-                      "cursor-pointer": !!onRowClick,
-                    })}
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      const meta = cell.column.columnDef.meta;
-
-                      return (
+                table.getRowModel().rows.map((row) => {
+                  return (
+                    <TableRow
+                      key={row.id}
+                      onClick={() => onRowClick?.(row)}
+                      className={clsx({
+                        "cursor-pointer": !!onRowClick,
+                      })}
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        const meta = cell.column.columnDef.meta;
+                        return (
+                          <TableCell
+                            key={cell.id}
+                            className={clsx(
+                              "p-2 text-xs sm:text-sm whitespace-nowrap",
+                              meta?.hideOnMobile && "hidden sm:table-cell",
+                            )}
+                            style={{
+                              width: `${cell.column.getSize()}px`,
+                            }}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                      {dropdownActions && (
                         <TableCell
-                          key={cell.id}
                           className={clsx(
-                            "p-2 text-xs sm:text-sm whitespace-nowrap",
-                            meta?.hideOnMobile && "hidden sm:table-cell",
+                            "p-2 text-xs sm:text-sm whitespace-nowrap w-6",
                           )}
-                          style={{
-                            width: `${cell.column.getSize()}px`,
-                          }}
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          <CustomDropdownMenu />
                         </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                ))
+                      )}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell

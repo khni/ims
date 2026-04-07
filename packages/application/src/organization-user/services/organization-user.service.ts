@@ -175,6 +175,17 @@ export class OrganizationUserService {
     });
   };
 
+  delete = async (params: {
+    context: Context;
+    where: { id: string };
+    tx?: unknown;
+  }) => {
+    const deleteOrganizationUser = this.moduleService.delete();
+    return await deleteOrganizationUser({
+      ...params,
+    });
+  };
+
   // ===============================
   // FIND BY ID
   // ===============================

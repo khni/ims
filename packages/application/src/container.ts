@@ -15,6 +15,7 @@ import {
   ModuleService,
   QueryService,
   UpdateService,
+  DeleteService,
 } from "@avuny/core";
 import { ActivityLogService } from "./activity-log/ActivityLogService.js";
 import { ResourcePermissionChecker } from "./resource-permission/resource-permission-checker.js";
@@ -55,6 +56,7 @@ export const appDeps = {
   createService: asClass(CreateService).scoped(),
   updateService: asClass(UpdateService).scoped(),
   queryService: asClass(QueryService).scoped(),
+  deleteService: asClass(DeleteService).scoped(),
   moduleService: asClass(ModuleService).transient(),
   activityLog: asClass(ActivityLogService).scoped(),
   resourcePermission: asClass(ResourcePermissionChecker).scoped(),

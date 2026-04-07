@@ -82,6 +82,7 @@ export const OrganizationUserDataTable: React.FC = () => {
         onSortingChange={setSortingState}
         filters={filters}
         onFilterChange={(filters) => setFilters(filters)}
+        dropdownActions={{}}
       />
     </>
   );
