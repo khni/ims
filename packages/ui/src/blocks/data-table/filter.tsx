@@ -15,22 +15,38 @@ import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Label } from "@workspace/ui/components/label";
 import { Separator } from "@workspace/ui/components/separator";
 
+type BackendDateRange = {
+  gte: Date; //startDate Greater than or equal to startDate
+  lte: Date; //endDate Less than or equal to endDate
+};
+
 export type Filters<T> = {
   [key: string]: T[];
+};
+
+export type FilterProps<T> = {
+  onApply: (filters: Filters<T>) => void;
+  filterConfigs: (
+    | {
+        type: "checkbox";
+        options: { label: string; value: T }[];
+        key: string;
+        title?: string;
+      }
+    | {
+        type: "date";
+        value?: BackendDateRange | undefined;
+        onChange?: (value: BackendDateRange | undefined) => void;
+        key: string;
+        title?: string;
+      }
+  )[];
 };
 
 export default function FilterComponent<T extends string | number>({
   onApply,
   filterConfigs,
-}: {
-  onApply: (filters: Filters<T>) => void;
-  filterConfigs: {
-    type: "checkbox";
-    options: { label: string; value: T }[];
-    key: string;
-    title?: string;
-  }[];
-}) {
+}: FilterProps<T>) {
   const [filters, setFilters] = useState<Filters<T>>({});
 
   const toggleValue = (key: string, value: T) => {
@@ -102,7 +118,7 @@ export default function FilterComponent<T extends string | number>({
                   </h4>
 
                   <div className="grid gap-2">
-                    {config.type === "checkbox" &&
+                    {config.type === "checkbox" ? (
                       config.options.map((option) => {
                         const checked = filters[config.key]?.includes(
                           option.value,
@@ -134,7 +150,12 @@ export default function FilterComponent<T extends string | number>({
                             )}
                           </label>
                         );
-                      })}
+                      })
+                    ) : config.type === "date" ? (
+                      <div></div>
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
                 </div>
               ))}

@@ -27,7 +27,6 @@ export const OrganizationUserColumns = ({
     columns: [
       {
         key: "name",
-        meta: { filterKey: "name", filterVariant: "text", showFilter: true },
         render: (_, row) => (
           <div className="flex flex-col">
             <div>{row.name}</div>
@@ -38,34 +37,29 @@ export const OrganizationUserColumns = ({
       {
         key: "role",
         render: (_, row) => row.role.name,
-        meta: {
-          filterKey: "roleName",
-          filterVariant: "text",
-          showFilter: true,
-        },
       },
       {
         key: "status",
         render: (_, row) => organizationUserStatusTranslations(row.status),
-        meta: {
-          filterOptions: Object.values(OrganizationUserStatus).map(
-            (status) => ({
-              label: organizationUserStatusTranslations(status),
-              value: status,
-            }),
-          ),
-          filterKey: "status",
-          showFilter: true,
-        },
+        // meta: {
+        //   filterOptions: Object.values(OrganizationUserStatus).map(
+        //     (status) => ({
+        //       label: organizationUserStatusTranslations(status),
+        //       value: status,
+        //     }),
+        //   ),
+        //   filterKey: "status",
+        //   showFilter: true,
+        // },
       },
       {
         key: "updatedAt",
         render: (value) => new Date(value).toLocaleDateString(),
-        meta: {
-          filterKey: "updatedAt",
-          filterVariant: "date",
-          showFilter: true,
-        },
+        // meta: {
+        //   filterKey: "updatedAt",
+        //   filterVariant: "date",
+        //   showFilter: true,
+        // },
       },
     ],
     getHeader,

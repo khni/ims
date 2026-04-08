@@ -50,13 +50,13 @@ declare module "@tanstack/react-table" {
     hideOnMobile?: boolean;
   }
 }
-interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
   data?: { list: TData[]; totalCount: number };
   dropdownActions?: {
-    delete?: (row: Row<TData>) => void;
-    edit?: (row: Row<TData>) => void;
+    delete?: (row: Row<TData>) => Promise<void>;
+    edit?: (row: Row<TData>) => Promise<void>;
   };
 
   setData?: React.Dispatch<React.SetStateAction<TData[]>>;
@@ -80,7 +80,7 @@ interface DataTableProps<TData, TValue> {
   >;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   onRowClick,
@@ -289,7 +289,20 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableRow
                       key={row.id}
-                      onClick={() => onRowClick?.(row)}
+                      onClick={(e) => {
+                        const target = e.target as HTMLElement;
+
+                        // Ignore clicks from interactive elements
+                        if (
+                          target.closest(
+                            "button, a, input, textarea, [role='menuitem'], [data-interactive]",
+                          )
+                        ) {
+                          return;
+                        }
+
+                        onRowClick?.(row);
+                      }}
                       className={clsx({
                         "cursor-pointer": !!onRowClick,
                       })}
@@ -320,7 +333,11 @@ export function DataTable<TData, TValue>({
                             "p-2 text-xs sm:text-sm whitespace-nowrap w-6",
                           )}
                         >
-                          <CustomDropdownMenu />
+                          <CustomDropdownMenu
+                            onDelete={async () =>
+                              await dropdownActions.delete?.(row)
+                            }
+                          />
                         </TableCell>
                       )}
                     </TableRow>

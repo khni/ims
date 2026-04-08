@@ -28,7 +28,7 @@ export function DebouncedInput({
   return (
     <input
       {...props}
-      className=" my-3 flex h-7  bg-secondary rounded-md  px-3 py-2 text-sm transition duration-300 ease-in-out transform focus:border-primary focus:ring-1 focus:ring-primary focus:ring-offset-1 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+      className=" my-3 flex  bg-secondary rounded-md  px-3 py-2 text-sm transition duration-300 ease-in-out transform focus:border-primary focus:ring-1 focus:ring-primary focus:ring-offset-1 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
       value={value ?? ""}
       onChange={(e) => {
         if (e.target.value === "") return setValue("");
