@@ -9,23 +9,21 @@ import FilterComponent, {
 import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
 import { buttonVariants } from "@workspace/ui/components/button";
 import { useRouter } from "next/navigation";
-
+import { Filters } from "@workspace/ui/blocks/data-table/filter";
 import React from "react";
 
-export type DataListProps<TData extends { id: string }, TValue> = {
+export interface DataListProps<TData, TValue>
+  extends
+    DataTableProps<TData, TValue>,
+    Pick<FilterProps<string | number>, "filterConfigs"> {
   searchKey: string;
-  onRowClickPath?: string;
-} & DataTableProps<TData, TValue> &
-  Pick<FilterProps<string | number>, "filterConfigs">;
-function DataList<
-  TData extends { id: string },
-  TValue,
-  Filters extends Record<string, string | object | undefined>,
-  F,
->({
+  onRowClickConfig?: { href: string; idKey: keyof TData };
+}
+
+function DataList<TData, TValue>({
   searchKey,
   filterConfigs,
-  onRowClickPath,
+  onRowClickConfig,
   ...props
 }: DataListProps<TData, TValue>) {
   const { filters, resetFilters, setFilters } = useFilters<Filters>();
@@ -36,24 +34,28 @@ function DataList<
         <DebouncedInput
           className={buttonVariants()}
           onChange={(value) => {
-            setFilters({ [searchKey]: String(value) } as Partial<Filters>);
+            setFilters({ [searchKey]: String(value) });
           }}
           placeholder="Search..."
           type={"text"}
           value={filters[searchKey] ? String(filters[searchKey]) : ""}
         />
         <FilterComponent
+          resetFilters={resetFilters}
           filterConfigs={filterConfigs}
           onApply={(filters) => {
-            setFilters(filters as Partial<Filters>);
+            setFilters(filters);
           }}
           filters={filters}
         />
       </div>
       <DataTable
         onRowClick={
-          onRowClickPath
-            ? (row) => router.push(`${onRowClickPath}/${row.original.id}`)
+          onRowClickConfig
+            ? (row) =>
+                router.push(
+                  `${onRowClickConfig.href}/${row.original[onRowClickConfig.idKey]}`,
+                )
             : undefined
         }
         {...props}

@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-import { CalendarIcon, Filter } from "lucide-react";
-import { format } from "date-fns";
-import { Calendar } from "@workspace/ui/components/calendar";
+import { Filter } from "lucide-react";
+import { DatePickerWithRange } from "@workspace/ui/blocks/form/date-picker-range";
+
 import {
   Popover,
   PopoverContent,
@@ -12,24 +12,20 @@ import {
 } from "@workspace/ui/components/popover";
 import { Button } from "@workspace/ui/components/button";
 import { Checkbox } from "@workspace/ui/components/checkbox";
-import { Label } from "@workspace/ui/components/label";
 import { Separator } from "@workspace/ui/components/separator";
-import { DatePickerWithRange } from "@workspace/ui/blocks/form/date-picker-range";
+import { se } from "date-fns/locale";
 
-type BackendDateRange = {
-  [key in string]: {
-    gte: Date; //startDate Greater than or equal to startDate
-    lte: Date; //endDate Less than or equal to endDate}
-  };
-};
+export interface BackendDateRange {
+  gte: Date;
+  lte?: Date;
+}
 
-export type Filters<T> = {
-  [key: string]: T[];
-};
+export type Filters = Record<string, string | [string] | object | undefined>;
 
 export type FilterProps<T> = {
-  onApply: (filters: Filters<T>) => void;
-  filters: Filters<T>;
+  onApply: (filters: Filters) => void;
+  filters: Filters;
+  resetFilters: () => void;
   filterConfigs: (
     | {
         type: "checkbox";
@@ -39,7 +35,7 @@ export type FilterProps<T> = {
       }
     | {
         type: "date";
-        value?: BackendDateRange | undefined;
+        value?: BackendDateRange;
         onChange?: (value: BackendDateRange | undefined) => void;
         key: string;
         title?: string;
@@ -50,12 +46,14 @@ export type FilterProps<T> = {
 export default function FilterComponent<T extends string | number>({
   onApply,
   filterConfigs,
+  filters: initialFilters,
+  resetFilters,
 }: FilterProps<T>) {
-  const [filters, setFilters] = useState<Filters<T>>({});
+  const [filters, setFilters] = useState<Filters>(initialFilters || {});
 
   const toggleValue = (key: string, value: T) => {
     setFilters((prev) => {
-      const currentValues = prev[key] || [];
+      const currentValues = (prev[key] as T[]) || [];
       const exists = currentValues.includes(value);
 
       const next = {
@@ -66,10 +64,24 @@ export default function FilterComponent<T extends string | number>({
       };
 
       onApply(next);
-
       return next;
     });
   };
+
+  const getTotalSelected = () => {
+    return Object.values(filters).reduce((sum, val) => {
+      if (Array.isArray(val)) {
+        return sum + val.length; // count each item in array
+      }
+
+      if (val && typeof val === "object") {
+        return sum + 1; // count object as 1
+      }
+
+      return sum;
+    }, 0);
+  };
+  console.log(filters, "filters from filter.tsx");
   return (
     <div className="flex items-center gap-2">
       <Popover>
@@ -77,12 +89,9 @@ export default function FilterComponent<T extends string | number>({
           <Button variant="outline" className="gap-2">
             <Filter className="w-4 h-4" />
             Filter
-            {Object.keys(filters).length > 0 && (
+            {getTotalSelected() > 0 && (
               <span className="text-xs text-white bg-blue-500 rounded-full px-1">
-                {Object.values(filters).reduce(
-                  (sum, arr) => sum + arr.length,
-                  0,
-                )}
+                {getTotalSelected()}
               </span>
             )}
           </Button>
@@ -95,16 +104,14 @@ export default function FilterComponent<T extends string | number>({
               <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
                 Filters
               </h3>
+
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-white"
+                className="text-xs"
                 onClick={() => {
-                  const next = Object.fromEntries(
-                    Object.keys(filters).map((key) => [key, []]),
-                  );
-                  setFilters(next);
-                  onApply(next);
+                  resetFilters();
+                  setFilters({});
                 }}
               >
                 Reset
@@ -113,7 +120,7 @@ export default function FilterComponent<T extends string | number>({
 
             <Separator />
 
-            {/* Filter Sections */}
+            {/* Filters */}
             <div className="space-y-5 max-h-75 overflow-y-auto pr-1">
               {filterConfigs.map((config) => (
                 <div key={config.key} className="space-y-3">
@@ -122,60 +129,51 @@ export default function FilterComponent<T extends string | number>({
                   </h4>
 
                   <div className="grid gap-2">
-                    {config.type === "checkbox" ? (
+                    {config.type === "checkbox" &&
                       config.options.map((option) => {
-                        const checked = filters[config.key]?.includes(
-                          option.value,
-                        );
+                        const values = (filters[config.key] as T[]) || [];
+                        const checked = values.includes(option.value);
 
                         return (
                           <label
                             key={String(option.value)}
-                            htmlFor={String(option.value)}
-                            className="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
+                            className="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800"
                           >
                             <div className="flex items-center gap-3">
                               <Checkbox
-                                id={String(option.value)}
                                 checked={checked}
                                 onCheckedChange={() =>
                                   toggleValue(config.key, option.value)
                                 }
                               />
-                              <span className="text-sm text-zinc-800 dark:text-zinc-200 capitalize">
+                              <span className="text-sm capitalize">
                                 {option.label}
                               </span>
                             </div>
 
                             {checked && (
-                              <span className="text-xs text-primary font-medium">
+                              <span className="text-xs text-primary">
                                 Selected
                               </span>
                             )}
                           </label>
                         );
-                      })
-                    ) : config.type === "date" ? (
-                      <DatePickerWithRange
-                        onChange={(value) => {
-                          if (!value?.lte || !value.gte) {
-                            onApply({
-                              [config.key]: undefined,
-                            });
-                            return;
-                          }
-                          console.log("Selected Date Range:", {
-                            [config.key]: value,
-                          });
+                      })}
 
-                          onApply({
+                    {config.type === "date" && (
+                      <DatePickerWithRange
+                        value={
+                          filters[config.key] as BackendDateRange | undefined
+                        }
+                        onChange={(value) => {
+                          const next = {
+                            ...filters,
                             [config.key]: value,
-                          });
+                          };
+                          setFilters(next);
+                          onApply(next);
                         }}
-                        value={filters[config.key]}
                       />
-                    ) : (
-                      <div></div>
                     )}
                   </div>
                 </div>
@@ -184,26 +182,18 @@ export default function FilterComponent<T extends string | number>({
 
             <Separator />
 
-            {/* Footer Actions */}
-            <div className="flex justify-end gap-2">
+            {/* Footer */}
+            <div className="flex justify-end">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  const next = Object.fromEntries(
-                    Object.keys(filters).map((key) => [key, []]),
-                  );
-                  setFilters(next);
-                  console.log("Cleared Filters:", next);
-                  onApply(next);
+                  resetFilters();
+                  setFilters({});
                 }}
               >
                 Clear
               </Button>
-
-              {/* <Button size="sm" onClick={() => onApply(filters)}>
-                Apply Filters
-              </Button> */}
             </div>
           </div>
         </PopoverContent>

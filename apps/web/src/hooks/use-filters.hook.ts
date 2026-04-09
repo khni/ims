@@ -1,8 +1,7 @@
+import { Filters } from "@workspace/ui/blocks/data-table/filter";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export function useFilters<
-  TSearchParams extends Record<string, string | object | undefined>,
->() {
+export function useFilters<TSearchParams extends Filters>() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -57,6 +56,7 @@ export function useFilters<
   const resetFilters = () => {
     router.push("?", { scroll: false });
   };
+  console.log("Parsed Filters:", parsedFilters); // Debug log to verify parsing
 
   return { filters: parsedFilters, setFilters, resetFilters };
 }

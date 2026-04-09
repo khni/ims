@@ -4,14 +4,6 @@ import type { OrganizationUserListResponse } from "@avuny/shared";
 import { createColumns } from "@workspace/ui/blocks/data-table/custom-columns";
 import { Messages } from "next-intl";
 
-enum OrganizationUserStatus {
-  PENDING = "PENDING",
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  REJECTED = "REJECTED",
-  SUSPENDED = "SUSPENDED",
-}
-
 export const OrganizationUserColumns = ({
   getHeader,
   organizationUserStatusTranslations,

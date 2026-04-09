@@ -84,8 +84,8 @@ export const OrganizationUserFiltersSchema = z.object({
   roleName: z.string().optional(),
   updatedAt: z
     .object({
-      gte: z.iso.datetime(),
-      lte: z.iso.datetime().optional(),
+      gte: z.date(),
+      lte: z.date().optional(),
     })
     .optional(),
 });
@@ -138,8 +138,8 @@ export const OrganizationUserRepoFiltersSchema = z.object({
   }),
   updatedAt: z
     .object({
-      gte: z.iso.datetime(),
-      lte: z.iso.datetime().optional(),
+      gte: z.date(),
+      lte: z.date().optional(),
     })
     .optional(),
 });

@@ -50,7 +50,7 @@ declare module "@tanstack/react-table" {
     hideOnMobile?: boolean;
   }
 }
-export interface DataTableProps<TData extends { id: string }, TValue> {
+export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
   data?: { list: TData[]; totalCount: number };
@@ -69,6 +69,7 @@ export interface DataTableProps<TData extends { id: string }, TValue> {
 
   sorting?: SortingState;
   filters: any;
+  resetFilters: () => void;
   onFilterChange: (dataFilters: any) => void;
   onSortingChange?: OnChangeFn<SortingState>;
 
@@ -80,7 +81,7 @@ export interface DataTableProps<TData extends { id: string }, TValue> {
   >;
 }
 
-export function DataTable<TData extends { id: string }, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
   onRowClick,
@@ -89,6 +90,7 @@ export function DataTable<TData extends { id: string }, TValue>({
   sorting,
   onSortingChange,
   filters,
+  resetFilters,
   onFilterChange,
   isLoading,
   dropdownActions,
@@ -186,6 +188,8 @@ export function DataTable<TData extends { id: string }, TValue>({
                             ) : meta.filterOptions ? (
                               <div>
                                 <FilterComponent
+                                  resetFilters={resetFilters}
+                                  filters={filters}
                                   onApply={(newFilters) =>
                                     onFilterChange({
                                       ...filters,

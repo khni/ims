@@ -8,7 +8,7 @@ import {
 } from "@/src/api";
 import type { OrganizationUserFilters } from "@avuny/shared";
 import { OrganizationUserColumns } from "./Columns";
-import { DataTable } from "@workspace/ui/blocks/data-table/data-table";
+import { BackendDateRange } from "@workspace/ui/blocks/data-table/filter";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { SortingState } from "@tanstack/react-table";
@@ -58,8 +58,12 @@ export const OrganizationUserDataTable: React.FC = () => {
   return (
     <>
       <DataList
+        resetFilters={resetFilters}
         searchKey="name"
-        onRowClickPath="organization-users"
+        onRowClickConfig={{
+          href: "organization-users",
+          idKey: "id",
+        }}
         filterConfigs={[
           {
             type: "checkbox",
@@ -77,10 +81,9 @@ export const OrganizationUserDataTable: React.FC = () => {
             key: "updatedAt",
             value: filters.updatedAt,
             onChange: (value) => {
-              setFilters((prev) => ({
-                ...prev,
+              setFilters({
                 updatedAt: value,
-              }));
+              });
             },
           },
         ]}

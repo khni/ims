@@ -13,10 +13,11 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
 import { cn } from "@workspace/ui/lib/utils";
+import { useEffect, useState } from "react";
 
 type BackendDateRange = {
   gte: Date; //startDate Greater than or equal to startDate
-  lte: Date; //endDate Less than or equal to endDate
+  lte?: Date; //endDate Less than or equal to endDate
 };
 
 export function DatePickerWithRange({
@@ -28,6 +29,13 @@ export function DatePickerWithRange({
   value?: BackendDateRange | undefined;
   onChange?: (value: BackendDateRange | undefined) => void;
 }) {
+  // Keep internal date state in sync with `value` prop
+  // When the parent clears or updates `value`, this ensures the UI reflects it
+  // (since useState does not re-run on prop changes)
+  useEffect(() => {
+    setDate(convertToCalenderDateRange(value));
+  }, [value]);
+
   const convertToBackendDateRange = (
     dateRange: DateRange | undefined,
   ): BackendDateRange | undefined => {
@@ -76,11 +84,6 @@ export function DatePickerWithRange({
     onChange?.(convertToBackendDateRange(value));
     // }
   };
-  console.log(
-    format(date?.from || "2020-01-01", "LLL dd, y"),
-    "formatDate",
-    date?.from,
-  );
 
   return (
     <div className={cn("grid ", className)}>
