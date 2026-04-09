@@ -45,8 +45,9 @@ function DataList<
         <FilterComponent
           filterConfigs={filterConfigs}
           onApply={(filters) => {
-            setFilters(filters);
+            setFilters(filters as Partial<Filters>);
           }}
+          filters={filters}
         />
       </div>
       <DataTable

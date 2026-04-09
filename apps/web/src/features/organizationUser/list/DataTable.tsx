@@ -71,6 +71,18 @@ export const OrganizationUserDataTable: React.FC = () => {
             })),
             key: "status",
           },
+          {
+            type: "date",
+            title: organizationUserColumnHeaderTranslations("updatedAt"),
+            key: "updatedAt",
+            value: filters.updatedAt,
+            onChange: (value) => {
+              setFilters((prev) => ({
+                ...prev,
+                updatedAt: value,
+              }));
+            },
+          },
         ]}
         isLoading={isPending}
         columns={OrganizationUserColumns({

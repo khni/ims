@@ -14,10 +14,13 @@ import { Button } from "@workspace/ui/components/button";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Label } from "@workspace/ui/components/label";
 import { Separator } from "@workspace/ui/components/separator";
+import { DatePickerWithRange } from "@workspace/ui/blocks/form/date-picker-range";
 
 type BackendDateRange = {
-  gte: Date; //startDate Greater than or equal to startDate
-  lte: Date; //endDate Less than or equal to endDate
+  [key in string]: {
+    gte: Date; //startDate Greater than or equal to startDate
+    lte: Date; //endDate Less than or equal to endDate}
+  };
 };
 
 export type Filters<T> = {
@@ -26,6 +29,7 @@ export type Filters<T> = {
 
 export type FilterProps<T> = {
   onApply: (filters: Filters<T>) => void;
+  filters: Filters<T>;
   filterConfigs: (
     | {
         type: "checkbox";
@@ -152,7 +156,24 @@ export default function FilterComponent<T extends string | number>({
                         );
                       })
                     ) : config.type === "date" ? (
-                      <div></div>
+                      <DatePickerWithRange
+                        onChange={(value) => {
+                          if (!value?.lte || !value.gte) {
+                            onApply({
+                              [config.key]: undefined,
+                            });
+                            return;
+                          }
+                          console.log("Selected Date Range:", {
+                            [config.key]: value,
+                          });
+
+                          onApply({
+                            [config.key]: value,
+                          });
+                        }}
+                        value={filters[config.key]}
+                      />
                     ) : (
                       <div></div>
                     )}
@@ -173,6 +194,7 @@ export default function FilterComponent<T extends string | number>({
                     Object.keys(filters).map((key) => [key, []]),
                   );
                   setFilters(next);
+                  console.log("Cleared Filters:", next);
                   onApply(next);
                 }}
               >

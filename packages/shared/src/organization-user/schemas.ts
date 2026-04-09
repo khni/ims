@@ -82,6 +82,12 @@ export const OrganizationUserFiltersSchema = z.object({
   name: z.string().optional(),
   status: z.array(z.enum(OrganizationUserStatus)).optional(),
   roleName: z.string().optional(),
+  updatedAt: z
+    .object({
+      gte: z.iso.datetime(),
+      lte: z.iso.datetime().optional(),
+    })
+    .optional(),
 });
 const StringFilter = z.object({
   contains: z.string(),
@@ -130,4 +136,10 @@ export const OrganizationUserRepoFiltersSchema = z.object({
   NOT: z.object({
     name: z.string(),
   }),
+  updatedAt: z
+    .object({
+      gte: z.iso.datetime(),
+      lte: z.iso.datetime().optional(),
+    })
+    .optional(),
 });

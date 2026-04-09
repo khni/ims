@@ -44,33 +44,35 @@ export class OrganizationUserService {
   serializeFilters(
     input: OrganizationUserFilters & { organizationId: string },
   ): OrganizationUserRepoFilters {
+    const { name, roleName, status, ...restInput } = input;
     return {
-      ...(input.name
+      ...(name
         ? {
             OR: [
-              { name: { contains: input.name, mode: "insensitive" } },
+              { name: { contains: name, mode: "insensitive" } },
               {
-                user: { email: { contains: input.name, mode: "insensitive" } },
+                user: { email: { contains: name, mode: "insensitive" } },
               },
             ],
           }
         : {}),
 
-      ...(input.roleName
+      ...(roleName
         ? {
             role: {
               name: {
-                contains: input.roleName,
+                contains: roleName,
                 mode: "insensitive",
               },
             },
           }
         : {}),
-      organizationId: input.organizationId,
       NOT: { name: this.organizationUserConfig.ownerName },
-      ...(input.status && Array.isArray(input.status)
-        ? { status: { in: input.status } }
+      ...(status && Array.isArray(status)
+        ? { status: { in: status } }
         : undefined),
+
+      ...restInput,
     };
   }
 
