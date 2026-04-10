@@ -19,7 +19,9 @@
       "welcome": "Welcome {thing}!",
       "actionThingTitle": "{action} {thing}",
       "actionThingDescription": "Use this form to {action} {thing}. You can modify these details later if needed.",
-      "successToastMsg": "The {thing} has been {action} successfully"
+      "successToastMsg": "The {thing} has been {action} successfully",
+      "confirmTitle": "Are you absolutely sure?",
+      "confirmDeleteDescription": "This action cannot be undone. This will permanently delete this item."
     },
     "alertMsgs": {
       "unknownError": "An unknown error occurred. Please try again later."

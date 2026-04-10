@@ -23,30 +23,30 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
 
-type Props = {
-  onDelete?: () => Promise<void>;
-  onEdit?: () => Promise<void>;
+export interface CustomDropdownMenuProps<DeleteArg, EditArg> {
+  onDelete?: (data: DeleteArg) => Promise<void>;
+  onEdit?: (data: EditArg) => Promise<void>;
+  actionTranslations?: (key: "delete" | "edit" | "cancel") => string;
+  msgTranslations?: (
+    key: "confirmTitle" | "confirmDeleteDescription",
+  ) => string;
+}
 
-  // Optional text props
-  deleteLabel?: string;
-  editLabel?: string;
-  confirmTitle?: string;
-  confirmDescription?: string;
-  confirmActionText?: string;
-  cancelText?: string;
-};
-
-export function CustomDropdownMenu({
+export function CustomDropdownMenu<DeleteArg, EditArg>({
   onDelete,
   onEdit,
-  deleteLabel = "Delete",
-  editLabel = "Edit",
-  confirmTitle = "Are you absolutely sure?",
-  confirmDescription = "This action cannot be undone. This will permanently delete this item.",
-  confirmActionText = "Delete",
-  cancelText = "Cancel",
-}: Props) {
+  actionTranslations = (key) => key,
+  msgTranslations = (key) => key,
+}: CustomDropdownMenuProps<DeleteArg, EditArg>) {
   const [open, setOpen] = useState(false);
+
+  const editLabel = actionTranslations("edit");
+  const deleteLabel = actionTranslations("delete");
+  const cancelText = actionTranslations("cancel");
+
+  const confirmTitle = msgTranslations("confirmTitle");
+  const confirmDescription = msgTranslations("confirmDeleteDescription");
+  const confirmActionText = deleteLabel;
 
   return (
     <>
@@ -64,7 +64,7 @@ export function CustomDropdownMenu({
         <DropdownMenuContent align="end" className="w-40 rounded-xl shadow-md">
           {onEdit && (
             <DropdownMenuItem
-              onClick={onEdit}
+              onClick={() => onEdit}
               className="cursor-pointer flex items-center gap-2"
             >
               <PencilIcon className="h-4 w-4" />
@@ -76,9 +76,7 @@ export function CustomDropdownMenu({
 
           {onDelete && (
             <DropdownMenuItem
-              onClick={() => {
-                setOpen(true);
-              }}
+              onClick={() => setOpen(true)}
               className="cursor-pointer flex items-center gap-2 text-red-600 focus:text-red-600"
             >
               <Trash2Icon className="h-4 w-4" />
@@ -88,7 +86,6 @@ export function CustomDropdownMenu({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Confirm Dialog */}
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent className="rounded-2xl">
           <AlertDialogHeader>
@@ -108,7 +105,7 @@ export function CustomDropdownMenu({
             <AlertDialogAction
               onClick={() => {
                 setOpen(false);
-                onDelete?.();
+                onDelete && onDelete;
               }}
               className="bg-red-600 hover:bg-red-700 text-white rounded-lg"
             >

@@ -18,7 +18,9 @@
       "welcome": "مرحبا {thing}!",
       "actionThingTitle": "{action} {thing}",
       "actionThingDescription": "استخدم هذا النموذج من أجل {action} {thing}. يمكنك تعديل هذه التفاصيل لاحقًا إذا لزم الأمر.",
-      "successToastMsg": "تم {action} {thing} بنجاح"
+      "successToastMsg": "تم {action} {thing} بنجاح",
+      "confirmTitle": "هل أنت متأكد تمامًا؟",
+      "confirmDeleteDescription": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف هذا العنصر نهائيًا."
     },
     "alertMsgs": {
       "unknownError": "حدث خطأ غير معروف. يرجى المحاولة مرة أخرى لاحقًا."

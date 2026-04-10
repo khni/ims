@@ -11,6 +11,7 @@ import { buttonVariants } from "@workspace/ui/components/button";
 import { useRouter } from "next/navigation";
 import { Filters } from "@workspace/ui/blocks/data-table/filter";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export interface DataListProps<TData, TValue>
   extends
@@ -24,10 +25,12 @@ function DataList<TData, TValue>({
   searchKey,
   filterConfigs,
   onRowClickConfig,
+  dropdownActions,
   ...props
 }: DataListProps<TData, TValue>) {
   const { filters, resetFilters, setFilters } = useFilters<Filters>();
   const router = useRouter();
+  const commonT = useTranslations("common");
   return (
     <div>
       <div className="flex gap-3">
@@ -58,6 +61,11 @@ function DataList<TData, TValue>({
                 )
             : undefined
         }
+        dropdownActions={{
+          actionTranslations: (key) => commonT(`actions.${key}`),
+          msgTranslations: (key) => commonT(`msgs.${key}`),
+          ...dropdownActions,
+        }}
         {...props}
       />
     </div>

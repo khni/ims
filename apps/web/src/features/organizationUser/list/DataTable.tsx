@@ -100,7 +100,7 @@ export const OrganizationUserDataTable: React.FC = () => {
         filters={filters}
         onFilterChange={(filters) => setFilters(filters)}
         dropdownActions={{
-          delete: async (row) => {
+          onDelete: async (row) => {
             await mutateAsync({ id: row.original.id });
             queryClient.invalidateQueries({
               queryKey: getOrganizationUserListQueryKey(),

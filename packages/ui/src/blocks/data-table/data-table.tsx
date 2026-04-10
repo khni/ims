@@ -36,7 +36,10 @@ import { Button } from "@workspace/ui/components/button";
 import Loading from "@workspace/ui/blocks/loading/loading";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import FilterComponent from "@workspace/ui/blocks/data-table/filter";
-import { CustomDropdownMenu } from "@workspace/ui/blocks/menus/custom-dropdown-menu";
+import {
+  CustomDropdownMenu,
+  CustomDropdownMenuProps,
+} from "@workspace/ui/blocks/menus/custom-dropdown-menu";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -54,10 +57,7 @@ export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
   data?: { list: TData[]; totalCount: number };
-  dropdownActions?: {
-    delete?: (row: Row<TData>) => Promise<void>;
-    edit?: (row: Row<TData>) => Promise<void>;
-  };
+  dropdownActions?: CustomDropdownMenuProps<Row<TData>, Row<TData>>;
 
   setData?: React.Dispatch<React.SetStateAction<TData[]>>;
   onRowClick?: (row: Row<TData>) => void;
@@ -338,9 +338,22 @@ export function DataTable<TData, TValue>({
                           )}
                         >
                           <CustomDropdownMenu
-                            onDelete={async () =>
-                              await dropdownActions.delete?.(row)
+                            onDelete={
+                              dropdownActions.onDelete
+                                ? async () =>
+                                    await dropdownActions.onDelete?.(row)
+                                : undefined
                             }
+                            onEdit={
+                              dropdownActions.onEdit
+                                ? async () =>
+                                    await dropdownActions.onEdit?.(row)
+                                : undefined
+                            }
+                            actionTranslations={
+                              dropdownActions.actionTranslations
+                            }
+                            msgTranslations={dropdownActions.msgTranslations}
                           />
                         </TableCell>
                       )}
