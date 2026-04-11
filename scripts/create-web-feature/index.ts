@@ -586,7 +586,8 @@ export * from "./${DIRS.list}";
     opts,
   );
 
-  // regenerate central files (scan all features)
+  /* for now until we finish edit generating templates
+   // regenerate central files (scan all features)
   const allFeatures = await discoverFeatures();
   // ensure messages root exists
   await ensureDir(MESSAGES_ROOT);
@@ -615,6 +616,7 @@ export * from "./${DIRS.list}";
   );
   if (opts.dryRun)
     console.log("Note: dry-run - no files were actually written.");
+  */
 }
 
 /* ----------------------------------- CLI ----------------------------------- */

@@ -5,7 +5,6 @@ import {
   useCreateOrganizationUser,
   useRoleList,
 } from "@/src/api";
-import { GetOrganizationUserByIdResponse } from "@avuny/shared";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,10 +12,6 @@ import { z } from "@avuny/zod";
 import { Form as CustomForm, FormProps } from "@/src/components/form";
 import { createOrganizationUserBodySchema as schema } from "@avuny/shared";
 import { useOrganizationUserTranslations } from "@/src/features/organizationUser/translations/hooks/useOrganizationUserTranslations";
-
-export type CreateOrganizationUserFormProps = {
-  organizationUser: GetOrganizationUserByIdResponse;
-};
 
 export default function CreateOrganizationUserForm() {
   const form = useForm<z.infer<typeof schema>>({
