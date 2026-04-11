@@ -23,9 +23,9 @@ import {
   AlertDialogTitle,
 } from "@workspace/ui/components/alert-dialog";
 
-export interface CustomDropdownMenuProps<DeleteArg, EditArg> {
-  onDelete?: (data: DeleteArg) => Promise<void>;
-  onEdit?: (data: EditArg) => Promise<void>;
+export interface CustomDropdownMenuProps {
+  onDelete?: () => Promise<void>;
+  onEdit?: () => Promise<void>;
   actionTranslations?: (key: "delete" | "edit" | "cancel") => string;
   msgTranslations?: (
     key: "confirmTitle" | "confirmDeleteDescription",
@@ -37,7 +37,7 @@ export function CustomDropdownMenu<DeleteArg, EditArg>({
   onEdit,
   actionTranslations = (key) => key,
   msgTranslations = (key) => key,
-}: CustomDropdownMenuProps<DeleteArg, EditArg>) {
+}: CustomDropdownMenuProps) {
   const [open, setOpen] = useState(false);
 
   const editLabel = actionTranslations("edit");
@@ -64,7 +64,7 @@ export function CustomDropdownMenu<DeleteArg, EditArg>({
         <DropdownMenuContent align="end" className="w-40 rounded-xl shadow-md">
           {onEdit && (
             <DropdownMenuItem
-              onClick={() => onEdit}
+              onClick={() => onEdit()}
               className="cursor-pointer flex items-center gap-2"
             >
               <PencilIcon className="h-4 w-4" />
@@ -105,7 +105,7 @@ export function CustomDropdownMenu<DeleteArg, EditArg>({
             <AlertDialogAction
               onClick={() => {
                 setOpen(false);
-                onDelete && onDelete;
+                onDelete && onDelete();
               }}
               className="bg-red-600 hover:bg-red-700 text-white rounded-lg"
             >

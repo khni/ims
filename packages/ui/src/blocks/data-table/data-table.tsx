@@ -57,7 +57,10 @@ export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
   data?: { list: TData[]; totalCount: number };
-  dropdownActions?: CustomDropdownMenuProps<Row<TData>, Row<TData>>;
+  dropdownActions?: {
+    onDelete?: (row: Row<TData>) => Promise<void>;
+    onEdit?: (row: Row<TData>) => Promise<void>;
+  } & Omit<CustomDropdownMenuProps, "onDelete" | "onEdit">;
 
   setData?: React.Dispatch<React.SetStateAction<TData[]>>;
   onRowClick?: (row: Row<TData>) => void;
@@ -340,14 +343,12 @@ export function DataTable<TData, TValue>({
                           <CustomDropdownMenu
                             onDelete={
                               dropdownActions.onDelete
-                                ? async () =>
-                                    await dropdownActions.onDelete?.(row)
+                                ? () => dropdownActions.onDelete!(row)
                                 : undefined
                             }
                             onEdit={
                               dropdownActions.onEdit
-                                ? async () =>
-                                    await dropdownActions.onEdit?.(row)
+                                ? () => dropdownActions.onEdit!(row)
                                 : undefined
                             }
                             actionTranslations={
