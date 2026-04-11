@@ -1,11 +1,13 @@
 export function formButtonTemplate({
   featurePascal,
   featureCamel,
+  kebabCase,
 }: {
   featurePascal: string;
   featureCamel: string;
+  kebabCase: string;
 }) {
-  return `// ${featureCamel}.form-button.tsx
+  return `// ${kebabCase}-form-button.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -15,8 +17,8 @@ import ActionButton from "@workspace/ui/blocks/buttons/action-btn";
 import { useCommonTranslations } from "@/messages/common";
 import { Get${featurePascal}ByIdResponse } from "@avuny/shared";
 
-import Update${featurePascal}Form from "@/src/features/${featureCamel}/mutation/update-${featureCamel}.form";
-import Create${featurePascal}Form from "@/src/features/${featureCamel}/mutation/create-${featureCamel}.form";
+import Update${featurePascal}Form from "@/src/features/${kebabCase}/mutation/update-${kebabCase}-form";
+import Create${featurePascal}Form from "@/src/features/${kebabCase}/mutation/create-${kebabCase}-form";
 
 export const ${featurePascal}FormButton: React.FC<{
   ${featureCamel}?: Get${featurePascal}ByIdResponse;

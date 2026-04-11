@@ -47,6 +47,17 @@
 
 import fs from "fs/promises";
 import path from "path";
+import { createFormTemplate } from "./templates/mutation/create-form.template";
+import { updateFormTemplate } from "./templates/mutation/update-form.template";
+import { translationsHookTemplate } from "./templates/translations/translation-hooks.template";
+import { messagesJsonContent } from "./templates/translations/translation-messages.template";
+import { featureMessagesTypeTemplate } from "./templates/translations/translation-messages-types.template";
+import { columnsTemplate } from "./templates/list/columns.template";
+import { dataTableTemplate } from "./templates/list/data-table.template";
+import { formButtonTemplate } from "./templates/mutation/form-button.template";
+import { dataTableIndexTemplate } from "./templates/list/list-index.template";
+import { formIndexTemplate } from "./templates/mutation/mutation-index.template";
+import { translationsIndexTemplate } from "./templates/translations/translation-index.template";
 
 type Options = { force: boolean; dryRun: boolean };
 
@@ -130,269 +141,6 @@ async function writeIfNeeded(fp: string, content: string, opts: Options) {
   console.log(
     `${exists ? "OVERWRITTEN:" : "created:"} ${path.relative(ROOT, fp)}`,
   );
-}
-
-/* --------------------------- Templates & Generators ------------------------ */
-
-/* DetailsForm template (PascalCase filename & default export) */
-function detailsFormTemplate(featureCamel: string, featurePascal: string) {
-  return `// ${featurePascal}DetailsForm.tsx
-"use client";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "@avuny/zod";
-import { Form as CustomForm, FormProps } from "@/src/components/form";
-import { mutate${featurePascal}Schema as schema } from "@avuny/shared";
-import { use${featurePascal}Translations } from "@/src/features/${featureCamel}/${DIRS.translations}/${DIRS.hooks}/use${featurePascal}Translations";
-
-export type ${featurePascal}FormDetailsProps<E, S extends string> = {
-  ${featureCamel}?: z.infer<typeof schema>;
-  customForm: Omit<FormProps<z.infer<typeof schema>, E, S>, "form" | "fields">;
-};
-
-export default function ${featurePascal}DetailsForm<E, S extends string>({
-  ${featureCamel},
-  customForm,
-}: ${featurePascal}FormDetailsProps<E, S>) {
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {},
-  });
-
-  useEffect(() => {
-    if (${featureCamel}) form.reset(${featureCamel});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [${featureCamel}]);
-
-  const { ${featureCamel}FormFieldsTranslations } = use${featurePascal}Translations();
-
-  return (
-    <CustomForm
-      form={form}
-      getLabel={${featureCamel}FormFieldsTranslations}
-      resourceName="${featureCamel}"
-      actionName={${featureCamel} ? "update" : "create"}
-      fields={[
-        { key: "name", content: { name: "name", type: "text" }, spans: { base: 4, md: 2 } },
-        { key: "description", content: { name: "description", type: "text" }, spans: { base: 4, md: 2 } },
-      ]}
-      {...customForm}
-    />
-  );
-}
-`;
-}
-
-function createFormTemplate(featurePascal: string) {
-  return `// Create${featurePascal}Form.tsx
-"use client";
-import React from "react";
-import { useCreate${featurePascal} } from "@/src/api";
-import ${featurePascal}DetailsForm from "./${featurePascal}DetailsForm";
-
-export const Create${featurePascal}Form: React.FC = () => {
-  const { mutateAsync, isPending, error } = useCreate${featurePascal}();
-  return (
-    <div>
-      <${featurePascal}DetailsForm
-        customForm={{
-          api: { onSubmit: async (data) => await mutateAsync({ data }), isLoading: isPending },
-          error,
-        }}
-      />
-    </div>
-  );
-};
-`;
-}
-
-function updateFormTemplate(featureCamel: string, featurePascal: string) {
-  return `// Update${featurePascal}Form.tsx
-"use client";
-import React from "react";
-import { useUpdate${featurePascal} } from "@/src/api";
-import { Get${featurePascal}ByIdResponse } from "@avuny/shared";
-import ${featurePascal}DetailsForm from "./${featurePascal}DetailsForm";
-
-export const Update${featurePascal}Form: React.FC<{ ${featureCamel}: Get${featurePascal}ByIdResponse }> = ({ ${featureCamel} }) => {
-  const { mutateAsync, isPending, error } = useUpdate${featurePascal}();
-
-  return (
-    <div>
-      <${featurePascal}DetailsForm
-        ${featureCamel}={${featureCamel}}
-        customForm={{
-          api: { onSubmit: async (data) => mutateAsync({ data: data, id: ${featureCamel}.id }), isLoading: isPending },
-          error,
-        }}
-      />
-    </div>
-  );
-};
-`;
-}
-
-function formButtonTemplate(featureCamel: string, featurePascal: string) {
-  return `// ${featurePascal}FormButton.tsx
-"use client";
-import React, { useState } from "react";
-import { Modal } from "@workspace/ui/blocks/modal";
-import ActionButton from "@workspace/ui/blocks/buttons/action-btn";
-import { useCommonTranslations } from "@/messages/common";
-import { Get${featurePascal}ByIdResponse } from "@avuny/shared";
-import { Create${featurePascal}Form } from "./Create${featurePascal}Form";
-import { Update${featurePascal}Form } from "./Update${featurePascal}Form";
-
-export const ${featurePascal}FormButton: React.FC<{ ${featureCamel}?: Get${featurePascal}ByIdResponse }> = ({ ${featureCamel} }) => {
-  const [open, setOpen] = useState(false);
-  const { actionTranslations } = useCommonTranslations();
-  const add = actionTranslations("add");
-  const edit = actionTranslations("edit");
-
-  return (
-    <div>
-      <Modal
-        trigger={
-          <ActionButton
-            type={${featureCamel} ? "edit" : "add"}
-            onClick={() => setOpen(true)}
-            title={${featureCamel} ? edit : add}
-          />
-        }
-        open={open}
-        onOpenChange={setOpen}
-      >
-        {${featureCamel} ? <Update${featurePascal}Form ${featureCamel}={${featureCamel}} /> : <Create${featurePascal}Form />}
-      </Modal>
-    </div>
-  );
-};
-`;
-}
-
-/* translations hook */
-function translationsHookTemplate(featureCamel: string, featurePascal: string) {
-  return `// use${featurePascal}Translations.ts
-import { useTranslations } from "next-intl";
-
-export const use${featurePascal}Translations = () => {
-  const ${featureCamel}FormTranslations = useTranslations("${featureCamel}.form");
-  const ${featureCamel}FormFieldsTranslations = useTranslations("${featureCamel}.form.fields");
-  const ${featureCamel}HeaderTranslations = useTranslations("${featureCamel}.headers");
-  const ${featureCamel}ColumnHeaderTranslations = useTranslations("${featureCamel}.columnHeaders");
-
-  return {
-    ${featureCamel}FormTranslations,
-    ${featureCamel}FormFieldsTranslations,
-    ${featureCamel}HeaderTranslations,
-    ${featureCamel}ColumnHeaderTranslations,
-  };
-};
-`;
-}
-
-/* list templates */
-function columnsTemplate(featurePascal: string) {
-  return `// Columns.tsx
-"use client";
-import type { ${featurePascal}ListResponse } from "@avuny/shared";
-import { createColumns } from "@workspace/ui/blocks/data-table/custom-columns";
-
-export const ${featurePascal}Columns = ({ getHeader }: { getHeader: any }) =>
-  createColumns<${featurePascal}ListResponse[number]>({
-    columns: [{ key: "name" }, { key: "description" }],
-    getHeader,
-  });
-`;
-}
-
-function dataTableTemplate(featureCamel: string, featurePascal: string) {
-  return `// DataTable.tsx
-"use client";
-import React from "react";
-import { use${featurePascal}List } from "@/src/api";
-import type { ${featurePascal}ListResponse } from "@avuny/shared";
-import { ${featurePascal}Columns } from "./Columns";
-import { DataTable } from "@workspace/ui/blocks/data-table";
-import { useTranslations } from "next-intl";
-
-export const ${featurePascal}DataTable: React.FC = () => {
-  const ${featureCamel}ColumnHeaderTranslations = useTranslations("${featureCamel}.columnHeaders");
-  const { data, isPending } = use${featurePascal}List({
-    query: { queryKey: ["${featureCamel}List"] },
-  });
-
-  if (!data) return null;
-
-  return (
-    <DataTable
-      columns={${featurePascal}Columns({
-        getHeader: ${featureCamel}ColumnHeaderTranslations as (key: keyof ${featurePascal}ListResponse[number]) => string,
-      })}
-      data={data.data.list}
-      isLoading={isPending}
-    />
-  );
-};
-`;
-}
-
-/* messages types template (per-feature) */
-function featureMessagesTypeTemplate(
-  featureCamel: string,
-  featurePascal: string,
-) {
-  return `import ${featureCamel}Messages from "./en.json";
-export type ${featurePascal}Messages = typeof ${featureCamel}Messages;
-
-export const ${featurePascal}Messages: ${featurePascal}Messages = {
-  ...${featureCamel}Messages,
-};
-`;
-}
-
-/* translations messages en/ar templates */
-function messagesJsonContent(featureCamel: string, lang: "en" | "ar") {
-  if (lang === "en") {
-    const obj: any = {
-      [featureCamel]: {
-        form: {
-          headings: {
-            title: "{action} " + capitalize(featureCamel),
-            description: `Use this form to {action} an ${capitalize(featureCamel)}.`,
-          },
-          fields: { name: "Name", description: "Description" },
-        },
-        headers: { list: "List" },
-        columnHeaders: {
-          name: "name",
-          description: "description",
-          updatedAt: "Last Updated",
-        },
-      },
-    };
-    return JSON.stringify(obj, null, 2);
-  } else {
-    const obj: any = {
-      [featureCamel]: {
-        form: {
-          headings: {
-            title: "{action} " + capitalize(featureCamel),
-            description: `استخدم هذا النموذج لـ {action} ${capitalize(featureCamel)}`,
-          },
-          fields: { name: "الاسم", description: "الوصف" },
-        },
-        headers: { list: "قائمة" },
-        columnHeaders: {
-          name: "الاسم",
-          description: "الوصف",
-          updatedAt: "آخر تحديث",
-        },
-      },
-    };
-    return JSON.stringify(obj, null, 2);
-  }
 }
 
 /* ----------------------- Central files templates (auto-regenerated) ----------------------- */
@@ -482,11 +230,12 @@ async function discoverFeatures(): Promise<string[]> {
 async function generateFeature(rawName: string, opts: Options) {
   if (!rawName) throw new Error("feature name is required");
 
+  const kebabCase = rawName;
   const featureCamel = toCamelCase(rawName);
   const featurePascal = toPascalCase(rawName);
 
-  // feature root: src/features/<featureCamel>
-  const featureRoot = path.join(FEATURES_DIR, featureCamel);
+  // feature root: src/features/<kebab-case>
+  const featureRoot = path.join(FEATURES_DIR, kebabCase);
   await ensureDir(featureRoot);
 
   // section directories
@@ -505,48 +254,56 @@ async function generateFeature(rawName: string, opts: Options) {
   ]);
 
   // write mutation files (PascalCase component filenames)
+
   await writeIfNeeded(
-    path.join(mutationDir, `${featurePascal}DetailsForm.tsx`),
-    detailsFormTemplate(featureCamel, featurePascal),
+    path.join(mutationDir, `create-${kebabCase}-form.tsx`),
+    createFormTemplate({
+      kebabCase,
+      featurePascal,
+      featureCamel,
+      hooksDir,
+      translationsDir,
+    }),
     opts,
   );
   await writeIfNeeded(
-    path.join(mutationDir, `Create${featurePascal}Form.tsx`),
-    createFormTemplate(featurePascal),
+    path.join(mutationDir, `update-${kebabCase}-form.tsx`),
+    updateFormTemplate({
+      kebabCase,
+      featurePascal,
+      featureCamel,
+      hooksDir,
+      translationsDir,
+    }),
     opts,
   );
   await writeIfNeeded(
-    path.join(mutationDir, `Update${featurePascal}Form.tsx`),
-    updateFormTemplate(featureCamel, featurePascal),
-    opts,
-  );
-  await writeIfNeeded(
-    path.join(mutationDir, `${featurePascal}FormButton.tsx`),
-    formButtonTemplate(featureCamel, featurePascal),
+    path.join(mutationDir, `${kebabCase}-form-button.tsx`),
+    formButtonTemplate({ featureCamel, featurePascal, kebabCase }),
     opts,
   );
   await writeIfNeeded(
     path.join(mutationDir, `index.ts`),
-    `export * from "./Create${featurePascal}Form";\nexport * from "./Update${featurePascal}Form";\nexport * from "./${featurePascal}FormButton";\nexport { default as ${featurePascal}DetailsForm } from "./${featurePascal}DetailsForm";\n`,
+    formIndexTemplate({ kebabCase }),
     opts,
   );
 
   // translations hooks
   await writeIfNeeded(
-    path.join(hooksDir, `use${featurePascal}Translations.ts`),
-    translationsHookTemplate(featureCamel, featurePascal),
+    path.join(hooksDir, `use-${kebabCase}-translations.ts`),
+    translationsHookTemplate({ featureCamel, featurePascal, kebabCase }),
     opts,
   );
 
   // messages en.json & ar.json
   await writeIfNeeded(
     path.join(messagesDir, `en.json`),
-    messagesJsonContent(featureCamel, "en"),
+    messagesJsonContent({ featureCamel, lang: "en" }),
     opts,
   );
   await writeIfNeeded(
     path.join(messagesDir, `ar.json`),
-    messagesJsonContent(featureCamel, "ar"),
+    messagesJsonContent({ featureCamel, lang: "ar" }),
     opts,
   );
 
@@ -554,24 +311,29 @@ async function generateFeature(rawName: string, opts: Options) {
   const messagesTypeFilename = `${featurePascal}Messages.ts`;
   await writeIfNeeded(
     path.join(messagesDir, messagesTypeFilename),
-    featureMessagesTypeTemplate(featureCamel, featurePascal),
+    featureMessagesTypeTemplate({ featureCamel, featurePascal }),
+    opts,
+  );
+  await writeIfNeeded(
+    path.join(translationsDir, `index.ts`),
+    translationsIndexTemplate({ kebabCase }),
     opts,
   );
 
   // list files
   await writeIfNeeded(
-    path.join(listDir, `Columns.tsx`),
-    columnsTemplate(featurePascal),
+    path.join(listDir, `${kebabCase}-columns.tsx`),
+    columnsTemplate({ featurePascal, featureCamel, kebabCase }),
     opts,
   );
   await writeIfNeeded(
-    path.join(listDir, `DataTable.tsx`),
-    dataTableTemplate(featureCamel, featurePascal),
+    path.join(listDir, `${kebabCase}-data-table.tsx`),
+    dataTableTemplate({ featureCamel, featurePascal, kebabCase }),
     opts,
   );
   await writeIfNeeded(
     path.join(listDir, `index.ts`),
-    `export * from "./DataTable";\n`,
+    dataTableIndexTemplate({ kebabCase }),
     opts,
   );
 

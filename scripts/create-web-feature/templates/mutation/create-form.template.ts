@@ -1,15 +1,17 @@
 export function createFormTemplate({
   featurePascal,
   featureCamel,
+  kebabCase,
   hooksDir,
   translationsDir,
 }: {
   featurePascal: string;
   featureCamel: string;
+  kebabCase: string;
   hooksDir: string;
   translationsDir: string;
 }) {
-  return `// create-${featureCamel}.form.tsx
+  return `// create-${kebabCase}-form.tsx
 "use client";
 
 import React from "react";
@@ -24,7 +26,7 @@ import {
 } from "@/src/api";
 
 import { create${featurePascal}Schema as schema } from "@avuny/shared";
-import { use${featurePascal}Translations } from "@/src/features/${featureCamel}/${translationsDir}/${hooksDir}/use${featurePascal}Translations";
+import { use${featurePascal}Translations } from "@/src/features/${kebabCase}/translations/hooks/use-${kebabCase}-translations";
 
 export const Create${featurePascal}Form: React.FC = () => {
   const form = useForm<z.infer<typeof schema>>({

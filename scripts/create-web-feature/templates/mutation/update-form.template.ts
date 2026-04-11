@@ -3,13 +3,15 @@ export function updateFormTemplate({
   featureCamel,
   hooksDir,
   translationsDir,
+  kebabCase,
 }: {
+  kebabCase: string;
   featurePascal: string;
   featureCamel: string;
   hooksDir: string;
   translationsDir: string;
 }) {
-  return `// update-${featureCamel}.form.tsx
+  return `// update-${kebabCase}-form.tsx
 "use client";
 
 import React, { useEffect } from "react";
@@ -24,7 +26,7 @@ import {
 } from "@/src/api";
 
 import { update${featurePascal}Schema as schema } from "@avuny/shared";
-import { use${featurePascal}Translations } from "@/src/features/${featureCamel}/${translationsDir}/${hooksDir}/use${featurePascal}Translations";
+import { use${featurePascal}Translations } from "@/src/features/${kebabCase}/translations/hooks/use-${kebabCase}-translations";
 
 import { Get${featurePascal}ByIdResponse } from "@/src/api/types";
 
