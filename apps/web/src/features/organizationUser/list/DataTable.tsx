@@ -8,18 +8,14 @@ import {
 } from "@/src/api";
 import type { OrganizationUserFilters } from "@avuny/shared";
 import { OrganizationUserColumns } from "./Columns";
-import { BackendDateRange } from "@workspace/ui/blocks/data-table/filter";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { SortingState } from "@tanstack/react-table";
 import { useFilters } from "@/src/hooks/use-filters.hook";
 import { mapSortingArray } from "@workspace/ui/lib/utils";
-import { DebouncedInput } from "@workspace/ui/blocks/form/debounced-input";
 import { useQueryClient } from "@tanstack/react-query";
 import DataList from "@/src/components/data-list";
 
 export const OrganizationUserDataTable: React.FC = () => {
-  const router = useRouter();
   const organizationUserColumnHeaderTranslations = useTranslations(
     "organizationUser.columnHeaders",
   );
@@ -28,8 +24,7 @@ export const OrganizationUserDataTable: React.FC = () => {
   );
   const [sortingState, setSortingState] = useState<SortingState>([
     { id: "updatedAt", desc: false },
-  ]); //this will be removed later when i make orderBy optional
-  const [filter, setFilter] = React.useState({});
+  ]);
   const { mutateAsync } = useDeleteOrganizationUser();
 
   const { filters, resetFilters, setFilters } =
