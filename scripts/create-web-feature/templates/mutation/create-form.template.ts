@@ -2,14 +2,10 @@ export function createFormTemplate({
   featurePascal,
   featureCamel,
   kebabCase,
-  hooksDir,
-  translationsDir,
 }: {
   featurePascal: string;
   featureCamel: string;
   kebabCase: string;
-  hooksDir: string;
-  translationsDir: string;
 }) {
   return `// create-${kebabCase}-form.tsx
 "use client";
