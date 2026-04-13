@@ -1,12 +1,4 @@
-import { Context } from "../../../types";
-
-export function dataTableTemplate({
-  featurePascal,
-  featureCamel,
-  kebabCase,
-  pluralKebabCase,
-}: Context) {
-  return `// ${kebabCase}-data-table.tsx
+// unit-item-data-table.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -15,38 +7,38 @@ import { SortingState } from "@tanstack/react-table";
 import { useQueryClient } from "@tanstack/react-query";
 
 import {
-  use${featurePascal}List,
-  useDelete${featurePascal},
-  get${featurePascal}ListQueryKey,
+  useUnitItemList,
+  useDeleteUnitItem,
+  getUnitItemListQueryKey,
 } from "@/src/api";
 
-import type { ${featurePascal}Filters } from "@avuny/shared";
+import type { UnitItemFilters } from "@avuny/shared";
 
-import { ${featurePascal}Columns } from "./${kebabCase}-columns";
+import { UnitItemColumns } from "./unit-item-columns";
 import { useFilters } from "@/src/hooks/use-filters.hook";
 import { mapSortingArray } from "@workspace/ui/lib/utils";
 import DataList from "@/src/components/data-list";
 
-export const ${featurePascal}DataTable: React.FC = () => {
+export const UnitItemDataTable: React.FC = () => {
   const columnHeaderTranslations = useTranslations(
-    "${featureCamel}.columnHeaders"
+    "unitItem.columnHeaders"
   );
 
   const [sortingState, setSortingState] = useState<SortingState>([
     { id: "updatedAt", desc: false },
   ]);
 
-  const { mutateAsync } = useDelete${featurePascal}();
+  const { mutateAsync } = useDeleteUnitItem();
 
   const { filters, resetFilters, setFilters } =
-    useFilters<${featurePascal}Filters>();
+    useFilters<UnitItemFilters>();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
 
-  const { data, isPending } = use${featurePascal}List({
+  const { data, isPending } = useUnitItemList({
     page: pagination.pageIndex,
     pageSize: pagination.pageSize,
     filters,
@@ -60,7 +52,7 @@ export const ${featurePascal}DataTable: React.FC = () => {
       resetFilters={resetFilters}
       searchKey="name"
       onRowClickConfig={{
-        href: "${pluralKebabCase}",
+        href: "unitItems",
         idKey: "id",
       }}
       filterConfigs={[
@@ -77,7 +69,7 @@ export const ${featurePascal}DataTable: React.FC = () => {
         },
       ]}
       isLoading={isPending}
-      columns={${featurePascal}Columns({
+      columns={UnitItemColumns({
         getHeader: columnHeaderTranslations,
       })}
       data={data?.data}
@@ -92,12 +84,10 @@ export const ${featurePascal}DataTable: React.FC = () => {
           await mutateAsync({ id: row.original.id });
 
           queryClient.invalidateQueries({
-            queryKey: get${featurePascal}ListQueryKey(),
+            queryKey: getUnitItemListQueryKey(),
           });
         },
       }}
     />
   );
 };
-`;
-}

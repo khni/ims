@@ -25,6 +25,7 @@ export const OrganizationUserDataTable: React.FC = () => {
   const [sortingState, setSortingState] = useState<SortingState>([
     { id: "updatedAt", desc: false },
   ]);
+  console.log("Map Sorting state:", mapSortingArray(sortingState));
   const { mutateAsync } = useDeleteOrganizationUser();
 
   const { filters, resetFilters, setFilters } =

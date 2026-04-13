@@ -1,0 +1,22 @@
+{
+  "unitItem": {
+    "form": {
+      "headings": {
+        "title": "{action} unitItem",
+        "description": "Use this form to {action} an unitItem."
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description"
+      }
+    },
+    "headers": {
+      "list": "List"
+    },
+    "columnHeaders": {
+      "name": "name",
+      "description": "description",
+      "updatedAt": "Last Updated"
+    }
+  }
+}

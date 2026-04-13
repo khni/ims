@@ -7,6 +7,8 @@ import { createFormTemplate } from "./templates/mutation/create-form.template";
 import { formButtonTemplate } from "./templates/mutation/form-button.template";
 import { formIndexTemplate } from "./templates/mutation/mutation-index.template";
 import { updateFormTemplate } from "./templates/mutation/update-form.template";
+import { detailsPageTemplate } from "./templates/pages/details-page.template";
+import { listPageTemplate } from "./templates/pages/list-page.template";
 import { translationsHookTemplate } from "./templates/translations/translation-hooks.template";
 import { translationsIndexTemplate } from "./templates/translations/translation-index.template";
 import { featureMessagesTypeTemplate } from "./templates/translations/translation-messages-types.template";
@@ -113,6 +115,30 @@ export const createFeatureStructure = (ctx: Context): StructureNode => ({
 export * from "./${DIRS.translations}";
 export * from "./${DIRS.list}";
 `,
+    },
+  ],
+});
+
+export const createModulePagesStructure = (ctx: Context): StructureNode => ({
+  name: ctx.kebabCase,
+  type: "dir",
+  children: [
+    {
+      name: `[${ctx.featureCamel}Id]`,
+      type: "dir",
+      children: [
+        {
+          name: `page.tsx`,
+          type: "file",
+          generate: () => detailsPageTemplate(ctx),
+        },
+      ],
+    },
+
+    {
+      name: "page.tsx",
+      type: "file",
+      generate: () => listPageTemplate(ctx),
     },
   ],
 });

@@ -3,6 +3,9 @@ export type Context = {
   kebabCase: string;
   featureCamel: string;
   featurePascal: string;
+  pluralKebabCase: string;
+  pluralFeaturePascal: string;
+  pluralFeatureCamel: string;
 };
 
 export type StructureNode = {

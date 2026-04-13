@@ -1,0 +1,22 @@
+{
+  "unitItem": {
+    "form": {
+      "headings": {
+        "title": "{action} unitItem",
+        "description": "استخدم هذا النموذج لـ {action} unitItem"
+      },
+      "fields": {
+        "name": "الاسم",
+        "description": "الوصف"
+      }
+    },
+    "headers": {
+      "list": "قائمة"
+    },
+    "columnHeaders": {
+      "name": "الاسم",
+      "description": "الوصف",
+      "updatedAt": "آخر تحديث"
+    }
+  }
+}

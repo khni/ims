@@ -7,6 +7,7 @@ import path from "path";
 export class GeneratorCli {
   private ctx: Context;
   private rawName: string;
+  private rawPlural: string;
   private options: Options;
   private node: StructureNode;
 
@@ -23,23 +24,40 @@ export class GeneratorCli {
       process.exit(1);
     }
     const raw = argv[0];
+    const rawPlural = argv[1];
+
     if (!raw || typeof raw !== "string") {
-      throw new Error("Feature name is required and must be a string");
+      throw new Error("Module name is required and must be a string");
+    }
+    if (!rawPlural || typeof rawPlural !== "string") {
+      throw new Error("Module plural name is required and must be a string");
     }
     this.rawName = raw;
+    this.rawPlural = rawPlural;
     const force = argv.includes("--force");
     const dryRun = argv.includes("--dry-run");
     this.options = { force, dryRun };
 
-    this.ctx = this.getContext(this.rawName);
+    this.ctx = this.getContext(this.rawName, this.rawPlural);
     this.node = this.createStructure(this.ctx);
   }
 
-  getContext(rawName: string): Context {
+  getContext(rawName: string, rawPlural: string): Context {
     const kebabCase = rawName;
     const featureCamel = toCamelCase(rawName);
     const featurePascal = toPascalCase(rawName);
-    return { kebabCase, featureCamel, featurePascal };
+    const pluralKebabCase = rawPlural;
+    const pluralFeaturePascal = toPascalCase(rawPlural);
+    const pluralFeatureCamel = toCamelCase(rawPlural);
+
+    return {
+      kebabCase,
+      featureCamel,
+      featurePascal,
+      pluralKebabCase,
+      pluralFeaturePascal,
+      pluralFeatureCamel,
+    };
   }
 
   generateNode = async (

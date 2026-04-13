@@ -1,7 +1,10 @@
 #!/usr/bin/env tsx
 import path from "path";
 import { GeneratorCli } from "../generator-cli";
-import { createFeatureStructure } from "./structure";
+import {
+  createFeatureStructure,
+  createModulePagesStructure,
+} from "./structure";
 import { DIRS } from "./config";
 import { ensureDir } from "../utils/fs";
 import { requestConfigTemplate } from "./templates/request-config.template";
@@ -29,6 +32,19 @@ const MESSAGES_ROOT = path.join(WEB_ROOT, "messages");
   );
 
   await generatorCli.run();
+
+  const WORKSPACE_DIR = path.join(WEB_SRC, "app/workspace/[workspaceId]");
+  // pages
+
+  const generatePagesCli = new GeneratorCli(
+    createModulePagesStructure,
+    ROOT,
+    WORKSPACE_DIR,
+  );
+
+  await generatePagesCli.run();
+
+  /*
   const allFeatures = await generatorCli.discoverFolders(FEATURES_DIR);
   console.log("Discovered features:", allFeatures);
   const getRequestConfigPath = path.join(WEB_SRC, "i18n/request.ts");
@@ -48,4 +64,5 @@ const MESSAGES_ROOT = path.join(WEB_ROOT, "messages");
   ]);
 
   console.log("✨ Central files updated");
+  */
 })();
