@@ -11,7 +11,8 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "api:generate": "turbo api:generate",
-    "create-feature": "tsx  scripts/create-web-feature/index.ts"
+    "create-web-module": "tsx  scripts/create-web-feature/index.ts",
+    "create-backend-module": "tsx  scripts/create-backend-module/index.ts"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

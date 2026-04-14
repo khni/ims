@@ -11,7 +11,7 @@ export const IdentifierStringSchema = z.union([z.e164(), z.email()]);
 // ─────────────────────────────────────────────
 
 export const createLocalRegisterInputSchema = <TIdentifier extends z._ZodType>(
-  identifierSchema: TIdentifier
+  identifierSchema: TIdentifier,
 ) =>
   z
     .object({
@@ -24,21 +24,10 @@ export const createLocalRegisterInputSchema = <TIdentifier extends z._ZodType>(
 export const LocalRegisterWithTransformInputSchema =
   createLocalRegisterInputSchema(IdentifierWithTransformSchema);
 export const LocalRegisterInputSchema = createLocalRegisterInputSchema(
-  IdentifierStringSchema
+  IdentifierStringSchema,
 );
 // --- Generated Types ---
 
-/**
- * Type for LocalRegister with transformed identifiers
- */
-export type LocalRegisterWithTransformInput = z.infer<
-  typeof LocalRegisterWithTransformInputSchema
->;
-
-/**
- * Type for standard LocalRegister with string identifiers
- */
-export type LocalRegisterInput = z.infer<typeof LocalRegisterInputSchema>;
 // ─────────────────────────────────────────────
 // otpSignUpInputSchema
 // ─────────────────────────────────────────────
@@ -58,8 +47,6 @@ export const localLoginInputSchema = z
     password: z.string().openapi({ example: "P@ssw0rd" }),
   })
   .openapi("LocalLoginInput");
-
-export type LocalLoginInput = z.infer<typeof localLoginInputSchema>;
 
 // ─────────────────────────────────────────────
 // resetForgettenPasswordInputSchema
