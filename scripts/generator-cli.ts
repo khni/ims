@@ -72,7 +72,13 @@ export class GeneratorCli {
     if (node.type === "dir") {
       await ensureDir(fullPath);
       for (const child of node.children || []) {
-        await this.generateNode(child, fullPath, opts, ROOT, context);
+        await this.generateNode(
+          child,
+          fullPath,
+          child.overwrite ? { ...opts, force: true } : opts,
+          ROOT,
+          context,
+        );
       }
     } else {
       const content = node.generate?.(context) || "";

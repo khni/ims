@@ -1,31 +1,28 @@
-import { Context } from "../../types";
-
-export function repositoryTemplate({ featurePascal, featureCamel }: Context) {
-  return `import {
+import {
   type Tx,
   type DB,
   PrismaTransaction,
 } from "@avuny/db";
 
 import type {
-  Create${featurePascal}Repo,
-  Update${featurePascal}Repo,
-  ${featurePascal}RepoFilters,
-  ${featurePascal}RepoSorting,
-  ${featurePascal}WhereUniqueInput,
+  CreateRegionRepo,
+  UpdateRegionRepo,
+  RegionRepoFilters,
+  RegionRepoSorting,
+  RegionWhereUniqueInput,
 } from "@avuny/shared";
 
 import { IRepository } from "@avuny/core";
 
 /**
- * ${featurePascal} Repository
+ * Region Repository
  *
  * Responsibility:
- * - Handles all DB operations for ${featureCamel}
+ * - Handles all DB operations for region
  * - Abstracts Prisma from service layer
  * - Supports transactions via Tx
  */
-export class ${featurePascal}Repository
+export class RegionRepository
   extends PrismaTransaction
   implements IRepository
 {
@@ -48,26 +45,26 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Create ${featureCamel}
+   * Create region
    */
   async create(params: {
-    data: Create${featurePascal}Repo;
+    data: CreateRegionRepo;
     tx?: Tx;
   }) {
     const { data, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.create({
+    return db.region.create({
       data,
       select: { id: true, name: true },
     });
   }
 
   /**
-   * Create many ${featureCamel}
+   * Create many region
    */
   async createMany(params: {
-    data: Create${featurePascal}Repo[];
+    data: CreateRegionRepo[];
     skipDuplicates?: boolean;
     tx?: Tx;
   }): Promise<{
@@ -76,7 +73,7 @@ export class ${featurePascal}Repository
     const { data, skipDuplicates, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.createMany({
+    return db.region.createMany({
       data,
       skipDuplicates,
     });
@@ -87,32 +84,32 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Find first ${featureCamel}
+   * Find first region
    */
   async find(params: {
-    where: ${featurePascal}RepoFilters;
+    where: RegionRepoFilters;
     tx?: Tx;
   }): Promise<{ id: string } | null> {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findFirst({
+    return db.region.findFirst({
       where,
       select: { id: true },
     });
   }
 
   /**
-   * Find unique ${featureCamel}
+   * Find unique region
    */
   async findUnique(params: {
-    where: ${featurePascal}WhereUniqueInput;
+    where: RegionWhereUniqueInput;
     tx?: Tx;
   }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findUnique({
+    return db.region.findUnique({
       where,
     });
   }
@@ -127,17 +124,17 @@ export class ${featurePascal}Repository
     const { id, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findUnique({
+    return db.region.findUnique({
       where: { id },
     });
   }
 
   /**
-   * Find many ${featureCamel}
+   * Find many region
    */
   async findMany(params: {
-    where?: ${featurePascal}RepoFilters;
-    orderBy?: ${featurePascal}RepoSorting;
+    where?: RegionRepoFilters;
+    orderBy?: RegionRepoSorting;
     skip?: number;
     take?: number;
     tx?: Tx;
@@ -145,22 +142,22 @@ export class ${featurePascal}Repository
     const { tx, ...query } = params ?? {};
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findMany({
+    return db.region.findMany({
       ...query,
     });
   }
 
   /**
-   * Count ${featureCamel}
+   * Count region
    */
   async count(params?: {
-    where?: ${featurePascal}RepoFilters;
+    where?: RegionRepoFilters;
     tx?: Tx;
   }) {
     const { tx, where } = params ?? {};
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.count({
+    return db.region.count({
       where,
     });
   }
@@ -170,17 +167,17 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Update ${featureCamel}
+   * Update region
    */
   async update(params: {
-    where: ${featurePascal}WhereUniqueInput;
-    data: Update${featurePascal}Repo;
+    where: RegionWhereUniqueInput;
+    data: UpdateRegionRepo;
     tx?: Tx;
   }) {
     const { where, data, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.update({
+    return db.region.update({
       where,
       data,
     });
@@ -191,20 +188,18 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Delete ${featureCamel}
+   * Delete region
    */
   async delete(params: {
-    where: ${featurePascal}WhereUniqueInput;
+    where: RegionWhereUniqueInput;
     tx?: Tx;
   }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.delete({
+    return db.region.delete({
       where,
       select: { id: true },
     });
   }
-}
-`;
 }

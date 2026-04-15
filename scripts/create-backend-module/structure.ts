@@ -1,4 +1,6 @@
 import { Context, StructureNode } from "../types";
+import { intlArTemplate } from "./templates/intl/locales/intl-ar.template";
+import { intlEnTemplate } from "./templates/intl/locales/intl-en.template";
 import { repositoryTemplate } from "./templates/repository.template";
 import { schemasTemplate } from "./templates/shared/schemas.template";
 import { typesTemplate } from "./templates/shared/types.templates";
@@ -55,6 +57,45 @@ export const createModuleStructure = (ctx: Context): StructureNode => ({
           generate: () => repositoryTemplate(ctx),
         },
       ],
+    },
+  ],
+});
+
+export const createModuleLocaleStructure = (ctx: Context): StructureNode => ({
+  name: ctx.kebabCase, //module name as folder
+  type: "dir",
+  children: [
+    {
+      name: `en.json`,
+      type: "file",
+      generate: () => intlEnTemplate(),
+    },
+    {
+      name: `ar.json`,
+      type: "file",
+      generate: () => intlArTemplate(),
+    },
+  ],
+});
+
+export const createModuleIntlStructure = (ctx: Context): StructureNode => ({
+  name: ctx.kebabCase, //intl
+  type: "dir",
+  children: [
+    {
+      name: `i18next.d.ts`,
+      type: "file",
+      generate: () => intlEnTemplate(),
+    },
+    {
+      name: `i18next.ts`,
+      type: "file",
+      generate: () => intlArTemplate(),
+    },
+    {
+      name: `trans.ts`,
+      type: "file",
+      generate: () => intlArTemplate(),
     },
   ],
 });

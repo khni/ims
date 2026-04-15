@@ -13,4 +13,5 @@ export type StructureNode = {
   type: "dir" | "file";
   children?: StructureNode[];
   generate?: (ctx: Context) => string;
+  overwrite?: boolean;
 };
