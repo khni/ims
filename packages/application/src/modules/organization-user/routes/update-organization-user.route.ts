@@ -14,10 +14,10 @@ import {
 } from "@avuny/utils";
 
 import { getContext, handleResult } from "@avuny/hono";
-import { isAuthenticatedMiddleware } from "../../shared.js";
-import container from "../../container.js";
+import { isAuthenticatedMiddleware } from "../../../shared.js";
+import container from "../../../container.js";
 
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../../intl/trans.js";
 
 export const updateOrganizationUserRoute = new OpenAPIHono();
 const route = createRoute({

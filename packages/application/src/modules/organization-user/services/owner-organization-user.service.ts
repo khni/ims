@@ -1,8 +1,8 @@
 import { Context } from "@avuny/core";
 
 import { OrganizationUserRepository } from "../repositories/organozation-user.repository.js";
-import { IActivityLogService } from "../../shared.js";
-import { IOwnerOrganizationUserService } from "../../shared/owner-oganization-user.interface.js";
+import { IActivityLogService } from "../../../shared.js";
+import { IOwnerOrganizationUserService } from "../../../shared/owner-oganization-user.interface.js";
 import { PrismaTransactionManager } from "@avuny/db";
 import { organizationUserConfig } from "../organization-user.config.js";
 

@@ -8,7 +8,7 @@ import {
   UpdateOrganizationUserBody,
 } from "@avuny/shared";
 import { OrganizationUserRepository } from "../repositories/organozation-user.repository.js";
-import { IUserService } from "../../shared.js";
+import { IUserService } from "../../../shared.js";
 import { fail } from "@avuny/utils";
 import { organizationUserConfig } from "../organization-user.config.js";
 

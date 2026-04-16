@@ -17,7 +17,7 @@ import { getContext, handleResult } from "@avuny/hono";
 import { isAuthenticatedMiddleware } from "../../shared.js";
 import container from "../../container.js";
 
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../intl/trans.js";
 
 export const createOrganizationRoute = new OpenAPIHono();
 const route = createRoute({

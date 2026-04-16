@@ -12,7 +12,7 @@ import {
   createResponseSchema,
   createDomainErrorResponseSchema,
 } from "@avuny/utils";
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../intl/trans.js";
 
 export const signinRoute = new OpenAPIHono();
 const route = createApi({

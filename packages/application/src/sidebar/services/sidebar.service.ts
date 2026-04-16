@@ -6,7 +6,7 @@ import {
 import { IIsOwnerOrganizationUserQuery } from "../../shared/is-owner-oganization-user.query.interface.js";
 import { SidebarQueries } from "../repositories/sidebar.queries.js";
 import { SidebarItem } from "../types.js";
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../intl/trans.js";
 
 // type SidebarItem = {
 //   id: string;

@@ -19,7 +19,7 @@ import { AuthSignUpDomainErrorCodes } from "../lib/auth/errors/errors.js";
 import { refreshTokenCookieOpts } from "../constants.js";
 import { setCookie } from "hono/cookie";
 import { handleResult } from "@avuny/hono";
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../intl/trans.js";
 
 export const signupRoute = new OpenAPIHono();
 const successStatus = 201;

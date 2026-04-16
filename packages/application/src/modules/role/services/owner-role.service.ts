@@ -1,8 +1,8 @@
 import { Context } from "@avuny/core";
 
 import { RoleRepository } from "../repositories/role.repository.js";
-import { IActivityLogService } from "../../shared.js";
-import { IOwnerRoleService } from "../../shared/owner-role.interface.js";
+import { IActivityLogService } from "../../../shared.js";
+import { IOwnerRoleService } from "../../../shared/owner-role.interface.js";
 import { PrismaTransactionManager } from "@avuny/db";
 import { RoleConfig } from "../role.config.js";
 

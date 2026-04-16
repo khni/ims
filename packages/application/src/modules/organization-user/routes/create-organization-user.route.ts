@@ -1,5 +1,8 @@
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { createRoleBodySchema, mutateRoleResponseSchema } from "../schemas.js";
+import {
+  createOrganizationUserBodySchema,
+  mutateOrganizationUserResponseSchema,
+} from "@avuny/shared";
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
@@ -9,26 +12,27 @@ import {
   ModuleErrorResponseMap,
 } from "@avuny/utils";
 
-import { prisma } from "@avuny/db";
 import { getContext, handleResult } from "@avuny/hono";
-import { isAuthenticatedMiddleware } from "../../shared.js";
-import container from "../../container.js";
+import { isAuthenticatedMiddleware } from "../../../shared.js";
+import container from "../../../container.js";
 
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../../intl/trans.js";
+import { OrganizationUserErrorCode } from "../errors/errorCode.js";
+import { OrganizationUserErrorMap } from "../errors/errorMap.js";
 
-export const createRoleRoute = new OpenAPIHono();
+export const createOrganizationUserRoute = new OpenAPIHono();
 const route = createRoute({
   method: "post",
   path: "/",
-  operationId: "createRole",
-  tags: ["role"],
+  operationId: "createOrganizationUser",
+  tags: ["organizationUser"],
   middleware: [isAuthenticatedMiddleware],
   request: {
     headers: AuthorizationHeaderSchema,
     body: {
       content: {
         "application/json": {
-          schema: createRoleBodySchema,
+          schema: createOrganizationUserBodySchema,
         },
       },
     },
@@ -36,15 +40,15 @@ const route = createRoute({
 
   responses: {
     [201]: {
-      description: "Role have been created successfully",
+      description: "OrganizationUser have been created successfully",
       content: {
         "application/json": {
-          schema: createResponseSchema(mutateRoleResponseSchema),
+          schema: createResponseSchema(mutateOrganizationUserResponseSchema),
         },
       },
     },
     [ModuleErrorResponseMap.MODULE_NAME_CONFLICT.statusCode]: {
-      description: "Role name is not unique",
+      description: "OrganizationUser name is not unique",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -54,7 +58,7 @@ const route = createRoute({
       },
     },
     [ModuleErrorResponseMap.MODULE_CREATION_LIMIT_EXCEEDED.statusCode]: {
-      description: "Role creation limit has been exceeded",
+      description: "OrganizationUser creation limit has been exceeded",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -64,7 +68,7 @@ const route = createRoute({
       },
     },
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
-      description: "User has no permission to create role",
+      description: "User has no permission to create organizationUser",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -73,29 +77,39 @@ const route = createRoute({
         },
       },
     },
+    [OrganizationUserErrorMap.USER_NOT_FOUND.statusCode]: {
+      description: "User ist not exists",
+      content: {
+        "application/json": {
+          schema: createDomainErrorResponseSchema([
+            OrganizationUserErrorCode.USER_NOT_FOUND,
+          ]),
+        },
+      },
+    },
     ...globalErrorResponses,
   },
 });
 
-createRoleRoute.openapi(route, async (c) => {
-  const roleService = container.resolve("roleService");
+createOrganizationUserRoute.openapi(route, async (c) => {
+  const organizationUserService = container.resolve("organizationUserService");
   const context = getContext(c);
   const errorTrans = trans({ lang: context.lang as "en" | "ar" });
 
   const body = c.req.valid("json");
 
-  const result = await roleService.create({
+  const result = await organizationUserService.create({
     data: body,
     context,
   });
   const { RESOURCE_NOT_FOUND, ...restModuleErrorResponseMap } =
-    ModuleErrorResponseMap;
+    OrganizationUserErrorMap;
   return handleResult({
     c,
     result,
     successStatus: 201,
     errorMap: restModuleErrorResponseMap,
-    moduleName: "role",
+    moduleName: "organizationUser",
     errorTrans,
   });
 });

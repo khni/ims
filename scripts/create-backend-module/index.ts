@@ -22,6 +22,10 @@ const SHARED_PACKAGE_DIR = path.join(PACKAGES_ROOT, "shared");
 const SHARED_PACKAGE_SRC_DIR = path.join(SHARED_PACKAGE_DIR, "src");
 const APPLICATOPN_PACKAGE_DIR = path.join(PACKAGES_ROOT, "application");
 const APPLICATION_PACKAGE_SRC_DIR = path.join(APPLICATOPN_PACKAGE_DIR, "src");
+const APPLICATION_PACKAGE_MODULES_DIR = path.join(
+  APPLICATION_PACKAGE_SRC_DIR,
+  "modules",
+);
 
 (async () => {
   const generatorCli = new GeneratorCli(
@@ -53,7 +57,7 @@ const APPLICATION_PACKAGE_SRC_DIR = path.join(APPLICATOPN_PACKAGE_DIR, "src");
   const applicationGeneratorCli = new GeneratorCli(
     createModuleStructure,
     ROOT,
-    APPLICATION_PACKAGE_SRC_DIR,
+    APPLICATION_PACKAGE_MODULES_DIR,
   );
 
   await applicationGeneratorCli.run();

@@ -19,21 +19,21 @@ import {
 } from "@avuny/core";
 import { ActivityLogService } from "./activity-log/ActivityLogService.js";
 import { ResourcePermissionChecker } from "./resource-permission/resource-permission-checker.js";
-import { OwnerRoleService } from "./role/services/owner-role.service.js";
-import { OwnerOrganizationUserService } from "./organization-user/services/owner-organization-user.service.js";
-import { RoleRepository } from "./role/repositories/role.repository.js";
-import { RoleService } from "./role/services/role.service.js";
-import { OrganizationUserRepository } from "./organization-user/repositories/organozation-user.repository.js";
-import { OrganizationUserService } from "./organization-user/services/organization-user.service.js";
-import { IsOwnerOrganizationUserQuery } from "./organization-user/queries/is-owner-organization-user.query.js";
+import { OwnerRoleService } from "./modules/role/services/owner-role.service.js";
+import { OwnerOrganizationUserService } from "./modules/organization-user/services/owner-organization-user.service.js";
+import { RoleRepository } from "./modules/role/repositories/role.repository.js";
+import { RoleService } from "./modules/role/services/role.service.js";
+import { OrganizationUserRepository } from "./modules/organization-user/repositories/organozation-user.repository.js";
+import { OrganizationUserService } from "./modules/organization-user/services/organization-user.service.js";
+import { IsOwnerOrganizationUserQuery } from "./modules/organization-user/queries/is-owner-organization-user.query.js";
 import { SidebarQueries } from "./sidebar/repositories/sidebar.queries.js";
 import { SidebarService } from "./sidebar/services/sidebar.service.js";
 import { prisma, PrismaN } from "@avuny/db";
 import { ActivityLogRepository } from "./activity-log/ActivityLogRepository.js";
 import { UserRepository } from "./user/repositories/user.repository.js";
 import { UserService } from "./user/services/user.services.js";
-import { organizationUserConfig } from "./organization-user/organization-user.config.js";
-import { RoleConfig } from "./role/role.config.js";
+import { organizationUserConfig } from "./modules/organization-user/organization-user.config.js";
+import { RoleConfig } from "./modules/role/role.config.js";
 
 function enforceClass<T>(
   c: new (...args: any[]) => T,

@@ -10,11 +10,11 @@ import {
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { getRoleByIdResponseSchema, roleSchema } from "../schemas.js";
 
-import container from "../../container.js";
+import container from "../../../container.js";
 
-import { isAuthenticatedMiddleware } from "../../shared.js";
+import { isAuthenticatedMiddleware } from "../../../shared.js";
 import { getContext, handleResult } from "@avuny/hono";
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../../intl/trans.js";
 
 export const getRoleByIdRoute = new OpenAPIHono();
 const route = createRoute({

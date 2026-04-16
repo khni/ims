@@ -15,11 +15,11 @@ import {
   organizationUserListResponseSchema,
 } from "@avuny/shared";
 import { parseFindManyQuery } from "@avuny/hono";
-import container from "../../container.js";
+import container from "../../../container.js";
 
-import { isAuthenticatedMiddleware } from "../../shared.js";
+import { isAuthenticatedMiddleware } from "../../../shared.js";
 import { getContext, handleResult } from "@avuny/hono";
-import { trans } from "../../intl/Translation.js";
+import { trans } from "../../../intl/trans.js";
 
 export const organizationUserListRoute = new OpenAPIHono();
 const route = createRoute({
