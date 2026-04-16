@@ -3,6 +3,9 @@ import i18n from "i18next";
 import authEn from "./locales/auth/en.json" with { type: "json" };
 import authAr from "./locales/auth/ar.json" with { type: "json" };
 
+import itemEn from "./locales/item/en.json" with { type: "json" };
+import itemAr from "./locales/item/ar.json" with { type: "json" };
+
 import organizationEn from "./locales/organization/en.json" with { type: "json" };
 import organizationAr from "./locales/organization/ar.json" with { type: "json" };
 
@@ -28,6 +31,7 @@ i18n.init({
   resources: {
     en: {
       auth: authEn,
+      item: itemEn,
       organization: organizationEn,
       organizationUser: organizationUserEn,
       permission: permissionEn,
@@ -37,6 +41,7 @@ i18n.init({
     },
     ar: {
       auth: authAr,
+      item: itemAr,
       organization: organizationAr,
       organizationUser: organizationUserAr,
       permission: permissionAr,
@@ -48,6 +53,7 @@ i18n.init({
 
   ns: [
     "auth",
+    "item",
     "organization",
     "organizationUser",
     "permission",

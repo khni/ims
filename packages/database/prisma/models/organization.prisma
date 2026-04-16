@@ -19,6 +19,7 @@ model Organization {
 
   organizationUsers OrganizationUser[]
   roles     Role[]
+  items     Item[]
   // optional fields
   address   String?
   zipCode   String?

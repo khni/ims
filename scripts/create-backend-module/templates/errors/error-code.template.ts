@@ -6,7 +6,7 @@ export function errorCodeTemplate({
   kebabCase: string;
 }) {
   return `import { getEnum } from "@avuny/utils";
-import en from "../../intl/locales/${kebabCase}/en.json" with { type: "json" };
+import en from "../../../intl/locales/${kebabCase}/en.json" with { type: "json" };
 
 /**
  * ${featurePascal} Error Codes

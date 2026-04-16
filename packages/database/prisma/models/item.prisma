@@ -1,0 +1,26 @@
+model Item {
+  id                    String                  @id() @default(uuid())
+  name                  String                  @db.VarChar(255)
+  description           String?
+  purchasePrice         Float                   @default(0.00)
+  salesPrice            Float                   @default(0.00)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  unit                  String
+  sku                   String?
+
+  barcode               String?
+  returnable            Boolean
+  PackedWeight          Float?
+  PackedHeight          Float?
+  PackedWidth           Float?
+  PackedDepth           Float?
+  Refrigerated          Boolean                 @default(false)
+  isActive              Boolean                 @default(true)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt()
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("items")
+}
