@@ -2,9 +2,9 @@ import { prisma } from "@avuny/db";
 import { createResponseSchema, resultToSuccessResponse } from "@avuny/utils";
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { PermissionsMatrixSchema } from "../schemas.js";
-import { trans } from "../../intl/Translation.js";
 import { getContext } from "@avuny/hono";
 import { isAuthenticatedMiddleware } from "../../shared.js";
+import { trans } from "../../intl/trans.js";
 
 export const permissionsMatrixRoute = new OpenAPIHono();
 
