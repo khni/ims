@@ -154,9 +154,7 @@ export const ${featurePascal}RepoFiltersSchema = z.object({
 
   organizationId: z.uuid(),
 
-  NOT: z.object({
-    name: z.string(),
-  }),
+  name: z.string().optional(),
 
   updatedAt: z
     .object({

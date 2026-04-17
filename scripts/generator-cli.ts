@@ -9,10 +9,10 @@ export class GeneratorCli {
   private rawName: string;
   private rawPlural: string;
   private options: Options;
-  private node: StructureNode;
+  private node: StructureNode | StructureNode[];
 
   constructor(
-    private createStructure: (ctx: Context) => StructureNode,
+    private createStructure: (ctx: Context) => StructureNode | StructureNode[],
     private ROOT: string,
     private basePath: string,
   ) {
@@ -61,28 +61,39 @@ export class GeneratorCli {
   }
 
   generateNode = async (
-    node: StructureNode,
+    node: StructureNode | StructureNode[],
     basePath: string,
     opts: Options,
     ROOT: string,
     context: Context,
-  ) => {
-    const fullPath = path.join(basePath, node.name);
+  ): Promise<void> => {
+    // ✅ Normalize to array
+    const nodes = Array.isArray(node) ? node : [node];
 
-    if (node.type === "dir") {
-      await ensureDir(fullPath);
-      for (const child of node.children || []) {
-        await this.generateNode(
-          child,
-          fullPath,
-          child.overwrite ? { ...opts, force: true } : opts,
-          ROOT,
-          context,
-        );
+    for (const currentNode of nodes) {
+      const fullPath = path.join(basePath, currentNode.name);
+
+      if (currentNode.type === "dir") {
+        await ensureDir(fullPath);
+
+        if (currentNode.children?.length) {
+          await this.generateNode(
+            currentNode.children,
+            fullPath,
+            currentNode.overwrite ? { ...opts, force: true } : opts,
+            ROOT,
+            context,
+          );
+        }
+      } else {
+        let dirs: string[] = [];
+        if (currentNode.discoverFolders) {
+          const folders = await this.discoverFolders(basePath);
+          dirs = folders;
+        }
+        const content = currentNode.generate?.(context, dirs) || "";
+        await writeIfNeeded(fullPath, content, opts, ROOT);
       }
-    } else {
-      const content = node.generate?.(context) || "";
-      await writeIfNeeded(fullPath, content, opts, ROOT);
     }
   };
 

@@ -34,6 +34,7 @@ import { UserRepository } from "./user/repositories/user.repository.js";
 import { UserService } from "./user/services/user.services.js";
 import { organizationUserConfig } from "./modules/organization-user/organization-user.config.js";
 import { RoleConfig } from "./modules/role/role.config.js";
+import { moduleDeps } from "./modules/container-deps.js";
 
 function enforceClass<T>(
   c: new (...args: any[]) => T,
@@ -85,7 +86,7 @@ export const appDeps = {
   sidebarQueries: asClass(SidebarQueries).scoped(),
   sidebarService: asClass(SidebarService).scoped(),
 
-  //owner role
+  ...moduleDeps,
 };
 type AppDeps = {
   [K in keyof typeof appDeps]: (typeof appDeps)[K] extends Resolver<infer T>
@@ -99,5 +100,4 @@ const container: AppContainer = createContainer({
   injectionMode: InjectionMode.PROXY,
 });
 container.register(appDeps);
-
 export default container;

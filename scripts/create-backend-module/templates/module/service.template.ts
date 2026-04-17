@@ -1,4 +1,4 @@
-import { Context } from "../../types";
+import { Context } from "../../../types";
 
 export function serviceTemplate({
   featurePascal,
@@ -68,6 +68,7 @@ export class ${featurePascal}Service {
     const { name, ...restInput } = input;
 
     return {
+      ...restInput,
       ...(name
         ? {
             OR: [
@@ -86,7 +87,6 @@ export class ${featurePascal}Service {
             ],
           }
         : {}),
-      ...restInput,
     };
   }
 
