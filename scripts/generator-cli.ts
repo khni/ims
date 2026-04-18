@@ -92,7 +92,12 @@ export class GeneratorCli {
           dirs = folders;
         }
         const content = currentNode.generate?.(context, dirs) || "";
-        await writeIfNeeded(fullPath, content, opts, ROOT);
+        await writeIfNeeded(
+          fullPath,
+          content,
+          currentNode.overwrite ? { ...opts, force: true } : opts,
+          ROOT,
+        );
       }
     }
   };

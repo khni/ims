@@ -69,18 +69,6 @@ export const appDeps = {
   // organization
   organizationRepository: asClass(OrganizationRepository).scoped(),
   organizationService: asClass(OrganizationService).scoped(),
-  // role
-  roleRepository: asClass(RoleRepository).scoped(),
-  roleService: asClass(RoleService).scoped(),
-  ownerRoleService: asClass(OwnerRoleService).scoped(),
-  roleConfig: asClass(RoleConfig).singleton(),
-
-  // organization user
-  organizationUserRepository: asClass(OrganizationUserRepository).scoped(),
-  organizationUserService: asClass(OrganizationUserService).scoped(),
-  ownerOrganizationUserService: asClass(OwnerOrganizationUserService).scoped(),
-  isOwnerOrganizationUserQuery: asClass(IsOwnerOrganizationUserQuery).scoped(),
-  organizationUserConfig: asClass(organizationUserConfig).singleton(),
 
   //sidebar
   sidebarQueries: asClass(SidebarQueries).scoped(),

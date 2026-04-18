@@ -80,6 +80,16 @@ export class UpdateService {
           `${options.config.moduleName}UpdateService.update`,
         );
       }
+      const recordIsExist = (await options.repository.findUnique({
+        where: { id: params.id },
+      })) as Awaited<ReturnType<R["findUnique"]>>;
+      if (!recordIsExist) {
+        return fail(
+          ModuleErrorCodes.RESOURCE_NOT_FOUND,
+          params.context,
+          `${options.config.moduleName}QueryService.findById`,
+        );
+      }
       const { data, context, id } = params;
       const { uniqueChecker, hooks } = options ?? {};
 

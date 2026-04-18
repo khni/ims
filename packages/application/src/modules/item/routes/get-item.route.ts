@@ -1,5 +1,3 @@
-import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { mutateOrganizationUserResponseSchema } from "@avuny/shared";
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
@@ -10,38 +8,58 @@ import {
   ModuleErrorResponseMap,
 } from "@avuny/utils";
 
-import { getContext, handleResult } from "@avuny/hono";
-import { isAuthenticatedMiddleware } from "../../../shared.js";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+
+import {
+  getItemByIdResponseSchema,
+} from "@avuny/shared";
+
 import container from "../../../container.js";
 
+import { isAuthenticatedMiddleware } from "../../../shared.js";
+import { getContext, handleResult } from "@avuny/hono";
 import { trans } from "../../../intl/trans.js";
 
-export const deleteOrganizationUserRoute = new OpenAPIHono();
+import { ItemErrorMap } from "../errors/item.error-map.js";
+
+/**
+ * Get Item By ID Route
+ */
+export const getItemByIdRoute = new OpenAPIHono();
+
 const route = createRoute({
-  method: "delete",
+  method: "get",
   path: "/{id}",
-  operationId: "deleteOrganizationUser",
-  tags: ["organizationUser"],
+  operationId: "getItemById",
+  tags: ["item"],
+
   middleware: [isAuthenticatedMiddleware],
+
   request: {
-    headers: AuthorizationHeaderSchema,
     params: getResourceByIdParamsSchema,
+    headers: AuthorizationHeaderSchema,
   },
 
   responses: {
-    [200]: {
-      description: "OrganizationUser have been deleted successfully",
+    /**
+     * Success
+     */
+    200: {
+      description: "Item retrieved successfully",
       content: {
         "application/json": {
           schema: createResponseSchema(
-            mutateOrganizationUserResponseSchema.omit({ name: true }),
+            getItemByIdResponseSchema
           ),
         },
       },
     },
 
+    /**
+     * Permission error
+     */
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
-      description: "User has no permission to delete organizationUser",
+      description: "User has no permission to access item",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -50,11 +68,12 @@ const route = createRoute({
         },
       },
     },
+
     /**
      * Resource not found
      */
     [ModuleErrorResponseMap.RESOURCE_NOT_FOUND.statusCode]: {
-      description: "organizationUser not found",
+      description: "Item not found",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -63,31 +82,44 @@ const route = createRoute({
         },
       },
     },
+
     ...globalErrorResponses,
   },
 });
 
-deleteOrganizationUserRoute.openapi(route, async (c) => {
-  const organizationUserService = container.resolve("organizationUserService");
-  const context = getContext(c);
-  const errorTrans = trans({ lang: context.lang as "en" | "ar" });
-  const { id } = c.req.valid("param");
+/**
+ * Route Handler
+ */
+getItemByIdRoute.openapi(route, async (c) => {
+  const itemService = container.resolve(
+    "itemService"
+  );
 
-  const result = await organizationUserService.delete({
-    context,
-    where: { id },
+  const context = getContext(c);
+
+  const errorTrans = trans({
+    lang: context.lang as "en" | "ar",
   });
-  const {
-    MODULE_CREATION_LIMIT_EXCEEDED,
-    MODULE_NAME_CONFLICT,
-    ...restModuleErrorResponseMap
-  } = ModuleErrorResponseMap;
+
+  const id = c.req.param("id");
+
+  const result = await itemService.findById({
+    context,
+    id,
+  });
+
+  /**
+   * Only expose relevant errors
+   */
+  const { USER_NO_PERMISSION, RESOURCE_NOT_FOUND } =
+    ItemErrorMap;
+
   return handleResult({
     c,
     result,
     successStatus: 200,
-    errorMap: restModuleErrorResponseMap,
-    moduleName: "organizationUser",
+    errorMap: { USER_NO_PERMISSION, RESOURCE_NOT_FOUND },
+    moduleName: "item",
     errorTrans,
   });
 });

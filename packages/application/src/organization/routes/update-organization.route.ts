@@ -69,6 +69,19 @@ const route = createRoute({
         },
       },
     },
+    /**
+     * Resource not found
+     */
+    [ModuleErrorResponseMap.RESOURCE_NOT_FOUND.statusCode]: {
+      description: "organization not found",
+      content: {
+        "application/json": {
+          schema: createDomainErrorResponseSchema([
+            ModuleErrorCodes.RESOURCE_NOT_FOUND,
+          ]),
+        },
+      },
+    },
     ...globalErrorResponses,
   },
 });
@@ -85,11 +98,8 @@ updateOrganizationRoute.openapi(route, async (c) => {
     context,
     id,
   });
-  const {
-    MODULE_CREATION_LIMIT_EXCEEDED,
-    RESOURCE_NOT_FOUND,
-    ...restModuleErrorResponseMap
-  } = ModuleErrorResponseMap;
+  const { MODULE_CREATION_LIMIT_EXCEEDED, ...restModuleErrorResponseMap } =
+    ModuleErrorResponseMap;
   return handleResult({
     c,
     result,

@@ -66,6 +66,19 @@ const route = createRoute({
         },
       },
     },
+    /**
+     * Resource not found
+     */
+    [ModuleErrorResponseMap.RESOURCE_NOT_FOUND.statusCode]: {
+      description: "Role not found",
+      content: {
+        "application/json": {
+          schema: createDomainErrorResponseSchema([
+            ModuleErrorCodes.RESOURCE_NOT_FOUND,
+          ]),
+        },
+      },
+    },
     ...globalErrorResponses,
   },
 });
@@ -84,7 +97,7 @@ updateRoleRoute.openapi(route, async (c) => {
   });
   const {
     MODULE_CREATION_LIMIT_EXCEEDED,
-    RESOURCE_NOT_FOUND,
+
     ...restModuleErrorResponseMap
   } = ModuleErrorResponseMap;
   return handleResult({

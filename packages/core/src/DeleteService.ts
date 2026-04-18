@@ -66,6 +66,16 @@ export class DeleteService {
           );
         }
       }
+      const recordIsExist = (await options.repository.findUnique({
+        where: { ...params.where },
+      })) as Awaited<ReturnType<R["findUnique"]>>;
+      if (!recordIsExist) {
+        return fail(
+          ModuleErrorCodes.RESOURCE_NOT_FOUND,
+          params.context,
+          `${options.config.moduleName}QueryService.findById`,
+        );
+      }
 
       const { where, context } = params;
       const { hooks } = options ?? {};

@@ -1,13 +1,13 @@
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import {
-  updateOrganizationUserBodySchema,
-  mutateOrganizationUserResponseSchema,
+  createItemBodySchema,
+  mutateItemResponseSchema,
 } from "@avuny/shared";
+
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
   createResponseSchema,
-  getResourceByIdParamsSchema,
   globalErrorResponses,
   ModuleErrorCodes,
   ModuleErrorResponseMap,
@@ -18,37 +18,52 @@ import { isAuthenticatedMiddleware } from "../../../shared.js";
 import container from "../../../container.js";
 
 import { trans } from "../../../intl/trans.js";
+import { ItemErrorMap } from "../errors/item.error-map.js";
 
-export const updateOrganizationUserRoute = new OpenAPIHono();
+/**
+ * Item Create Route
+ */
+export const createItemRoute = new OpenAPIHono();
+
 const route = createRoute({
-  method: "put",
-  path: "/{id}",
-  operationId: "updateOrganizationUser",
-  tags: ["organizationUser"],
+  method: "post",
+  path: "/",
+  operationId: "createItem",
+  tags: ["item"],
+
   middleware: [isAuthenticatedMiddleware],
+
   request: {
     headers: AuthorizationHeaderSchema,
-    params: getResourceByIdParamsSchema,
     body: {
       content: {
         "application/json": {
-          schema: updateOrganizationUserBodySchema,
+          schema: createItemBodySchema,
         },
       },
     },
   },
 
   responses: {
-    [201]: {
-      description: "OrganizationUser have been updated successfully",
+    /**
+     * Success
+     */
+    201: {
+      description: "Item created successfully",
       content: {
         "application/json": {
-          schema: createResponseSchema(mutateOrganizationUserResponseSchema),
+          schema: createResponseSchema(
+            mutateItemResponseSchema
+          ),
         },
       },
     },
+
+    /**
+     * Name conflict
+     */
     [ModuleErrorResponseMap.MODULE_NAME_CONFLICT.statusCode]: {
-      description: "OrganizationUser name is not unique",
+      description: "Item name must be unique",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -58,8 +73,24 @@ const route = createRoute({
       },
     },
 
+    /**
+     * Creation limit exceeded
+     */
+    [ModuleErrorResponseMap.MODULE_CREATION_LIMIT_EXCEEDED.statusCode]: {
+      description: "Item creation limit exceeded",
+      content: {
+        "application/json": {
+          schema: createDomainErrorResponseSchema([
+            ModuleErrorCodes.MODULE_CREATION_LIMIT_EXCEEDED,
+          ]),
+        },
+      },
+    },
+      /**
+     * Permission error
+     */
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
-      description: "User has no permission to update organizationUser",
+      description: "User has no permission to access item",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -68,43 +99,47 @@ const route = createRoute({
         },
       },
     },
-    /**
-     * Resource not found
-     */
-    [ModuleErrorResponseMap.RESOURCE_NOT_FOUND.statusCode]: {
-      description: "organizationUser not found",
-      content: {
-        "application/json": {
-          schema: createDomainErrorResponseSchema([
-            ModuleErrorCodes.RESOURCE_NOT_FOUND,
-          ]),
-        },
-      },
-    },
+
     ...globalErrorResponses,
   },
 });
 
-updateOrganizationUserRoute.openapi(route, async (c) => {
-  const organizationUserService = container.resolve("organizationUserService");
+/**
+ * Route Handler
+ */
+createItemRoute.openapi(route, async (c) => {
+  const itemService = container.resolve(
+    "itemService"
+  );
+
   const context = getContext(c);
-  const errorTrans = trans({ lang: context.lang as "en" | "ar" });
-  const { id } = c.req.valid("param");
+
+  /**
+   * Translation function (based on request language)
+   */
+  const errorTrans = trans({
+    lang: context.lang as "en" | "ar",
+  });
+
   const body = c.req.valid("json");
 
-  const result = await organizationUserService.update({
+  const result = await itemService.create({
     data: body,
     context,
-    id,
   });
-  const { MODULE_CREATION_LIMIT_EXCEEDED, ...restModuleErrorResponseMap } =
-    ModuleErrorResponseMap;
+
+  /**
+   * Remove global errors handled elsewhere
+   */
+  const { RESOURCE_NOT_FOUND, ...filteredErrorMap } =
+    ItemErrorMap;
+
   return handleResult({
     c,
     result,
     successStatus: 201,
-    errorMap: restModuleErrorResponseMap,
-    moduleName: "organizationUser",
+    errorMap: filteredErrorMap,
+    moduleName: "item",
     errorTrans,
   });
 });

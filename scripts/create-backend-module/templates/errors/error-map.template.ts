@@ -21,7 +21,7 @@ export const ${featurePascal}ErrorMap = {
    * Duplicate name
    */
   [${featurePascal}ErrorCode.MODULE_NAME_CONFLICT]: {
-    statusCode: 403,
+    statusCode: 409,
     responseMessage: "Name is already in use",
   },
 
@@ -29,7 +29,7 @@ export const ${featurePascal}ErrorMap = {
    * Creation limit exceeded
    */
   [${featurePascal}ErrorCode.MODULE_CREATION_LIMIT_EXCEEDED]: {
-    statusCode: 403,
+    statusCode: 429,
     responseMessage:
       "You have reached the maximum number of ${featureCamel}s allowed in your plan. Please upgrade your plan to create more ${featureCamel}s.",
   },

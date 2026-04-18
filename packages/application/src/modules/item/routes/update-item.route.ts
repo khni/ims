@@ -1,8 +1,10 @@
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+
 import {
-  updateOrganizationUserBodySchema,
-  mutateOrganizationUserResponseSchema,
+  updateItemBodySchema,
+  mutateItemResponseSchema,
 } from "@avuny/shared";
+
 import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
@@ -13,42 +15,62 @@ import {
   ModuleErrorResponseMap,
 } from "@avuny/utils";
 
-import { getContext, handleResult } from "@avuny/hono";
+import {
+  getContext,
+  handleResult,
+} from "@avuny/hono";
+
 import { isAuthenticatedMiddleware } from "../../../shared.js";
 import container from "../../../container.js";
-
 import { trans } from "../../../intl/trans.js";
 
-export const updateOrganizationUserRoute = new OpenAPIHono();
+import { ItemErrorMap } from "../errors/item.error-map.js";
+
+/**
+ * Update Item Route
+ */
+export const updateItemRoute = new OpenAPIHono();
+
 const route = createRoute({
   method: "put",
   path: "/{id}",
-  operationId: "updateOrganizationUser",
-  tags: ["organizationUser"],
+  operationId: "updateItem",
+  tags: ["item"],
+
   middleware: [isAuthenticatedMiddleware],
+
   request: {
     headers: AuthorizationHeaderSchema,
     params: getResourceByIdParamsSchema,
     body: {
       content: {
         "application/json": {
-          schema: updateOrganizationUserBodySchema,
+          schema: updateItemBodySchema,
         },
       },
     },
   },
 
   responses: {
-    [201]: {
-      description: "OrganizationUser have been updated successfully",
+    /**
+     * Success
+     */
+    200: {
+      description: "Item updated successfully",
       content: {
         "application/json": {
-          schema: createResponseSchema(mutateOrganizationUserResponseSchema),
+          schema: createResponseSchema(
+            mutateItemResponseSchema
+          ),
         },
       },
     },
+
+    /**
+     * Name conflict
+     */
     [ModuleErrorResponseMap.MODULE_NAME_CONFLICT.statusCode]: {
-      description: "OrganizationUser name is not unique",
+      description: "Item name must be unique",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -58,8 +80,11 @@ const route = createRoute({
       },
     },
 
+    /**
+     * Permission error
+     */
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
-      description: "User has no permission to update organizationUser",
+      description: "User has no permission to update item",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -68,11 +93,12 @@ const route = createRoute({
         },
       },
     },
+
     /**
      * Resource not found
      */
     [ModuleErrorResponseMap.RESOURCE_NOT_FOUND.statusCode]: {
-      description: "organizationUser not found",
+      description: "Item not found",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -81,30 +107,53 @@ const route = createRoute({
         },
       },
     },
+
     ...globalErrorResponses,
   },
 });
 
-updateOrganizationUserRoute.openapi(route, async (c) => {
-  const organizationUserService = container.resolve("organizationUserService");
+/**
+ * Route Handler
+ */
+updateItemRoute.openapi(route, async (c) => {
+  const itemService = container.resolve(
+    "itemService"
+  );
+
   const context = getContext(c);
-  const errorTrans = trans({ lang: context.lang as "en" | "ar" });
+
+  const errorTrans = trans({
+    lang: context.lang as "en" | "ar",
+  });
+
   const { id } = c.req.valid("param");
   const body = c.req.valid("json");
 
-  const result = await organizationUserService.update({
+  const result = await itemService.update({
     data: body,
     context,
     id,
   });
-  const { MODULE_CREATION_LIMIT_EXCEEDED, ...restModuleErrorResponseMap } =
-    ModuleErrorResponseMap;
+
+  /**
+   * Only expose relevant errors
+   */
+  const {
+    MODULE_NAME_CONFLICT,
+    USER_NO_PERMISSION,
+    RESOURCE_NOT_FOUND,
+  } = ItemErrorMap;
+
   return handleResult({
     c,
     result,
-    successStatus: 201,
-    errorMap: restModuleErrorResponseMap,
-    moduleName: "organizationUser",
+    successStatus: 200,
+    errorMap: {
+      MODULE_NAME_CONFLICT,
+      USER_NO_PERMISSION,
+      RESOURCE_NOT_FOUND,
+    },
+    moduleName: "item",
     errorTrans,
   });
 });

@@ -8,6 +8,12 @@ import { moduleDepsTemplate } from "./templates/module/base-container-deps.templ
 import { depsTemplate } from "./templates/module/module-container-deps.template";
 import { repositoryTemplate } from "./templates/module/repository.template";
 import { serviceTemplate } from "./templates/module/service.template";
+import { createRouteTemplate } from "./templates/routes/create-route.template";
+import { deleteRouteTemplate } from "./templates/routes/delete-route.template";
+import { getByIdRouteTemplate } from "./templates/routes/get-route.template";
+import { listRouteTemplate } from "./templates/routes/list-route.template";
+import { routesIndexTemplate } from "./templates/routes/route-index.template";
+import { updateRouteTemplate } from "./templates/routes/update-route.template";
 import { schemasTemplate } from "./templates/shared/schemas.template";
 import { typesTemplate } from "./templates/shared/types.templates";
 
@@ -89,6 +95,42 @@ export const createModuleStructure = (ctx: Context): StructureNode[] => [
             name: `${ctx.kebabCase}.service.ts`,
             type: "file",
             generate: () => serviceTemplate(ctx),
+          },
+        ],
+      },
+      {
+        name: `routes`,
+        type: "dir",
+        children: [
+          {
+            name: `create-${ctx.kebabCase}.route.ts`,
+            type: "file",
+            generate: () => createRouteTemplate(ctx),
+          },
+          {
+            name: `update-${ctx.kebabCase}.route.ts`,
+            type: "file",
+            generate: () => updateRouteTemplate(ctx),
+          },
+          {
+            name: `delete-${ctx.kebabCase}.route.ts`,
+            type: "file",
+            generate: () => deleteRouteTemplate(ctx),
+          },
+          {
+            name: `${ctx.kebabCase}-list.route.ts`,
+            type: "file",
+            generate: () => listRouteTemplate(ctx),
+          },
+          {
+            name: `get-${ctx.kebabCase}.route.ts`,
+            type: "file",
+            generate: () => getByIdRouteTemplate(ctx),
+          },
+          {
+            name: `index.ts`,
+            type: "file",
+            generate: () => routesIndexTemplate(ctx),
           },
         ],
       },
