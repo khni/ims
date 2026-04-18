@@ -17,8 +17,8 @@ import ActionButton from "@workspace/ui/blocks/buttons/action-btn";
 import { useCommonTranslations } from "@/messages/common";
 import { Get${featurePascal}ByIdResponse } from "@avuny/shared";
 
-import Update${featurePascal}Form from "@/src/features/${kebabCase}/mutation/update-${kebabCase}-form";
-import Create${featurePascal}Form from "@/src/features/${kebabCase}/mutation/create-${kebabCase}-form";
+import { Update${featurePascal}Form }from "@/src/features/${kebabCase}/mutation/update-${kebabCase}-form";
+import { Create${featurePascal}Form } from "@/src/features/${kebabCase}/mutation/create-${kebabCase}-form";
 
 export const ${featurePascal}FormButton: React.FC<{
   ${featureCamel}?: Get${featurePascal}ByIdResponse;

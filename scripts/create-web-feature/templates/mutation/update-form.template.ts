@@ -22,10 +22,10 @@ import {
   get${featurePascal}ListQueryKey,
 } from "@/src/api";
 
-import { update${featurePascal}Schema as schema } from "@avuny/shared";
+import { update${featurePascal}BodySchema as schema } from "@avuny/shared";
 import { use${featurePascal}Translations } from "@/src/features/${kebabCase}/translations/hooks/use-${kebabCase}-translations";
 
-import { Get${featurePascal}ByIdResponse } from "@/src/api";
+import { Get${featurePascal}ByIdResponse } from  "@avuny/shared";
 
 export type Update${featurePascal}FormProps = {
   ${featureCamel}: Get${featurePascal}ByIdResponse | null;

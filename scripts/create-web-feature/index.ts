@@ -44,7 +44,6 @@ const MESSAGES_ROOT = path.join(WEB_ROOT, "messages");
 
   await generatePagesCli.run();
 
-  /*
   const allFeatures = await generatorCli.discoverFolders(FEATURES_DIR);
   console.log("Discovered features:", allFeatures);
   const getRequestConfigPath = path.join(WEB_SRC, "i18n/request.ts");
@@ -64,5 +63,4 @@ const MESSAGES_ROOT = path.join(WEB_ROOT, "messages");
   ]);
 
   console.log("✨ Central files updated");
-  */
 })();

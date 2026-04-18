@@ -19,7 +19,9 @@ export type BaseDynamicField<T extends FieldValues, E> = {
 };
 
 export type DynamicField<T extends FieldValues, E> =
-  | (BaseDynamicField<T, E> & { type: "text" | "password" | "date" | "hidden" })
+  | (BaseDynamicField<T, E> & {
+      type: "text" | "password" | "date" | "hidden" | "checkbox" | "number";
+    })
   | (BaseDynamicField<T, E> & {
       type: "select" | "radio";
       setValue?: (value: string) => void;
@@ -94,6 +96,32 @@ export const DynamicFields = <
                 options={field.options}
                 errorResponse={field.errorResponse}
                 setValue={field.setValue}
+              />
+            );
+          case "number":
+            return (
+              <InputField
+                key={field.name}
+                form={field.form!}
+                {...field.form!.register(field.name, {
+                  valueAsNumber: true,
+                })}
+                name={field.name!}
+                label={field.getLabel?.(field.name) || field.label || ""}
+                type="number"
+                errorResponse={field.errorResponse}
+              />
+            );
+
+          case "checkbox":
+            return (
+              <InputField
+                key={field.name}
+                form={field.form!}
+                name={field.name!}
+                label={field.getLabel?.(field.name) || field.label || ""}
+                type="checkbox"
+                errorResponse={field.errorResponse}
               />
             );
 

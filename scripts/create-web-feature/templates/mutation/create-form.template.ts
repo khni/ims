@@ -21,7 +21,7 @@ import {
   get${featurePascal}ListQueryKey,
 } from "@/src/api";
 
-import { create${featurePascal}Schema as schema } from "@avuny/shared";
+import { create${featurePascal}BodySchema as schema } from "@avuny/shared";
 import { use${featurePascal}Translations } from "@/src/features/${kebabCase}/translations/hooks/use-${kebabCase}-translations";
 
 export const Create${featurePascal}Form: React.FC = () => {

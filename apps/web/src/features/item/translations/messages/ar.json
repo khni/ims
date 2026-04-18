@@ -1,0 +1,31 @@
+{
+  "item": {
+    "form": {
+      "headings": {
+        "title": "{action} item",
+        "description": "استخدم هذا النموذج لـ {action} item"
+      },
+      "fields": {
+        "name": "الاسم",
+        "description": "الوصف",
+        "purchasePrice": "سعر الشراء",
+        "salesPrice": "سعر البيع",
+        "unit": "الوحدة",
+        "returnable": "قابل للإرجاع"
+      }
+    },
+    "headers": {
+      "items": "العناصر"
+    },
+    "columnHeaders": {
+      "id": "المعرف",
+      "name": "الاسم",
+      "description": "الوصف",
+      "purchasePrice": "سعر الشراء",
+      "salesPrice": "سعر البيع",
+      "unit": "الوحدة",
+      "returnable": "قابل للإرجاع",
+      "updatedAt": "تاريخ التحديث"
+    }
+  }
+}

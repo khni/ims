@@ -1,0 +1,31 @@
+{
+  "item": {
+    "form": {
+      "headings": {
+        "title": "{action} item",
+        "description": "Use this form to {action} an item."
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "purchasePrice": "Purchase Price",
+        "salesPrice": "Sales Price",
+        "unit": "Unit",
+        "returnable": "Returnable"
+      }
+    },
+    "headers": {
+      "items": "Items"
+    },
+    "columnHeaders": {
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "purchasePrice": "Purchase Price",
+      "salesPrice": "Sales Price",
+      "unit": "Unit",
+      "returnable": "Returnable",
+      "updatedAt": "Updated At"
+    }
+  }
+}

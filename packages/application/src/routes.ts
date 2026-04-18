@@ -10,6 +10,7 @@ import { OrganizationUserRoutes } from "./modules/organization-user/routes/index
 import { RegionRoutes } from "./region/routes.js";
 import { PermissionRoutes } from "./permission/index.js";
 import { SidebarRoutes } from "./sidebar/routes/index.js";
+import { ItemRoutes } from "./modules/item/routes/index.js";
 // import { createHonoErrorHandler } from "@khni/error-handler";
 // const errorHandler = createHonoErrorHandler(console);
 // src/app.ts
@@ -24,6 +25,7 @@ app.route("/", PermissionRoutes);
 
 app.route("/regions", RegionRoutes);
 app.route("/roles", RoleRoutes);
+app.route("/items", ItemRoutes);
 
 app.route("/sidebar", SidebarRoutes);
 
