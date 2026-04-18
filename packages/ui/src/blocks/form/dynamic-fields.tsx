@@ -8,6 +8,7 @@ import DatePickerField from "@workspace/ui/blocks/form/datePicker-field";
 import InputField from "@workspace/ui/blocks/form/input-field";
 import RadioGroupFormField from "@workspace/ui/blocks/form/radio-input";
 import SelectFormField from "@workspace/ui/blocks/form/select-field";
+import CheckboxFormField from "@workspace/ui/blocks/form/checkbox-field";
 
 export type BaseDynamicField<T extends FieldValues, E> = {
   name: Path<T>; // optional if we just render a custom component
@@ -20,12 +21,17 @@ export type BaseDynamicField<T extends FieldValues, E> = {
 
 export type DynamicField<T extends FieldValues, E> =
   | (BaseDynamicField<T, E> & {
-      type: "text" | "password" | "date" | "hidden" | "checkbox" | "number";
+      type: "text" | "password" | "date" | "hidden" | "number";
     })
   | (BaseDynamicField<T, E> & {
       type: "select" | "radio";
       setValue?: (value: string) => void;
       options: { id: string; name: string | number }[];
+    })
+  | (BaseDynamicField<T, E> & {
+      type: "checkbox";
+      setValue?: (value: boolean) => void;
+      options?: { id: string; name: string | number }[];
     })
   | {
       /** New type for custom component */
@@ -103,9 +109,6 @@ export const DynamicFields = <
               <InputField
                 key={field.name}
                 form={field.form!}
-                {...field.form!.register(field.name, {
-                  valueAsNumber: true,
-                })}
                 name={field.name!}
                 label={field.getLabel?.(field.name) || field.label || ""}
                 type="number"
@@ -115,12 +118,12 @@ export const DynamicFields = <
 
           case "checkbox":
             return (
-              <InputField
+              <CheckboxFormField
                 key={field.name}
                 form={field.form!}
                 name={field.name!}
                 label={field.getLabel?.(field.name) || field.label || ""}
-                type="checkbox"
+                setValue={field.setValue}
                 errorResponse={field.errorResponse}
               />
             );

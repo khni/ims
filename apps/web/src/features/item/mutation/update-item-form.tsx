@@ -24,6 +24,10 @@ export const UpdateItemForm: React.FC<UpdateItemFormProps> = ({ item }) => {
     defaultValues: {
       name: "",
       description: "",
+      purchasePrice: 0,
+      salesPrice: 0,
+      unit: "",
+      returnable: false,
     },
   });
 
@@ -89,7 +93,11 @@ export const UpdateItemForm: React.FC<UpdateItemFormProps> = ({ item }) => {
         },
         {
           key: "returnable",
-          content: { name: "returnable", type: "checkbox" },
+          content: {
+            name: "returnable",
+            type: "checkbox",
+            setValue: (value) => form.setValue("returnable", value),
+          },
           spans: { base: 4, md: 2 },
         },
       ]}

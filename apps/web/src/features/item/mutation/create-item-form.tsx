@@ -34,6 +34,7 @@ export const CreateItemForm: React.FC = () => {
       error={error}
       api={{
         onSubmit: async (data) => {
+          console.log("Submitting data:", data);
           await mutateAsync({ data });
         },
         isLoading: isPending,

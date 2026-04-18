@@ -36,6 +36,15 @@ export const InputField = <T extends FieldValues, E = unknown>({
           <FormControl>
             <Input
               {...field}
+              {...(type === "number" && {
+                inputMode: "numeric",
+                pattern: "[0-9]*",
+              })}
+              {...(type === "number" && {
+                ...form.register(field.name, {
+                  valueAsNumber: true,
+                }),
+              })}
               type={type}
               disabled={form.formState.isSubmitting}
             />

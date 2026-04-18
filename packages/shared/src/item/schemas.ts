@@ -13,9 +13,9 @@ export const itemSchema = z.object({
   name: z.string().min(2).max(20),
   description: z.string().nullable(),
   organizationId: z.string(),
-  purchasePrice: z.coerce.number().nonnegative(),
+  purchasePrice: z.number(),
 
-  salesPrice: z.coerce.number().nonnegative(),
+  salesPrice: z.number(),
   unit: z.string().min(2).max(20),
   returnable: z.boolean(),
 
