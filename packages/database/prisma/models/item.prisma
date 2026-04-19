@@ -2,11 +2,14 @@ model Item {
   id                    String                  @id() @default(uuid())
   name                  String                  @db.VarChar(255)
   description           String?
-  purchasePrice         Float                   @default(0.00)
-  salesPrice            Float                   @default(0.00)
+  purchasePrice Decimal @db.Decimal(10, 2)
+  salesPrice    Decimal @db.Decimal(10, 2)
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
   unit                  String
+  baseUnit              Unit                    @relation(fields: [baseUnitId], references: [id], onDelete: Cascade)
+  baseUnitId            String
+  units                 ItemUnitConversion[]
   sku                   String?
 
   barcode               String?
@@ -23,4 +26,55 @@ model Item {
   @@unique([organizationId, name])
   @@index([organizationId])
   @@map("items")
+}
+
+
+enum UnitType {
+  WEIGHT
+  LENGTH
+  VOLUME
+  COUNT
+  TIME
+}
+model Unit {
+  id        String   @id @default(uuid())
+  name      String   // e.g. "Kilogram"
+  symbol    String   // e.g. "kg"
+  type      UnitType // grouping (weight, length, count, etc.)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  items     Item[]   
+
+  // Relations
+  baseConversions ItemUnitConversion[] @relation("BaseUnit")
+  targetConversions ItemUnitConversion[] @relation("TargetUnit")
+  
+  isActive              Boolean                 @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("units")
+}
+
+model ItemUnitConversion {
+  id String @id @default(uuid())
+
+  baseUnit   Unit   @relation("BaseUnit", fields: [baseUnitId], references: [id], onDelete: Cascade)
+  baseUnitId String
+
+  targetUnit   Unit   @relation("TargetUnit", fields: [targetUnitId], references: [id], onDelete: Cascade)
+  targetUnitId String
+  item       Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)  
+  itemId     String
+  purchasePrice Decimal? @db.Decimal(10, 2)
+  salesPrice    Decimal? @db.Decimal(10, 2)
+
+  factor Float 
+  // Example:
+  // 1 kg = 1000 g → factor = 1000
+  // 1 box = 12 pieces → factor = 12
+
+  createdAt DateTime @default(now())
+
+  @@unique([baseUnitId, targetUnitId])
+  @@map("item_unit_conversions")
 }
