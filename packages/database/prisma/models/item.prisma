@@ -9,7 +9,6 @@ model Item {
   unit                  String
   baseUnit              Unit                    @relation(fields: [baseUnitId], references: [id], onDelete: Cascade)
   baseUnitId            String
-  units                 ItemUnitConversion[]
   sku                   String?
 
   barcode               String?
@@ -46,8 +45,8 @@ model Unit {
   items     Item[]   
 
   // Relations
-  baseConversions ItemUnitConversion[] @relation("BaseUnit")
-  targetConversions ItemUnitConversion[] @relation("TargetUnit")
+  baseConversions UnitConversion[] @relation("BaseUnit")
+  targetConversions UnitConversion[] @relation("TargetUnit")
   
   isActive              Boolean                 @default(true)
   createdAt DateTime @default(now())
@@ -55,7 +54,7 @@ model Unit {
   @@map("units")
 }
 
-model ItemUnitConversion {
+model UnitConversion {
   id String @id @default(uuid())
 
   baseUnit   Unit   @relation("BaseUnit", fields: [baseUnitId], references: [id], onDelete: Cascade)
@@ -63,18 +62,31 @@ model ItemUnitConversion {
 
   targetUnit   Unit   @relation("TargetUnit", fields: [targetUnitId], references: [id], onDelete: Cascade)
   targetUnitId String
-  item       Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)  
-  itemId     String
-  purchasePrice Decimal? @db.Decimal(10, 2)
-  salesPrice    Decimal? @db.Decimal(10, 2)
 
-  factor Float 
+  factor Decimal? @db.Decimal(10, 5) // Conversion factor from base unit to target unit
   // Example:
   // 1 kg = 1000 g → factor = 1000
   // 1 box = 12 pieces → factor = 12
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([baseUnitId, targetUnitId])
   @@map("item_unit_conversions")
+}
+
+model ItemUnitPrice {
+  id String @id @default(uuid())
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId String
+  unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  unitId String
+  purchasePrice Decimal @db.Decimal(10, 2)
+  salesPrice    Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([itemId, unitId])
+  @@map("item_unit_prices")
 }
