@@ -27,30 +27,60 @@ model Item {
   @@map("items")
 }
 
+/// Represents a classification of units based on their physical dimension
+/// (e.g., WEIGHT, LENGTH, VOLUME).
+///
+/// Design:
+/// - Supports both global categories (organizationId = null)
+///   and organization-specific custom categories.
+/// - Used to enforce valid unit conversions (same category only).
+///
+/// Examples:
+/// - Global: WEIGHT, LENGTH
+/// - Custom (per org): PACKAGING, FABRIC_DENSITY
+model UnitCategory {
+  id   String @id @default(uuid())
+  name String
 
-enum UnitType {
-  WEIGHT
-  LENGTH
-  VOLUME
-  COUNT
-  TIME
-}
-model Unit {
-  id        String   @id @default(uuid())
-  name      String   // e.g. "Kilogram"
-  symbol    String   // e.g. "kg"
-  type      UnitType // grouping (weight, length, count, etc.)
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  items     Item[]   
+  // optional organization scope
+  organizationId String? 
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  // Relations
-  baseConversions UnitConversion[] @relation("BaseUnit")
-  targetConversions UnitConversion[] @relation("TargetUnit")
-  
-  isActive              Boolean                 @default(true)
+  units Unit[]
+
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([name, organizationId])
+}
+model Unit {
+  id     String @id @default(uuid())
+  name   String // "Kilogram"
+  symbol String // "kg"
+
+
+  category   UnitCategory @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  // Organization scoping
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  items Item[]
+
+  // Relations (same-category conversions only)
+  baseConversions   UnitConversion[] @relation("BaseUnit")
+  targetConversions UnitConversion[] @relation("TargetUnit")
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, name])
+  @@unique([organizationId, symbol])
+
+  @@index([categoryId]) // 🔥 important for filtering
   @@map("units")
 }
 
@@ -62,6 +92,9 @@ model UnitConversion {
 
   targetUnit   Unit   @relation("TargetUnit", fields: [targetUnitId], references: [id], onDelete: Cascade)
   targetUnitId String
+
+  item   Organization? @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId String?
 
   factor Decimal? @db.Decimal(10, 5) // Conversion factor from base unit to target unit
   // Example:
