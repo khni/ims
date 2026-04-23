@@ -2,14 +2,15 @@ model Item {
   id                    String                  @id() @default(uuid())
   name                  String                  @db.VarChar(255)
   description           String?
-  purchasePrice Decimal @db.Decimal(10, 2)
-  salesPrice    Decimal @db.Decimal(10, 2)
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
-  unit                  String
-  baseUnit              Unit                    @relation(fields: [baseUnitId], references: [id], onDelete: Cascade)
-  baseUnitId            String
+
+
   sku                   String?
+  unitCollection        UnitCollection?         @relation(fields: [unitCollectionId], references: [id], onDelete: Cascade)
+  unitCollectionId      String?
+  itemUnitPrices ItemUnitPrice[]
+
 
   barcode               String?
   returnable            Boolean
@@ -27,51 +28,21 @@ model Item {
   @@map("items")
 }
 
-/// Represents a classification of units based on their physical dimension
-/// (e.g., WEIGHT, LENGTH, VOLUME).
-///
-/// Design:
-/// - Supports both global categories (organizationId = null)
-///   and organization-specific custom categories.
-/// - Used to enforce valid unit conversions (same category only).
-///
-/// Examples:
-/// - Global: WEIGHT, LENGTH
-/// - Custom (per org): PACKAGING, FABRIC_DENSITY
-model UnitCategory {
-  id   String @id @default(uuid())
-  name String
 
-  // optional organization scope
-  organizationId String? 
-  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  units Unit[]
-
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([name, organizationId])
-}
 model Unit {
   id     String @id @default(uuid())
   name   String // "Kilogram"
   symbol String // "kg"
 
 
-  category   UnitCategory @relation(fields: [categoryId], references: [id])
-  categoryId String
 
   // Organization scoping
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
-  items Item[]
+  itemUnitPrices ItemUnitPrice[]
 
-  // Relations (same-category conversions only)
-  baseConversions   UnitConversion[] @relation("BaseUnit")
-  targetConversions UnitConversion[] @relation("TargetUnit")
+
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -80,21 +51,47 @@ model Unit {
   @@unique([organizationId, name])
   @@unique([organizationId, symbol])
 
-  @@index([categoryId]) // 🔥 important for filtering
+ 
   @@map("units")
 }
 
-model UnitConversion {
+model UnitCollection {
+
   id String @id @default(uuid())
+
+  name                  String                  @db.VarChar(255)
+  description           String?
 
   baseUnit   Unit   @relation("BaseUnit", fields: [baseUnitId], references: [id], onDelete: Cascade)
   baseUnitId String
 
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+
+  targetUnitLines   TargetUnitLine[]  
+  
+
+  items Item[]
+
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("item_unit_conversions") 
+}
+
+model TargetUnitLine {
+  id String @id @default(uuid())
+
   targetUnit   Unit   @relation("TargetUnit", fields: [targetUnitId], references: [id], onDelete: Cascade)
   targetUnitId String
 
-  item   Organization? @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId String?
+
+  collectionId String
+  collection   UnitCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  
 
   factor Decimal? @db.Decimal(10, 5) // Conversion factor from base unit to target unit
   // Example:
@@ -104,8 +101,9 @@ model UnitConversion {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([baseUnitId, targetUnitId])
-  @@map("item_unit_conversions")
+  @@unique([collectionId, targetUnitId])
+  @@index([collectionId])
+  @@map("target_unit_lines")
 }
 
 model ItemUnitPrice {
