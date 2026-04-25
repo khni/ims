@@ -3,6 +3,8 @@ enum ResourceName {
   user
   role
   item
+  unit
+  unitCollection
   invoice
   customer
   supplier

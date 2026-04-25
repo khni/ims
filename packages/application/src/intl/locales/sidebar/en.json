@@ -6,6 +6,8 @@
   },
   "sidebarOptions": {
     "user": "Users",
+    "unit": "Units",
+    "unitCollection": "Unit Collections",
     "role": "Roles",
     "item": "Items",
     "invoice": "Invoices",

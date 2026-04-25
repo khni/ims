@@ -1,0 +1,26 @@
+{
+  "unit": {
+    "form": {
+      "headings": {
+        "title": "{action} unit",
+        "description": "Use this form to {action} an unit."
+      },
+      "fields": {
+        "name": "Name",
+        "symbol": "Symbol",
+        "description": "Description"
+      }
+    },
+    "headers": {
+      "list": "List"
+    },
+    "columnHeaders": {
+      "id": "ID",
+      "name": "Name",
+      "symbol": "Symbol",
+      "description": "Description",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    }
+  }
+}

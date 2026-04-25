@@ -1,0 +1,26 @@
+{
+  "unit": {
+    "form": {
+      "headings": {
+        "title": "{action} unit",
+        "description": "استخدم هذا النموذج لـ {action} unit"
+      },
+      "fields": {
+        "name": "الاسم",
+        "symbol": "الرمز",
+        "description": "الوصف"
+      }
+    },
+    "headers": {
+      "list": "قائمة"
+    },
+    "columnHeaders": {
+      "id": "المعرف",
+      "name": "الاسم",
+      "symbol": "الرمز",
+      "description": "الوصف",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث"
+    }
+  }
+}

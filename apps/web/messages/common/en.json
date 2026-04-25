@@ -46,6 +46,8 @@
       "organizationUser": "Organization User",
       "account": "Account",
       "item": "Item",
+      "unit": "Unit",
+      "unitCollection": "Unit Collection",
       "invoice": "Invoice",
       "user": "User",
       "product": "Product",

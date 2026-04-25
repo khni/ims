@@ -13,7 +13,13 @@ import { toast } from "sonner";
 export type FormProps<T extends FieldValues, E, S extends string> = {
   children?: React.ReactNode;
   actionName?: "create" | "add" | "update";
-  resourceName?: "organization" | "role" | "item" | "organizationUser";
+  resourceName?:
+    | "organization"
+    | "role"
+    | "item"
+    | "organizationUser"
+    | "unit"
+    | "unitCollection";
   queryInvalidateKey?: readonly [string, ...any[]] | [string, ...any[]];
 } & Omit<
   CustomFormProps<T, E>,

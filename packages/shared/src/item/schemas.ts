@@ -13,10 +13,7 @@ export const itemSchema = z.object({
   name: z.string().min(2).max(20),
   description: z.string().nullable(),
   organizationId: z.string(),
-  purchasePrice: z.number(),
-
-  salesPrice: z.number(),
-  unit: z.string().min(2).max(20),
+  unitCollectionId: z.string(),
   returnable: z.boolean(),
 
   createdAt: z.iso.datetime(),
@@ -77,9 +74,7 @@ export const getItemByIdResponseSchema = itemSchema.pick({
   id: true,
   name: true,
   description: true,
-  salesPrice: true,
-  purchasePrice: true,
-  unit: true,
+  unitCollectionId: true,
   returnable: true,
   updatedAt: true,
 });

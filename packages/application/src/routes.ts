@@ -11,6 +11,8 @@ import { RegionRoutes } from "./region/routes.js";
 import { PermissionRoutes } from "./permission/index.js";
 import { SidebarRoutes } from "./sidebar/routes/index.js";
 import { ItemRoutes } from "./modules/item/routes/index.js";
+import { UnitRoutes } from "./modules/unit/routes/index.js";
+import { UnitCollectionRoutes } from "./modules/unit-collection/routes/index.js";
 // import { createHonoErrorHandler } from "@khni/error-handler";
 // const errorHandler = createHonoErrorHandler(console);
 // src/app.ts
@@ -26,6 +28,8 @@ app.route("/", PermissionRoutes);
 app.route("/regions", RegionRoutes);
 app.route("/roles", RoleRoutes);
 app.route("/items", ItemRoutes);
+app.route("/units", UnitRoutes);
+app.route("/unit-collections", UnitCollectionRoutes);
 
 app.route("/sidebar", SidebarRoutes);
 

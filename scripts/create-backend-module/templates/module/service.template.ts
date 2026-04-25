@@ -172,7 +172,7 @@ export class ${featurePascal}Service {
           },
         ],
         uniqueCheckerData: {
-          organizationId: params.context.organizationId,
+          organizationId: params.context.organizationId!,
           name: params.data.name,
         },
       },

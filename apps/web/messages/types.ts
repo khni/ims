@@ -4,13 +4,17 @@ import itemMessages from "../src/features/item/translations/messages/en.json";
 import organizationMessages from "../src/features/organization/translations/messages/en.json";
 import organizationuserMessages from "../src/features/organizationUser/translations/messages/en.json";
 import roleMessages from "../src/features/role/translations/messages/en.json";
+import unitMessages from "../src/features/unit/translations/messages/en.json";
+import unitCollectionMessages from "../src/features/unit-collection/translations/messages/en.json";
 
 export type Messages = typeof commonMessages &
   typeof authMessages &
   typeof itemMessages &
   typeof organizationMessages &
   typeof organizationuserMessages &
-  typeof roleMessages;
+  typeof roleMessages &
+  typeof unitMessages &
+  typeof unitCollectionMessages;
 
 export const messages: Messages = {
   ...commonMessages,
@@ -18,5 +22,7 @@ export const messages: Messages = {
   ...itemMessages,
   ...organizationMessages,
   ...organizationuserMessages,
-  ...roleMessages
+  ...roleMessages,
+  ...unitMessages,
+  ...unitCollectionMessages
 };

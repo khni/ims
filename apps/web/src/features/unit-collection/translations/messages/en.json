@@ -1,0 +1,22 @@
+{
+  "unitCollection": {
+    "form": {
+      "headings": {
+        "title": "{action} unitCollection",
+        "description": "Use this form to {action} an unitCollection."
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description"
+      }
+    },
+    "headers": {
+      "list": "List"
+    },
+    "columnHeaders": {
+      "name": "name",
+      "description": "description",
+      "updatedAt": "Last Updated"
+    }
+  }
+}

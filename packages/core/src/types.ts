@@ -10,6 +10,8 @@ export type Resource =
   | "user"
   | "role"
   | "item"
+  | "unit"
+  | "unitCollection"
   | "invoice"
   | "customer"
   | "supplier"

@@ -1,0 +1,120 @@
+import {
+  AuthorizationHeaderSchema,
+  createDomainErrorResponseSchema,
+  createFindManyQuerySchema,
+  createPaginatedResponseSchema,
+  globalErrorResponses,
+  ModuleErrorCodes,
+  ModuleErrorResponseMap,
+} from "@avuny/utils";
+
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+
+import {
+  UnitFiltersSchema,
+  unitListResponseSchema,
+  UnitFilters,
+  UnitSorting,
+} from "@avuny/shared";
+
+import { parseFindManyQuery, getContext, handleResult } from "@avuny/hono";
+
+import container from "../../../container.js";
+import { isAuthenticatedMiddleware } from "../../../shared.js";
+import { trans } from "../../../intl/trans.js";
+
+import { FilteredPaginatedList } from "@avuny/core";
+
+import { UnitErrorMap } from "../errors/unit.error-map.js";
+
+/**
+ * Unit List Route
+ * - Supports filtering, sorting, pagination
+ */
+export const unitListRoute = new OpenAPIHono();
+
+const route = createRoute({
+  method: "get",
+  path: "/",
+  operationId: "unitList",
+  tags: ["unit"],
+
+  middleware: [isAuthenticatedMiddleware, parseFindManyQuery],
+
+  request: {
+    headers: AuthorizationHeaderSchema,
+    query: createFindManyQuerySchema({
+      filtersSchema: UnitFiltersSchema,
+    }),
+  },
+
+  responses: {
+    /**
+     * Success
+     */
+    200: {
+      description: "Unit list retrieved successfully",
+      content: {
+        "application/json": {
+          schema: createPaginatedResponseSchema(unitListResponseSchema),
+        },
+      },
+    },
+
+    /**
+     * Permission error
+     */
+    [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
+      description: "User has no permission to access unit",
+      content: {
+        "application/json": {
+          schema: createDomainErrorResponseSchema([
+            ModuleErrorCodes.USER_NO_PERMISSION,
+          ]),
+        },
+      },
+    },
+
+    ...globalErrorResponses,
+  },
+});
+
+/**
+ * Route Handler
+ */
+unitListRoute.openapi(route, async (c) => {
+  const unitService = container.resolve("unitService");
+
+  const context = getContext(c);
+
+  const errorTrans = trans({
+    lang: context.lang as "en" | "ar",
+  });
+
+  /**
+   * Parsed query (filters, sorting, pagination)
+   */
+  const query = c.get("findManyQuery") as FilteredPaginatedList<
+    UnitFilters,
+    UnitSorting
+  >;
+
+  const result = await unitService.filteredPaginatedList({
+    context,
+    query,
+  });
+
+  /**
+   * Only expose relevant errors
+   */
+  const { USER_NO_PERMISSION } = UnitErrorMap;
+
+  return handleResult({
+    c,
+    result,
+    successStatus: 200,
+    errorMap: { USER_NO_PERMISSION },
+    moduleName: "unit",
+    errorTrans,
+  });
+});

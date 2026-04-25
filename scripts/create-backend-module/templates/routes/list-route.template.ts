@@ -114,8 +114,8 @@ ${featureCamel}ListRoute.openapi(route, async (c) => {
    * Parsed query (filters, sorting, pagination)
    */
   const query = c.get("findManyQuery") as FilteredPaginatedList<
-      ItemFilters,
-      ItemSorting
+       ${featurePascal}Filters,
+       ${featurePascal}Sorting
     >;
 
   const result =

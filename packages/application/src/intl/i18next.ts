@@ -24,6 +24,12 @@ import roleAr from "./locales/role/ar.json" with { type: "json" };
 import sidebarEn from "./locales/sidebar/en.json" with { type: "json" };
 import sidebarAr from "./locales/sidebar/ar.json" with { type: "json" };
 
+import unitEn from "./locales/unit/en.json" with { type: "json" };
+import unitAr from "./locales/unit/ar.json" with { type: "json" };
+
+import unitCollectionEn from "./locales/unit-collection/en.json" with { type: "json" };
+import unitCollectionAr from "./locales/unit-collection/ar.json" with { type: "json" };
+
 i18n.init({
   fallbackLng: "en",
   lng: "en",
@@ -38,6 +44,8 @@ i18n.init({
       region: regionEn,
       role: roleEn,
       sidebar: sidebarEn,
+      unit: unitEn,
+      unitCollection: unitCollectionEn,
     },
     ar: {
       auth: authAr,
@@ -48,6 +56,8 @@ i18n.init({
       region: regionAr,
       role: roleAr,
       sidebar: sidebarAr,
+      unit: unitAr,
+      unitCollection: unitCollectionAr,
     },
   },
 
@@ -59,7 +69,9 @@ i18n.init({
     "permission",
     "region",
     "role",
-    "sidebar"
+    "sidebar",
+    "unit",
+    "unitCollection"
   ],
 
   interpolation: {
