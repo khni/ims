@@ -12,7 +12,8 @@
       }
     },
     "headers": {
-      "list": "List"
+      "list": "List",
+      "units": "Units"
     },
     "columnHeaders": {
       "id": "ID",

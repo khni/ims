@@ -27,6 +27,7 @@ import { usePathname, useRouter } from "next/navigation";
 import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
 import useOrganizationListHandler from "@/src/features/organization/list/hooks/useOrganizationListHandler";
 import { GetSidebar200Item, GetSidebar200ItemName } from "@/src/api/model";
+import { isSidebarOptionActive } from "@/src/features/sidebar/is-sidebar-option-active";
 
 export default function WorkSpaceLayout({
   children,
@@ -39,6 +40,7 @@ export default function WorkSpaceLayout({
   const { workspaceId } = React.use(params);
   const { data: sidebarData } = useGetSidebar();
   const pathName = usePathname();
+
   const { data, isLoading } = useIsAuthenticated({
     query: {
       queryKey: ["getAuthenticatedUser"],
@@ -111,12 +113,15 @@ export default function WorkSpaceLayout({
               )
             }
             isSubItemActive={(subItem) =>
-              pathName.includes(subItem.name.toLowerCase())
+              // pathName.includes(subItem.name.toLowerCase())
+              {
+                return isSidebarOptionActive(pathName, subItem.name);
+              }
             }
             isItemActive={(item) =>
-              !!item.options?.find((subItem) =>
-                pathName.includes(subItem.name.toLowerCase()),
-              )
+              !!item.options?.find((subItem) => {
+                return isSidebarOptionActive(pathName, subItem.name);
+              })
             }
             items={
               sidebarData?.map((sb) => {

@@ -12,7 +12,8 @@
       }
     },
     "headers": {
-      "list": "قائمة"
+      "list": "قائمة",
+      "units": "الوحدات"
     },
     "columnHeaders": {
       "id": "المعرف",

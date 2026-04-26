@@ -11,7 +11,8 @@
       }
     },
     "headers": {
-      "list": "List"
+      "list": "List",
+      "unitCollections": "Unit Collections"
     },
     "columnHeaders": {
       "name": "name",

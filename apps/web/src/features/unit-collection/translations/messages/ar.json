@@ -11,7 +11,8 @@
       }
     },
     "headers": {
-      "list": "قائمة"
+      "list": "قائمة",
+      "unitCollections": "مجموعات الوحدات"
     },
     "columnHeaders": {
       "name": "الاسم",
