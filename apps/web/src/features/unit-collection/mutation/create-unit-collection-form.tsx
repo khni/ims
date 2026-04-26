@@ -14,6 +14,7 @@ import {
 
 import { createUnitCollectionBodySchema as schema } from "@avuny/shared";
 import { useUnitCollectionTranslations } from "@/src/features/unit-collection/translations/hooks/use-unit-collection-translations";
+import TargetItemLines from "@/src/features/unit-collection/mutation/target-item-lines";
 
 export const CreateUnitCollectionForm: React.FC = () => {
   const form = useForm<z.infer<typeof schema>>({
@@ -54,6 +55,8 @@ export const CreateUnitCollectionForm: React.FC = () => {
           spans: { base: 4, md: 2 },
         },
       ]}
-    />
+    >
+      <TargetItemLines></TargetItemLines>
+    </CustomForm>
   );
 };
