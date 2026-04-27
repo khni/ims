@@ -7,7 +7,8 @@
       },
       "fields": {
         "name": "الاسم",
-        "description": "الوصف"
+        "description": "الوصف",
+        "baseUnitId": "الوحدة الاساسية"
       }
     },
     "headers": {
@@ -15,6 +16,7 @@
       "unitCollections": "مجموعات الوحدات"
     },
     "columnHeaders": {
+      "id": "المعرف",
       "name": "الاسم",
       "description": "الوصف",
       "updatedAt": "آخر تحديث"

@@ -10,12 +10,13 @@ import { Form as CustomForm } from "@/src/components/form";
 import {
   useUpdateUnitCollection,
   getUnitCollectionListQueryKey,
+  useUnitList,
 } from "@/src/api";
 
 import { updateUnitCollectionBodySchema as schema } from "@avuny/shared";
 import { useUnitCollectionTranslations } from "@/src/features/unit-collection/translations/hooks/use-unit-collection-translations";
 
-import { GetUnitCollectionByIdResponse } from  "@avuny/shared";
+import { GetUnitCollectionByIdResponse } from "@avuny/shared";
 
 export type UpdateUnitCollectionFormProps = {
   unitCollection: GetUnitCollectionByIdResponse | null;
@@ -29,6 +30,7 @@ export const UpdateUnitCollectionForm: React.FC<
     defaultValues: {
       name: "",
       description: "",
+      baseUnitId: "",
     },
   });
 
@@ -37,6 +39,7 @@ export const UpdateUnitCollectionForm: React.FC<
       form.reset({
         name: unitCollection.name ?? "",
         description: unitCollection.description ?? "",
+        baseUnitId: unitCollection.baseUnitId ?? "",
       });
     }
   }, [unitCollection, form]);
@@ -44,7 +47,12 @@ export const UpdateUnitCollectionForm: React.FC<
   const { mutateAsync, isPending, error } = useUpdateUnitCollection();
   const { unitCollectionFormFieldsTranslations } =
     useUnitCollectionTranslations();
-
+  const { data: unitsData, isPending: unitsIsPending } = useUnitList({
+    filters: {},
+    orderBy: {},
+    page: 0,
+    pageSize: 10,
+  });
   return (
     <CustomForm
       form={form}
@@ -72,6 +80,15 @@ export const UpdateUnitCollectionForm: React.FC<
         {
           key: "description",
           content: { name: "description", type: "text" },
+          spans: { base: 4, md: 2 },
+        },
+        {
+          key: "baseUnitId",
+          content: {
+            name: "baseUnitId",
+            type: "select",
+            options: unitsData?.data.list || [],
+          },
           spans: { base: 4, md: 2 },
         },
       ]}

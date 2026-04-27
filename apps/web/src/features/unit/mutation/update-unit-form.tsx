@@ -24,6 +24,7 @@ export const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({ unit }) => {
     defaultValues: {
       name: "",
       description: "",
+      symbol: "",
     },
   });
 
@@ -32,6 +33,7 @@ export const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({ unit }) => {
       form.reset({
         name: unit.name ?? "",
         description: unit.description ?? "",
+        symbol: unit.symbol ?? "",
       });
     }
   }, [unit, form]);

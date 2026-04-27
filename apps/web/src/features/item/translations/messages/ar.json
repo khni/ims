@@ -26,7 +26,8 @@
       "salesPrice": "سعر البيع",
       "unit": "الوحدة",
       "returnable": "قابل للإرجاع",
-      "updatedAt": "تاريخ التحديث"
+      "updatedAt": "تاريخ التحديث",
+      "unitCollectionId": "مجموعة الوحدات"
     }
   }
 }

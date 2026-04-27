@@ -7,7 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "@avuny/zod";
 
 import { Form as CustomForm } from "@/src/components/form";
-import { useUpdateItem, getItemListQueryKey } from "@/src/api";
+import {
+  useUpdateItem,
+  getItemListQueryKey,
+  useUnitCollectionList,
+} from "@/src/api";
 
 import { updateItemBodySchema as schema } from "@avuny/shared";
 import { useItemTranslations } from "@/src/features/item/translations/hooks/use-item-translations";
@@ -24,9 +28,7 @@ export const UpdateItemForm: React.FC<UpdateItemFormProps> = ({ item }) => {
     defaultValues: {
       name: "",
       description: "",
-      purchasePrice: 0,
-      salesPrice: 0,
-      unit: "",
+      unitCollectionId: "",
       returnable: false,
     },
   });
@@ -36,9 +38,8 @@ export const UpdateItemForm: React.FC<UpdateItemFormProps> = ({ item }) => {
       form.reset({
         name: item.name ?? "",
         description: item.description ?? "",
-        purchasePrice: item.purchasePrice ?? 0,
-        salesPrice: item.salesPrice ?? 0,
-        unit: item.unit ?? "",
+        unitCollectionId: item.unitCollectionId ?? "",
+
         returnable: item.returnable ?? false,
       });
     }
@@ -46,7 +47,13 @@ export const UpdateItemForm: React.FC<UpdateItemFormProps> = ({ item }) => {
 
   const { mutateAsync, isPending, error } = useUpdateItem();
   const { itemFormFieldsTranslations } = useItemTranslations();
-
+  const { data: unitCollectionsData, isPending: unitCollectionsIsPending } =
+    useUnitCollectionList({
+      filters: {},
+      orderBy: {},
+      page: 0,
+      pageSize: 10,
+    });
   return (
     <CustomForm
       form={form}
@@ -77,20 +84,15 @@ export const UpdateItemForm: React.FC<UpdateItemFormProps> = ({ item }) => {
           spans: { base: 4, md: 2 },
         },
         {
-          key: "purchasePrice ",
-          content: { name: "purchasePrice", type: "number" },
+          key: "unitCollectionId",
+          content: {
+            name: "unitCollectionId",
+            type: "select",
+            options: unitCollectionsData?.data.list || [],
+          },
           spans: { base: 4, md: 2 },
         },
-        {
-          key: "salesPrice",
-          content: { name: "salesPrice", type: "number" },
-          spans: { base: 4, md: 2 },
-        },
-        {
-          key: "unit",
-          content: { name: "unit", type: "text" },
-          spans: { base: 4, md: 2 },
-        },
+
         {
           key: "returnable",
           content: {

@@ -7,7 +7,8 @@
       },
       "fields": {
         "name": "Name",
-        "description": "Description"
+        "description": "Description",
+        "baseUnitId": "Base Unit"
       }
     },
     "headers": {
@@ -15,6 +16,7 @@
       "unitCollections": "Unit Collections"
     },
     "columnHeaders": {
+      "id": "ID",
       "name": "name",
       "description": "description",
       "updatedAt": "Last Updated"

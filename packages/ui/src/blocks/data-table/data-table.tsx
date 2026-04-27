@@ -400,13 +400,13 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* PAGINATION */}
-      {setPagination && data?.totalCount && pagination && (
+      {setPagination && data?.totalCount && pagination ? (
         <TablePagination
           pagination={pagination}
           rowCount={isLoading ? 0 : data?.totalCount || 0}
           setPagination={setPagination}
         />
-      )}
+      ) : null}
     </div>
   );
 }

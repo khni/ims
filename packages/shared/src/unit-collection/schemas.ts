@@ -11,7 +11,7 @@ import { z } from "@avuny/zod";
 export const unitCollectionSchema = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullable(),
   organizationId: z.string(),
   baseUnitId: z.string(),
   createdAt: z.iso.datetime(),
@@ -74,6 +74,8 @@ export const getUnitCollectionByIdResponseSchema = unitCollectionSchema.pick({
   id: true,
   name: true,
   updatedAt: true,
+  baseUnitId: true,
+  description: true,
 });
 
 /**

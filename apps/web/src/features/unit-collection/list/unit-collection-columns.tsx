@@ -9,7 +9,7 @@ export const UnitCollectionColumns = ({
   getHeader,
 }: {
   getHeader: (
-    value: keyof Messages["unitCollection"]["columnHeaders"]
+    value: keyof Messages["unitCollection"]["columnHeaders"],
   ) => string;
 }) =>
   createColumns<UnitCollectionListResponse[number]>({
@@ -18,14 +18,10 @@ export const UnitCollectionColumns = ({
         key: "name",
         render: (_, row) => row.name,
       },
-      {
-        key: "description",
-        render: (_, row) => row.description,
-      },
+
       {
         key: "updatedAt",
-        render: (value) =>
-          new Date(value).toLocaleDateString(),
+        render: (value) => new Date(value).toLocaleDateString(),
       },
     ],
     getHeader,

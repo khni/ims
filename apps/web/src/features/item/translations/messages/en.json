@@ -26,7 +26,8 @@
       "salesPrice": "Sales Price",
       "unit": "Unit",
       "returnable": "Returnable",
-      "updatedAt": "Updated At"
+      "updatedAt": "Updated At",
+      "unitCollectionId": "Unit Collection"
     }
   }
 }

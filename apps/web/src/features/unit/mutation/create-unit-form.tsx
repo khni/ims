@@ -18,6 +18,7 @@ export const CreateUnitForm: React.FC = () => {
     defaultValues: {
       name: "",
       description: "",
+      symbol: "",
     },
   });
 
