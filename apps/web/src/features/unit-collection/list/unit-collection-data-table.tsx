@@ -21,7 +21,7 @@ import DataList from "@/src/components/data-list";
 
 export const UnitCollectionDataTable: React.FC = () => {
   const columnHeaderTranslations = useTranslations(
-    "unitCollection.columnHeaders"
+    "unitCollection.columnHeaders",
   );
 
   const [sortingState, setSortingState] = useState<SortingState>([
@@ -49,7 +49,11 @@ export const UnitCollectionDataTable: React.FC = () => {
 
   return (
     <DataList
-      resetFilters={resetFilters}
+      filter={{
+        resetFilters,
+        onFilterChange: (filters) => setFilters(filters),
+        filters,
+      }}
       searchKey="name"
       onRowClickConfig={{
         href: "unit-collections",
@@ -77,8 +81,6 @@ export const UnitCollectionDataTable: React.FC = () => {
       setPagination={setPagination}
       sorting={sortingState}
       onSortingChange={setSortingState}
-      filters={filters}
-      onFilterChange={(filters) => setFilters(filters)}
       dropdownActions={{
         onDelete: async (row) => {
           await mutateAsync({ id: row.original.id });

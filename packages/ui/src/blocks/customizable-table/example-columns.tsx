@@ -1,25 +1,22 @@
 import { ColumnDef } from "@tanstack/react-table";
-import DATA from "@workspace/ui/blocks/customizable-table/example-data";
-
+import DATA, {
+  status,
+} from "@workspace/ui/blocks/customizable-table/example-data";
+import createSelectCell from "@workspace/ui/blocks/data-table/create-select-cell";
+import EditableCell from "@workspace/ui/blocks/data-table/editable-cell";
+const SelectCell = createSelectCell(status);
 export function DataColumnExample(): ColumnDef<(typeof DATA)[0]>[] {
   return [
     {
       accessorKey: "task",
       header: "Task",
-      cell: ({ row }) => <p>{row.getValue("task")}</p>,
+      cell: EditableCell,
     },
-    {
-      accessorKey: "assignee",
-      header: "Assignee",
-      cell: ({ row }) => <p>{row.getValue("assignee")}</p>,
-    },
+
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => {
-        const status: (typeof DATA)[0]["status"] = row.getValue("status");
-        return <p>{status?.name}</p>;
-      },
+      cell: SelectCell,
     },
     {
       accessorKey: "due",
@@ -32,6 +29,12 @@ export function DataColumnExample(): ColumnDef<(typeof DATA)[0]>[] {
           </p>
         );
       },
+    },
+    {
+      accessorKey: "notes",
+      header: "Notes",
+      size: 225,
+      cell: EditableCell,
     },
   ];
 }

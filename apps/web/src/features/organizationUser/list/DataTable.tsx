@@ -54,7 +54,11 @@ export const OrganizationUserDataTable: React.FC = () => {
   return (
     <>
       <DataList
-        resetFilters={resetFilters}
+        filter={{
+          resetFilters,
+          onFilterChange: (filters) => setFilters(filters),
+          filters,
+        }}
         searchKey="name"
         onRowClickConfig={{
           href: "organization-users",
@@ -93,8 +97,6 @@ export const OrganizationUserDataTable: React.FC = () => {
         setPagination={setPagination}
         sorting={sortingState}
         onSortingChange={setSortingState}
-        filters={filters}
-        onFilterChange={(filters) => setFilters(filters)}
         dropdownActions={{
           onDelete: async (row) => {
             await mutateAsync({ id: row.original.id });

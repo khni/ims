@@ -42,12 +42,16 @@ import {
 } from "@workspace/ui/blocks/menus/custom-dropdown-menu";
 
 declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+  }
+
   interface ColumnMeta<TData extends RowData, TValue> {
     filterKey: string;
     filterVariant?: "text" | "number" | "date";
     showFilter?: boolean;
 
-    // 👇 use TValue instead of custom T
+    // uses column value type
     filterOptions?: { label: string; value: TValue }[];
 
     hideOnMobile?: boolean;
@@ -56,27 +60,32 @@ declare module "@tanstack/react-table" {
 export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   isLoading?: boolean;
-  data?: { list: TData[]; totalCount: number };
+  data?: {
+    list: TData[];
+    totalCount: number;
+    set?: React.Dispatch<React.SetStateAction<TData[]>>;
+  };
   dropdownActions?: {
     onDelete?: (row: Row<TData>) => Promise<void>;
     onEdit?: (row: Row<TData>) => Promise<void>;
   } & Omit<CustomDropdownMenuProps, "onDelete" | "onEdit">;
 
-  setData?: React.Dispatch<React.SetStateAction<TData[]>>;
   onRowClick?: (row: Row<TData>) => void;
 
-  pagination: {
+  pagination?: {
     pageIndex: number;
     pageSize: number;
   };
 
   sorting?: SortingState;
-  filters: any;
-  resetFilters: () => void;
-  onFilterChange: (dataFilters: any) => void;
+  filter?: {
+    filters?: any;
+    resetFilters: () => void;
+    onFilterChange: (dataFilters: any) => void;
+  };
   onSortingChange?: OnChangeFn<SortingState>;
 
-  setPagination: React.Dispatch<
+  setPagination?: React.Dispatch<
     React.SetStateAction<{
       pageIndex: number;
       pageSize: number;
@@ -92,9 +101,7 @@ export function DataTable<TData, TValue>({
   setPagination,
   sorting,
   onSortingChange,
-  filters,
-  resetFilters,
-  onFilterChange,
+  filter,
   isLoading,
   dropdownActions,
 }: DataTableProps<TData, TValue>) {
@@ -112,6 +119,20 @@ export function DataTable<TData, TValue>({
     },
     manualSorting: true,
     onSortingChange,
+    meta: {
+      updateData: (rowIndex, columnId, value) => {
+        data?.set?.((prev) =>
+          prev.map((row, index) =>
+            index === rowIndex
+              ? {
+                  ...row,
+                  [columnId]: value,
+                }
+              : row,
+          ),
+        );
+      },
+    },
   });
 
   return (
@@ -156,46 +177,48 @@ export function DataTable<TData, TValue>({
                               header.getContext(),
                             )}
 
-                            {(() => {
-                              const sortState = header.column.getIsSorted();
-                              return sortState === "asc" ? (
-                                <ArrowUpNarrowWide size={16} />
-                              ) : sortState === "desc" ? (
-                                <ArrowDownNarrowWide size={16} />
-                              ) : (
-                                <ArrowUpDown size={16} />
-                              );
-                            })()}
+                            {onSortingChange &&
+                              (() => {
+                                const sortState = header.column.getIsSorted();
+                                return sortState === "asc" ? (
+                                  <ArrowUpNarrowWide size={16} />
+                                ) : sortState === "desc" ? (
+                                  <ArrowDownNarrowWide size={16} />
+                                ) : (
+                                  <ArrowUpDown size={16} />
+                                );
+                              })()}
                           </div>
 
                           {/* Filters */}
-                          {meta?.showFilter &&
+                          {filter &&
+                          meta?.showFilter &&
                           header.column.getCanFilter() &&
                           meta?.filterKey ? (
                             meta.filterVariant === "date" ? (
                               <DatePickerWithRange
                                 onChange={(value) => {
                                   if (!value?.lte || !value.gte) {
-                                    onFilterChange({
+                                    filter.onFilterChange({
                                       [meta.filterKey]: undefined,
                                     });
                                     return;
                                   }
 
-                                  onFilterChange({
+                                  filter.onFilterChange({
                                     [meta.filterKey]: value,
                                   });
                                 }}
-                                value={filters[meta.filterKey]}
+                                value={filter.filters[meta.filterKey]}
                               />
                             ) : meta.filterOptions ? (
                               <div>
                                 <FilterComponent
-                                  resetFilters={resetFilters}
-                                  filters={filters}
+                                  resetFilters={filter.resetFilters}
+                                  filters={filter.filters}
                                   onApply={(newFilters) =>
-                                    onFilterChange({
-                                      ...filters,
+                                    filter.onFilterChange({
+                                      ...filter.filters,
                                       ...newFilters,
                                     })
                                   }
@@ -217,7 +240,7 @@ export function DataTable<TData, TValue>({
                               <DebouncedInput
                                 className="w-full sm:w-36 border shadow rounded text-xs"
                                 onChange={(value) =>
-                                  onFilterChange({
+                                  filter.onFilterChange({
                                     [meta.filterKey]: value,
                                   })
                                 }
@@ -227,7 +250,7 @@ export function DataTable<TData, TValue>({
                                     ? "number"
                                     : "text"
                                 }
-                                value={filters[meta.filterKey] ?? ""}
+                                value={filter.filters[meta.filterKey] ?? ""}
                               />
                             )
                           ) : (
@@ -245,7 +268,7 @@ export function DataTable<TData, TValue>({
           {/* BODY */}
           {isLoading ? (
             <TableBody>
-              {Array.from({ length: pagination.pageSize }).map(
+              {Array.from({ length: pagination?.pageSize || 5 }).map(
                 (_, rowIndex) => (
                   <TableRow key={`skeleton-row-${rowIndex}`}>
                     {table.getAllLeafColumns().map((column, colIndex) => {
@@ -377,11 +400,13 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* PAGINATION */}
-      <TablePagination
-        pagination={pagination}
-        rowCount={isLoading ? 0 : data?.totalCount || 0}
-        setPagination={setPagination}
-      />
+      {setPagination && data?.totalCount && pagination && (
+        <TablePagination
+          pagination={pagination}
+          rowCount={isLoading ? 0 : data?.totalCount || 0}
+          setPagination={setPagination}
+        />
+      )}
     </div>
   );
 }

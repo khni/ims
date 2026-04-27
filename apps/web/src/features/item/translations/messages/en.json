@@ -11,7 +11,8 @@
         "purchasePrice": "Purchase Price",
         "salesPrice": "Sales Price",
         "unit": "Unit",
-        "returnable": "Returnable"
+        "returnable": "Returnable",
+        "unitCollectionId": "Unit Collection"
       }
     },
     "headers": {

@@ -57,7 +57,11 @@ export const ${featurePascal}DataTable: React.FC = () => {
 
   return (
     <DataList
-      resetFilters={resetFilters}
+      filter={{
+        resetFilters,
+        onFilterChange: (filters) => setFilters(filters),
+        filters,
+      }}
       searchKey="name"
       onRowClickConfig={{
         href: "${pluralKebabCase}",
@@ -85,8 +89,6 @@ export const ${featurePascal}DataTable: React.FC = () => {
       setPagination={setPagination}
       sorting={sortingState}
       onSortingChange={setSortingState}
-      filters={filters}
-      onFilterChange={(filters) => setFilters(filters)}
       dropdownActions={{
         onDelete: async (row) => {
           await mutateAsync({ id: row.original.id });
