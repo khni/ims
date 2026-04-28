@@ -140,6 +140,15 @@ export class ModuleService<R extends IRepository> {
     });
   };
 
+  getOptions = () => {
+    const { repository, config } = this.getConfig();
+
+    return this.queryService.getOptions({
+      repository,
+      config: { moduleName: config.moduleName },
+    });
+  };
+
   findById = () => {
     const { repository, config } = this.getConfig();
 

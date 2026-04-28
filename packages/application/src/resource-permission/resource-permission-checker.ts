@@ -3,13 +3,29 @@ import { prisma, PrismaClient, SystemCustomPermission } from "@avuny/db";
 export class ResourcePermissionChecker implements IResourcePermission {
   constructor() {}
 
-  async check(params: {
-    organizationId: string;
-    userId: string;
-    resource: Resource;
-    action: Action;
-  }): Promise<boolean> {
-    const { organizationId, userId, resource, action } = params;
+  async check(
+    params:
+      | {
+          organizationId?: string;
+          userId: string;
+          resource: Resource;
+          action: Action;
+        }
+      | {
+          organizationId?: string;
+          userId: string;
+          permissions: {
+            resource: Resource;
+            action: Action;
+          }[];
+        },
+  ): Promise<boolean> {
+    const { organizationId, userId } = params;
+
+    const permissionFilters =
+      "permissions" in params
+        ? params.permissions
+        : [{ resource: params.resource, action: params.action }];
 
     const orgUser = await prisma.organizationUser.findFirst({
       where: {
@@ -18,7 +34,7 @@ export class ResourcePermissionChecker implements IResourcePermission {
         status: "ACTIVE",
         role: {
           OR: [
-            // ✅ FULL_ACCESS custom permission
+            // FULL_ACCESS
             {
               roleCustomPermissions: {
                 some: {
@@ -30,14 +46,17 @@ export class ResourcePermissionChecker implements IResourcePermission {
               },
             },
 
+            // Any requested permission matches
             {
               rolePermissions: {
                 some: {
                   isActive: true,
-                  permission: {
-                    action: { name: action },
-                    resource: { name: resource },
-                  },
+                  OR: permissionFilters.map((item) => ({
+                    permission: {
+                      action: { name: item.action },
+                      resource: { name: item.resource },
+                    },
+                  })),
                 },
               },
             },
@@ -47,6 +66,6 @@ export class ResourcePermissionChecker implements IResourcePermission {
       select: { id: true },
     });
 
-    return Boolean(orgUser);
+    return !!orgUser;
   }
 }

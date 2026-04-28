@@ -147,6 +147,24 @@ export class OrganizationUserRepository
     });
   }
 
+  /**
+   * Find organization user options
+   */
+  async getOptions(params: {
+    where?: OrganizationUserRepoFilters;
+    take?: number;
+    tx?: Tx;
+    cursor?: { id: string };
+  }) {
+    const { tx, ...query } = params ?? {};
+    const db = this.getDB(tx);
+
+    return db.organizationUser.findMany({
+      ...query,
+      select: { id: true, name: true },
+    });
+  }
+
   /** Update OrganizationUser */
   async update(params: {
     where: Prisma.OrganizationUserWhereUniqueInput;

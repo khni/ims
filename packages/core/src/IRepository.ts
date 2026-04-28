@@ -40,6 +40,7 @@ export interface IRepository<
     id: string;
   },
   TFindManyReturnType = { id: string }[],
+  TGetOptionsReturnType = { id: string }[],
 > {
   create(params: { data: TCreateInput; tx?: Tx }): Promise<TCreateReturnType>;
 
@@ -54,7 +55,15 @@ export interface IRepository<
     skip?: number;
     take?: number;
     tx?: Tx;
+    cursor?: unknown;
   }): Promise<TFindManyReturnType>;
+
+  getOptions(params: {
+    where?: TWhere;
+    take?: number;
+    tx?: Tx;
+    cursor?: unknown;
+  }): Promise<TGetOptionsReturnType>;
 
   update(params: {
     data: TUpdateInput;

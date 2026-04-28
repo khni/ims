@@ -1,8 +1,4 @@
-import {
-  type Tx,
-  type DB,
-  PrismaTransaction,
-} from "@avuny/db";
+import { type Tx, type DB, PrismaTransaction } from "@avuny/db";
 
 import type {
   CreateUnitRepo,
@@ -22,10 +18,7 @@ import { IRepository } from "@avuny/core";
  * - Abstracts Prisma from service layer
  * - Supports transactions via Tx
  */
-export class UnitRepository
-  extends PrismaTransaction
-  implements IRepository
-{
+export class UnitRepository extends PrismaTransaction implements IRepository {
   private readonly db: DB;
 
   constructor({ db }: { db: DB }) {
@@ -47,10 +40,7 @@ export class UnitRepository
   /**
    * Create unit
    */
-  async create(params: {
-    data: CreateUnitRepo;
-    tx?: Tx;
-  }) {
+  async create(params: { data: CreateUnitRepo; tx?: Tx }) {
     const { data, tx } = params;
     const db = this.getDB(tx);
 
@@ -102,10 +92,7 @@ export class UnitRepository
   /**
    * Find unique unit
    */
-  async findUnique(params: {
-    where: UnitWhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async findUnique(params: { where: UnitWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
@@ -117,10 +104,7 @@ export class UnitRepository
   /**
    * Find by ID (helper)
    */
-  async findById(params: {
-    id: string;
-    tx?: Tx;
-  }) {
+  async findById(params: { id: string; tx?: Tx }) {
     const { id, tx } = params;
     const db = this.getDB(tx);
 
@@ -138,6 +122,7 @@ export class UnitRepository
     skip?: number;
     take?: number;
     tx?: Tx;
+    cursor?: { id: string };
   }) {
     const { tx, ...query } = params ?? {};
     const db = this.getDB(tx);
@@ -148,12 +133,32 @@ export class UnitRepository
   }
 
   /**
+   * Find unit options
+   */
+  async getOptions(params: {
+    where?: { organizationId: string; name: string };
+    take?: number;
+    skip?: number;
+    tx?: Tx;
+    cursor?: { id: string };
+  }) {
+    const { tx, where, ...query } = params ?? {};
+    const db = this.getDB(tx);
+
+    return db.unit.findMany({
+      ...query,
+      where: {
+        organizationId: where?.organizationId,
+        name: { contains: where?.name, mode: "insensitive" },
+      },
+      select: { id: true, name: true },
+    });
+  }
+
+  /**
    * Count unit
    */
-  async count(params?: {
-    where?: UnitRepoFilters;
-    tx?: Tx;
-  }) {
+  async count(params?: { where?: UnitRepoFilters; tx?: Tx }) {
     const { tx, where } = params ?? {};
     const db = this.getDB(tx);
 
@@ -190,10 +195,7 @@ export class UnitRepository
   /**
    * Delete unit
    */
-  async delete(params: {
-    where: UnitWhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async delete(params: { where: UnitWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 

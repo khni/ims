@@ -236,4 +236,27 @@ export class UnitService {
       },
     });
   };
+
+  getOptions = async (params: {
+    context: Context;
+    query: { name?: string; lastId: string };
+  }) => {
+    const list = this.moduleService.getOptions();
+
+    return await list({
+      ...params,
+      query: {
+        filters: {
+          organizationId: params.context.organizationId!,
+          name: params.query.name,
+        },
+        cursor: { id: params.query.lastId },
+      },
+      permissions: [
+        { resource: "unit", action: "read" },
+        { resource: "unitCollection", action: "create" },
+        { resource: "unitCollection", action: "update" },
+      ],
+    });
+  };
 }

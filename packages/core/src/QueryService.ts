@@ -3,7 +3,7 @@ import { fail, ModuleErrorCodes, ok } from "@avuny/utils";
 import { IRepository } from "./IRepository.js";
 
 import { FilteredPaginatedList } from "./IQueryService.js";
-import { Context, Resource } from "./types.js";
+import { Action, Context, Resource } from "./types.js";
 import { IResourcePermission } from "./ServiceGuard/IResourcePermission.js";
 
 export class QueryService {
@@ -83,6 +83,81 @@ export class QueryService {
         },
         context,
         `${config.moduleName}QueryService.filteredPaginatedList`,
+      );
+    };
+  };
+
+  getOptions = <
+    R extends IRepository,
+    TFilter extends Parameters<R["findMany"]>[0]["where"],
+    TCursor extends Parameters<R["findMany"]>[0]["cursor"],
+  >({
+    config,
+    repository,
+  }: {
+    config: {
+      moduleName: Resource;
+    };
+    repository: R;
+  }) => {
+    return async ({
+      query: { cursor, take = 100, filters },
+      context,
+      permissions,
+      passResourcePermissionChecker: passResourcePermission,
+    }: {
+      query: {
+        cursor?: TCursor;
+        take?: number;
+        filters?: TFilter;
+      };
+      context: Context;
+      passResourcePermissionChecker?: boolean;
+      permissions: {
+        resource: Resource;
+        action: Action;
+      }[]; // because options could be used with other resources like when creating item and want select unit for it.
+    }) => {
+      let canRead;
+
+      if (!passResourcePermission) {
+        canRead = await this.resourcePermission.check({
+          organizationId: context.organizationId,
+          userId: context.userId,
+          permissions,
+        });
+
+        if (!canRead) {
+          return fail(
+            ModuleErrorCodes.USER_NO_PERMISSION,
+            context,
+            `${config.moduleName}QueryService.getOptions`,
+          );
+        }
+      }
+
+      const limit = Math.min(take, 500);
+
+      const list = (await repository.findMany({
+        where: filters,
+        orderBy: { id: "asc" },
+        take: limit,
+        ...(cursor && {
+          cursor,
+          skip: 1,
+        }),
+      })) as Awaited<ReturnType<R["getOptions"]>>;
+
+      const nextCursor =
+        list.length === limit ? { id: list[list.length - 1]?.id } : null;
+
+      return ok(
+        {
+          list,
+          nextCursor,
+        },
+        context,
+        `${config.moduleName}QueryService.getOptions`,
       );
     };
   };

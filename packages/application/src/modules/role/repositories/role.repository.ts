@@ -111,6 +111,24 @@ export class RoleRepository extends PrismaTransaction implements IRepository {
     });
   }
 
+  /**
+   * Find role options
+   */
+  async getOptions(params: {
+    where?: { organizationId?: string; NOT?: { name?: string } };
+    take?: number;
+    tx?: Tx;
+    cursor?: { id: string };
+  }) {
+    const { tx, ...query } = params ?? {};
+    const db = this.getDB(tx);
+
+    return db.role.findMany({
+      ...query,
+      select: { id: true, name: true },
+    });
+  }
+
   /** Update role*/
   async update(params: {
     data: MutateRoleBody;

@@ -1,8 +1,4 @@
-import {
-  type Tx,
-  type DB,
-  PrismaTransaction,
-} from "@avuny/db";
+import { type Tx, type DB, PrismaTransaction } from "@avuny/db";
 
 import type {
   CreateItemRepo,
@@ -22,10 +18,7 @@ import { IRepository } from "@avuny/core";
  * - Abstracts Prisma from service layer
  * - Supports transactions via Tx
  */
-export class ItemRepository
-  extends PrismaTransaction
-  implements IRepository
-{
+export class ItemRepository extends PrismaTransaction implements IRepository {
   private readonly db: DB;
 
   constructor({ db }: { db: DB }) {
@@ -47,10 +40,7 @@ export class ItemRepository
   /**
    * Create item
    */
-  async create(params: {
-    data: CreateItemRepo;
-    tx?: Tx;
-  }) {
+  async create(params: { data: CreateItemRepo; tx?: Tx }) {
     const { data, tx } = params;
     const db = this.getDB(tx);
 
@@ -102,10 +92,7 @@ export class ItemRepository
   /**
    * Find unique item
    */
-  async findUnique(params: {
-    where: ItemWhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async findUnique(params: { where: ItemWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
@@ -117,10 +104,7 @@ export class ItemRepository
   /**
    * Find by ID (helper)
    */
-  async findById(params: {
-    id: string;
-    tx?: Tx;
-  }) {
+  async findById(params: { id: string; tx?: Tx }) {
     const { id, tx } = params;
     const db = this.getDB(tx);
 
@@ -148,12 +132,27 @@ export class ItemRepository
   }
 
   /**
+   * Find item options
+   */
+  async getOptions(params: {
+    where?: ItemRepoFilters;
+    take?: number;
+    tx?: Tx;
+    cursor?: { id: string };
+  }) {
+    const { tx, ...query } = params ?? {};
+    const db = this.getDB(tx);
+
+    return db.item.findMany({
+      ...query,
+      select: { id: true, name: true },
+    });
+  }
+
+  /**
    * Count item
    */
-  async count(params?: {
-    where?: ItemRepoFilters;
-    tx?: Tx;
-  }) {
+  async count(params?: { where?: ItemRepoFilters; tx?: Tx }) {
     const { tx, where } = params ?? {};
     const db = this.getDB(tx);
 
@@ -190,10 +189,7 @@ export class ItemRepository
   /**
    * Delete item
    */
-  async delete(params: {
-    where: ItemWhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async delete(params: { where: ItemWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 

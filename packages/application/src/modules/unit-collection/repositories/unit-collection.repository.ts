@@ -1,8 +1,4 @@
-import {
-  type Tx,
-  type DB,
-  PrismaTransaction,
-} from "@avuny/db";
+import { type Tx, type DB, PrismaTransaction } from "@avuny/db";
 
 import type {
   CreateUnitCollectionRepo,
@@ -47,10 +43,7 @@ export class UnitCollectionRepository
   /**
    * Create unitCollection
    */
-  async create(params: {
-    data: CreateUnitCollectionRepo;
-    tx?: Tx;
-  }) {
+  async create(params: { data: CreateUnitCollectionRepo; tx?: Tx }) {
     const { data, tx } = params;
     const db = this.getDB(tx);
 
@@ -102,10 +95,7 @@ export class UnitCollectionRepository
   /**
    * Find unique unitCollection
    */
-  async findUnique(params: {
-    where: UnitCollectionWhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async findUnique(params: { where: UnitCollectionWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
@@ -117,10 +107,7 @@ export class UnitCollectionRepository
   /**
    * Find by ID (helper)
    */
-  async findById(params: {
-    id: string;
-    tx?: Tx;
-  }) {
+  async findById(params: { id: string; tx?: Tx }) {
     const { id, tx } = params;
     const db = this.getDB(tx);
 
@@ -148,12 +135,27 @@ export class UnitCollectionRepository
   }
 
   /**
+   * Find unit. collection options
+   */
+  async getOptions(params: {
+    where?: UnitCollectionRepoFilters;
+    take?: number;
+    tx?: Tx;
+    cursor?: { id: string };
+  }) {
+    const { tx, ...query } = params ?? {};
+    const db = this.getDB(tx);
+
+    return db.unitCollection.findMany({
+      ...query,
+      select: { id: true, name: true },
+    });
+  }
+
+  /**
    * Count unitCollection
    */
-  async count(params?: {
-    where?: UnitCollectionRepoFilters;
-    tx?: Tx;
-  }) {
+  async count(params?: { where?: UnitCollectionRepoFilters; tx?: Tx }) {
     const { tx, where } = params ?? {};
     const db = this.getDB(tx);
 
@@ -190,10 +192,7 @@ export class UnitCollectionRepository
   /**
    * Delete unitCollection
    */
-  async delete(params: {
-    where: UnitCollectionWhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async delete(params: { where: UnitCollectionWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 

@@ -78,9 +78,25 @@ export const getUnitByIdResponseSchema = unitSchema.pick({
 });
 
 /**
+ * Single option entity response
+ */
+export const getUnitOptionSchema = unitSchema.pick({
+  id: true,
+  name: true,
+});
+
+/**
  * List response
  */
 export const unitListResponseSchema = getUnitByIdResponseSchema.array();
+
+/**
+ * List options response
+ */
+export const unitOptionsResponseSchema = z.object({
+  nextCursor: z.object({ id: z.string().optional() }).nullable(),
+  list: getUnitOptionSchema.array(),
+});
 
 /* =========================
    Filters
@@ -110,6 +126,14 @@ export const UnitFiltersSchema = z.object({
       lte: z.date().optional(),
     })
     .optional(),
+});
+
+/**
+ * UI Filters (simple)
+ */
+export const UnitOptionsQuerySchema = z.object({
+  name: z.string().optional(),
+  lastId: z.string(),
 });
 
 /**
