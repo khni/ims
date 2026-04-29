@@ -18,9 +18,11 @@ export const app = new OpenAPIHono();
 app.route("/", createUnitRoute);
 app.route("/", unitListRoute);
 app.route("/", updateUnitRoute);
-app.route("/", getUnitByIdRoute);
-app.route("/", deleteUnitRoute);
+
 app.route("/", unitOptionListRoute);
+app.route("/", getUnitByIdRoute);
+
+app.route("/", deleteUnitRoute);
 
 /**
  * Export namespaced routes

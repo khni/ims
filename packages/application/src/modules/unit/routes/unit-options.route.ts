@@ -42,7 +42,7 @@ const route = createRoute({
   operationId: "unitOptions",
   tags: ["unit"],
 
-  middleware: [isAuthenticatedMiddleware, parseFindManyQuery],
+  middleware: [isAuthenticatedMiddleware],
 
   request: {
     headers: AuthorizationHeaderSchema,
