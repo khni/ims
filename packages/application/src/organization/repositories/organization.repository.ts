@@ -18,6 +18,14 @@ export class OrganizationRepository
     super();
     this.db = db;
   }
+  getOptions(params: {
+    where?: unknown;
+    take?: number;
+    tx?: unknown;
+    cursor?: unknown;
+  }): Promise<{ id: string }[]> {
+    throw new Error("Method not implemented.");
+  }
 
   private getDB(tx?: Tx): DB {
     return tx ?? this.db;

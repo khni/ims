@@ -239,7 +239,7 @@ export class UnitService {
 
   getOptions = async (params: {
     context: Context;
-    query: { name?: string; lastId: string };
+    query: { name?: string; cursor?: { id: string } };
   }) => {
     const list = this.moduleService.getOptions();
 
@@ -250,7 +250,7 @@ export class UnitService {
           organizationId: params.context.organizationId!,
           name: params.query.name,
         },
-        cursor: { id: params.query.lastId },
+        cursor: params.query.cursor,
       },
       permissions: [
         { resource: "unit", action: "read" },

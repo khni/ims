@@ -39,7 +39,7 @@ export const unitOptionListRoute = new OpenAPIHono();
 const route = createRoute({
   method: "get",
   path: "/options",
-  operationId: "unitList",
+  operationId: "unitOptions",
   tags: ["unit"],
 
   middleware: [isAuthenticatedMiddleware, parseFindManyQuery],

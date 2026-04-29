@@ -19,7 +19,8 @@
       "id": "المعرف",
       "name": "الاسم",
       "description": "الوصف",
-      "updatedAt": "آخر تحديث"
+      "updatedAt": "آخر تحديث",
+      "baseUnitId": "الوحدة الاساسية"
     }
   }
 }

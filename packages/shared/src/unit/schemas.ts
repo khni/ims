@@ -133,7 +133,11 @@ export const UnitFiltersSchema = z.object({
  */
 export const UnitOptionsQuerySchema = z.object({
   name: z.string().optional(),
-  lastId: z.string(),
+  cursor: z
+    .object({
+      id: z.string(),
+    })
+    .optional(),
 });
 
 /**

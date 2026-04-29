@@ -19,7 +19,8 @@
       "id": "ID",
       "name": "name",
       "description": "description",
-      "updatedAt": "Last Updated"
+      "updatedAt": "Last Updated",
+      "baseUnitId": "Base Unit"
     }
   }
 }

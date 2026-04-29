@@ -11,6 +11,8 @@ import {
   useCreateUnitCollection,
   getUnitCollectionListQueryKey,
   useUnitList,
+  unitOptions,
+  useUnitOptions,
 } from "@/src/api";
 
 import { createUnitCollectionBodySchema as schema } from "@avuny/shared";
@@ -30,12 +32,7 @@ export const CreateUnitCollectionForm: React.FC = () => {
   const { unitCollectionFormFieldsTranslations } =
     useUnitCollectionTranslations();
 
-  const { data: unitsData, isPending: unitsIsPending } = useUnitList({
-    filters: {},
-    orderBy: {},
-    page: 0,
-    pageSize: 10,
-  });
+  const { data: unitsData, isPending: unitsIsPending } = useUnitOptions({});
   console.log(unitsData, "unitData");
   return (
     <CustomForm
