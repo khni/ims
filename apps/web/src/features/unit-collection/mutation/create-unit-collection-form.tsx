@@ -1,7 +1,7 @@
 // create-unit-collection-form.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "@avuny/zod";
@@ -17,7 +17,7 @@ import {
 
 import { createUnitCollectionBodySchema as schema } from "@avuny/shared";
 import { useUnitCollectionTranslations } from "@/src/features/unit-collection/translations/hooks/use-unit-collection-translations";
-import TargetItemLines from "@/src/features/unit-collection/mutation/target-item-lines";
+import TargetItemLines from "@/src/features/unit-collection/mutation/target-items-lines";
 
 export const CreateUnitCollectionForm: React.FC = () => {
   const form = useForm<z.infer<typeof schema>>({
@@ -25,6 +25,8 @@ export const CreateUnitCollectionForm: React.FC = () => {
     defaultValues: {
       name: "",
       description: "",
+      baseUnitId: "",
+      targetUnitLines: [],
     },
   });
 
@@ -33,14 +35,14 @@ export const CreateUnitCollectionForm: React.FC = () => {
     useUnitCollectionTranslations();
 
   const { data: unitsData, isPending: unitsIsPending } = useUnitOptions({});
-  console.log(unitsData, "unitData");
+  const [targetUnitLines, setTargetUnitLines] = useState([]);
   return (
     <CustomForm
       form={form}
       error={error}
       api={{
         onSubmit: async (data) => {
-          await mutateAsync({ data });
+          await mutateAsync({ data: { ...data, targetUnitLines } });
         },
         isLoading: isPending,
       }}
@@ -70,7 +72,7 @@ export const CreateUnitCollectionForm: React.FC = () => {
         },
       ]}
     >
-      <TargetItemLines></TargetItemLines>
+      <TargetItemLines targetUnits={targetUnitLines}></TargetItemLines>
     </CustomForm>
   );
 };

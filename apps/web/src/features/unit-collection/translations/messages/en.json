@@ -8,7 +8,8 @@
       "fields": {
         "name": "Name",
         "description": "Description",
-        "baseUnitId": "Base Unit"
+        "baseUnitId": "Base Unit",
+        "targetUnitLines": "Target Unit Lines"
       }
     },
     "headers": {

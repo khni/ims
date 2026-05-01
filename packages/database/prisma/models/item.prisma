@@ -97,7 +97,7 @@ model TargetUnitLine {
 
   
 
-  factor Decimal? @db.Decimal(10, 5) // Conversion factor from base unit to target unit
+  factor Decimal @db.Decimal(10, 5) // Conversion factor from base unit to target unit
   // Example:
   // 1 kg = 1000 g → factor = 1000
   // 1 box = 12 pieces → factor = 12

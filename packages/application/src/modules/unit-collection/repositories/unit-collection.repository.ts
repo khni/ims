@@ -9,6 +9,7 @@ import type {
 } from "@avuny/shared";
 
 import { IRepository } from "@avuny/core";
+import { t } from "i18next";
 
 /**
  * UnitCollection Repository
@@ -45,10 +46,11 @@ export class UnitCollectionRepository
    */
   async create(params: { data: CreateUnitCollectionRepo; tx?: Tx }) {
     const { data, tx } = params;
+    const { targetUnitLines, ...restData } = data;
     const db = this.getDB(tx);
 
     return db.unitCollection.create({
-      data,
+      data: { ...restData, targetUnitLines: { create: targetUnitLines } },
       select: { id: true, name: true },
     });
   }
@@ -101,6 +103,20 @@ export class UnitCollectionRepository
 
     return db.unitCollection.findUnique({
       where,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        baseUnitId: true,
+
+        targetUnitLines: {
+          select: {
+            id: true,
+            targetUnitId: true,
+            factor: true,
+          },
+        },
+      },
     });
   }
 
@@ -113,6 +129,20 @@ export class UnitCollectionRepository
 
     return db.unitCollection.findUnique({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        baseUnitId: true,
+
+        targetUnitLines: {
+          select: {
+            id: true,
+            targetUnitId: true,
+            factor: true,
+          },
+        },
+      },
     });
   }
 
@@ -131,6 +161,12 @@ export class UnitCollectionRepository
 
     return db.unitCollection.findMany({
       ...query,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        updatedAt: true,
+      },
     });
   }
 
@@ -177,11 +213,18 @@ export class UnitCollectionRepository
     tx?: Tx;
   }) {
     const { where, data, tx } = params;
+    const { targetUnitLines, ...restData } = data;
     const db = this.getDB(tx);
 
     return db.unitCollection.update({
       where,
-      data,
+      data: {
+        ...restData,
+        targetUnitLines: {
+          deleteMany: { collectionId: where.id },
+          create: targetUnitLines,
+        },
+      },
     });
   }
 

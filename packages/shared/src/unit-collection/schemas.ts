@@ -18,6 +18,14 @@ export const unitCollectionSchema = z.object({
   updatedAt: z.iso.datetime(),
 });
 
+export const targetUnitLines = z
+  .object({
+    id: z.uuid(),
+    targetUnitId: z.uuid(),
+    factor: z.string(),
+  })
+  .array();
+
 /* =========================
    Mutation Schemas
 ========================= */
@@ -27,11 +35,13 @@ export const unitCollectionSchema = z.object({
  * - Removes auto-generated fields
  * - Used as base for create & update
  */
-export const baseMutateUnitCollectionSchema = unitCollectionSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
+export const baseMutateUnitCollectionSchema = unitCollectionSchema
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({ targetUnitLines });
 
 /**
  * Repo Schemas (DB layer)
@@ -70,19 +80,26 @@ export const mutateUnitCollectionResponseSchema = unitCollectionSchema.pick({
 /**
  * Single entity response
  */
-export const getUnitCollectionByIdResponseSchema = unitCollectionSchema.pick({
-  id: true,
-  name: true,
-  updatedAt: true,
-  baseUnitId: true,
-  description: true,
-});
+export const getUnitCollectionByIdResponseSchema = unitCollectionSchema
+  .pick({
+    id: true,
+    name: true,
+    baseUnitId: true,
+    description: true,
+  })
+  .extend({ targetUnitLines });
 
 /**
  * List response
  */
-export const unitCollectionListResponseSchema =
-  getUnitCollectionByIdResponseSchema.array();
+export const unitCollectionListResponseSchema = unitCollectionSchema
+  .pick({
+    id: true,
+    name: true,
+    updatedAt: true,
+    description: true,
+  })
+  .array();
 
 /* =========================
    Filters
