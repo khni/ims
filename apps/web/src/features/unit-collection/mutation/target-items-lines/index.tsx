@@ -4,6 +4,9 @@ import { DataColumnExample } from "@workspace/ui/blocks/customizable-table/examp
 import DATA from "@workspace/ui/blocks/customizable-table/example-data";
 import { GetUnitCollectionByIdResponse } from "@avuny/shared";
 import { TargetUnitColumns } from "@/src/features/unit-collection/mutation/target-items-lines/columns";
+import { useUnitOptions } from "@/src/api";
+import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
+import ErrorPage from "@/src/components/error";
 
 function TargetItemLines({
   targetUnits,
@@ -11,11 +14,22 @@ function TargetItemLines({
   targetUnits: GetUnitCollectionByIdResponse["targetUnitLines"];
 }) {
   const [list, setList] = useState(targetUnits);
+  const { data, isPending, error } = useUnitOptions();
+  useEffect(() => {
+    if (list.length === 0) {
+      setList([{ id: "", factor: "", targetUnitId: "" }]);
+    }
+  }, []);
+  if (isPending) {
+    return <LoadingPage />;
+  }
+  if (error) {
+    return <ErrorPage />;
+  }
 
-  console.log(list);
   return (
     <DataTable
-      columns={TargetUnitColumns()}
+      columns={TargetUnitColumns({ units: data?.data })}
       data={{ list, totalCount: 0, set: setList }}
     />
   );

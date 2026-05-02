@@ -8,7 +8,7 @@ import { CellContext } from "@tanstack/react-table";
 
 type SelectOption = {
   id: string | number;
-  label: string;
+  name: string;
   color?: string;
 };
 
@@ -45,7 +45,7 @@ export function createSelectCell(options: SelectOption[]) {
               backgroundColor: value?.color || "transparent",
             }}
           >
-            {value?.label || "Select"}
+            {value?.name || "Select"}
           </button>
         </DropdownMenuTrigger>
 
@@ -67,7 +67,7 @@ export function createSelectCell(options: SelectOption[]) {
               <div className="mr-2">
                 <ColorIcon color={option.color} />
               </div>
-              {option.label}
+              {option.name}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>

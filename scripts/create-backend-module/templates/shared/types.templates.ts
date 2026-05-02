@@ -20,6 +20,8 @@ import {
 
   ${featurePascal}SortingSchema,
   ${featurePascal}RepoSortingSchema,
+
+  ${featurePascal}OptionsResponseSchema,
 } from "./schemas.js";
 
 /* =========================
@@ -61,6 +63,11 @@ export type Get${featurePascal}ByIdResponse = z.infer<
 export type ${featurePascal}ListResponse = z.infer<
   typeof ${featureCamel}ListResponseSchema
 >;
+
+/**
+ * Options response
+ */
+export type ${featurePascal}OptionsResponse = z.infer<typeof ${featurePascal}OptionsResponseSchema>;
 
 /* =========================
    Mutations (API Layer)

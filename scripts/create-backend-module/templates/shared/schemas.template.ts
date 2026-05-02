@@ -72,6 +72,15 @@ export const mutate${featurePascal}ResponseSchema =
     name: true,
   });
 
+  /**
+ * Single option entity response
+ */
+export const get${featurePascal}OptionSchema = ${featurePascal}Schema.pick({
+  id: true,
+  name: true,
+});
+
+
 /**
  * Single entity response
  */
@@ -87,6 +96,14 @@ export const get${featurePascal}ByIdResponseSchema =
  */
 export const ${featureCamel}ListResponseSchema =
   get${featurePascal}ByIdResponseSchema.array();
+
+/**
+ * List options response
+ */
+export const ${featureCamel}OptionsResponseSchema = z.object({
+  nextCursor: z.object({ id: z.string().optional() }).nullable(),
+  list: get${featurePascal}OptionSchema.array(),
+});
 
 /* =========================
    Filters

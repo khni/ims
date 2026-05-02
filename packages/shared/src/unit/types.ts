@@ -4,19 +4,16 @@ import {
   unitSchema,
   getUnitByIdResponseSchema,
   unitListResponseSchema,
-
   createUnitBodySchema,
   updateUnitBodySchema,
-
   createUnitRepoSchema,
   updateUnitRepoSchema,
-  
   UnitWhereUniqueInputSchema,
   UnitFiltersSchema,
   UnitRepoFiltersSchema,
-
   UnitSortingSchema,
   UnitRepoSortingSchema,
+  unitOptionsResponseSchema,
 } from "./schemas.js";
 
 /* =========================
@@ -26,9 +23,7 @@ import {
 /**
  * Full entity (matches DB shape)
  */
-export type Unit = z.infer<
-  typeof unitSchema
->;
+export type Unit = z.infer<typeof unitSchema>;
 
 /* =========================
    Params
@@ -48,17 +43,17 @@ export type GetUnitByIdParams = {
 /**
  * Single entity response
  */
-export type GetUnitByIdResponse = z.infer<
-  typeof getUnitByIdResponseSchema
->;
+export type GetUnitByIdResponse = z.infer<typeof getUnitByIdResponseSchema>;
 
 /**
  * List response
  */
-export type UnitListResponse = z.infer<
-  typeof unitListResponseSchema
->;
+export type UnitListResponse = z.infer<typeof unitListResponseSchema>;
 
+/**
+ * Options response
+ */
+export type UnitOptionsResponse = z.infer<typeof unitOptionsResponseSchema>;
 /* =========================
    Mutations (API Layer)
 ========================= */
@@ -66,16 +61,12 @@ export type UnitListResponse = z.infer<
 /**
  * Create request body (API)
  */
-export type CreateUnitBody = z.infer<
-  typeof createUnitBodySchema
->;
+export type CreateUnitBody = z.infer<typeof createUnitBodySchema>;
 
 /**
  * Update request body (API)
  */
-export type UpdateUnitBody = z.infer<
-  typeof updateUnitBodySchema
->;
+export type UpdateUnitBody = z.infer<typeof updateUnitBodySchema>;
 
 /* =========================
    Mutations (Repo Layer)
@@ -84,16 +75,12 @@ export type UpdateUnitBody = z.infer<
 /**
  * Create input (DB layer)
  */
-export type CreateUnitRepo = z.infer<
-  typeof createUnitRepoSchema
->;
+export type CreateUnitRepo = z.infer<typeof createUnitRepoSchema>;
 
 /**
  * Update input (DB layer)
  */
-export type UpdateUnitRepo = z.infer<
-  typeof updateUnitRepoSchema
->;
+export type UpdateUnitRepo = z.infer<typeof updateUnitRepoSchema>;
 
 /* =========================
    Filters
@@ -109,23 +96,17 @@ export type UpdateUnitRepo = z.infer<
  * - Usually contains only "id"
  * - Can be extended later (email, slug, etc.)
  */
-export type UnitWhereUniqueInput = z.infer<
-  typeof UnitWhereUniqueInputSchema
->;
+export type UnitWhereUniqueInput = z.infer<typeof UnitWhereUniqueInputSchema>;
 
 /**
  * UI filters (from frontend)
  */
-export type UnitFilters = z.infer<
-  typeof UnitFiltersSchema
->;
+export type UnitFilters = z.infer<typeof UnitFiltersSchema>;
 
 /**
  * Repo filters (Prisma / DB)
  */
-export type UnitRepoFilters = z.infer<
-  typeof UnitRepoFiltersSchema
->;
+export type UnitRepoFilters = z.infer<typeof UnitRepoFiltersSchema>;
 
 /* =========================
    Sorting
@@ -134,16 +115,12 @@ export type UnitRepoFilters = z.infer<
 /**
  * UI sorting (table)
  */
-export type UnitSorting = z.infer<
-  typeof UnitSortingSchema
->;
+export type UnitSorting = z.infer<typeof UnitSortingSchema>;
 
 /**
  * Repo sorting (DB orderBy)
  */
-export type UnitRepoSorting = z.infer<
-  typeof UnitRepoSortingSchema
->;
+export type UnitRepoSorting = z.infer<typeof UnitRepoSortingSchema>;
 
 /* =========================
    Utility Types (Optional but Powerful)
