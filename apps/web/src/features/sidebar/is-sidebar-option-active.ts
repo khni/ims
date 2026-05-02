@@ -3,7 +3,7 @@ export const MappedPaths = {
   roles: "role",
   items: "item",
   units: "unit",
-  unitCollections: "unitCollection",
+  "unit-collections": "unitCollection",
   invoices: "invoice",
   customers: "customer",
   suppliers: "supplier",
@@ -12,16 +12,15 @@ export const MappedPaths = {
   warehouses: "warehouse",
   organizations: "organization",
   reports: "report",
-} as const;
+};
 type MappedPathKey = keyof typeof MappedPaths;
 export const isSidebarOptionActive = (
   pathName: string,
   optionName: string,
 ): boolean => {
-  const currentSection = pathName
+  const segment = pathName
     .split("/")
-    .filter(Boolean)
-    .pop()! as MappedPathKey;
+    .find((seg): seg is MappedPathKey => seg in MappedPaths);
 
-  return MappedPaths[currentSection] === optionName;
+  return segment ? MappedPaths[segment] === optionName : false;
 };
