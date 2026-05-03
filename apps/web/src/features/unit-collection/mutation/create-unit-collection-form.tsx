@@ -15,7 +15,10 @@ import {
   useUnitOptions,
 } from "@/src/api";
 
-import { createUnitCollectionBodySchema as schema } from "@avuny/shared";
+import {
+  GetUnitCollectionByIdResponse,
+  createUnitCollectionBodySchema as schema,
+} from "@avuny/shared";
 import { useUnitCollectionTranslations } from "@/src/features/unit-collection/translations/hooks/use-unit-collection-translations";
 import TargetItemLines from "@/src/features/unit-collection/mutation/target-items-lines";
 
@@ -35,7 +38,10 @@ export const CreateUnitCollectionForm: React.FC = () => {
     useUnitCollectionTranslations();
 
   const { data: unitsData, isPending: unitsIsPending } = useUnitOptions({});
-  const [targetUnitLines, setTargetUnitLines] = useState([]);
+  const [targetUnitLines, setTargetUnitLines] = useState<
+    GetUnitCollectionByIdResponse["targetUnitLines"]
+  >([]);
+  console.log(targetUnitLines, "targetUnitLines");
   return (
     <CustomForm
       form={form}
@@ -72,7 +78,10 @@ export const CreateUnitCollectionForm: React.FC = () => {
         },
       ]}
     >
-      <TargetItemLines targetUnits={targetUnitLines}></TargetItemLines>
+      <TargetItemLines
+        setTargetUnits={setTargetUnitLines}
+        targetUnits={targetUnitLines}
+      ></TargetItemLines>
     </CustomForm>
   );
 };

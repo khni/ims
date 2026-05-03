@@ -23,7 +23,15 @@ import { UnitCollectionErrorMap } from "../errors/unit-collection.error-map.js";
 /**
  * UnitCollection Create Route
  */
-export const createUnitCollectionRoute = new OpenAPIHono();
+export const createUnitCollectionRoute = new OpenAPIHono({
+  defaultHook: (result) => {
+    if (!result.success) {
+      if (result.error) {
+        console.log(result.error);
+      }
+    }
+  },
+});
 
 const route = createRoute({
   method: "post",
@@ -52,9 +60,7 @@ const route = createRoute({
       description: "UnitCollection created successfully",
       content: {
         "application/json": {
-          schema: createResponseSchema(
-            mutateUnitCollectionResponseSchema
-          ),
+          schema: createResponseSchema(mutateUnitCollectionResponseSchema),
         },
       },
     },
@@ -86,7 +92,7 @@ const route = createRoute({
         },
       },
     },
-      /**
+    /**
      * Permission error
      */
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
@@ -108,9 +114,7 @@ const route = createRoute({
  * Route Handler
  */
 createUnitCollectionRoute.openapi(route, async (c) => {
-  const unitCollectionService = container.resolve(
-    "unitCollectionService"
-  );
+  const unitCollectionService = container.resolve("unitCollectionService");
 
   const context = getContext(c);
 
@@ -131,8 +135,7 @@ createUnitCollectionRoute.openapi(route, async (c) => {
   /**
    * Remove global errors handled elsewhere
    */
-  const { RESOURCE_NOT_FOUND, ...filteredErrorMap } =
-    UnitCollectionErrorMap;
+  const { RESOURCE_NOT_FOUND, ...filteredErrorMap } = UnitCollectionErrorMap;
 
   return handleResult({
     c,

@@ -18,13 +18,11 @@ export const unitCollectionSchema = z.object({
   updatedAt: z.iso.datetime(),
 });
 
-export const targetUnitLines = z
-  .object({
-    id: z.uuid(),
-    targetUnitId: z.uuid(),
-    factor: z.string(),
-  })
-  .array();
+export const targetUnitLines = z.object({
+  id: z.uuid(),
+  targetUnitId: z.uuid(),
+  factor: z.string(),
+});
 
 /* =========================
    Mutation Schemas
@@ -41,7 +39,7 @@ export const baseMutateUnitCollectionSchema = unitCollectionSchema
     createdAt: true,
     updatedAt: true,
   })
-  .extend({ targetUnitLines });
+  .extend({ targetUnitLines: targetUnitLines.omit({ id: true }).array() });
 
 /**
  * Repo Schemas (DB layer)
@@ -87,7 +85,7 @@ export const getUnitCollectionByIdResponseSchema = unitCollectionSchema
     baseUnitId: true,
     description: true,
   })
-  .extend({ targetUnitLines });
+  .extend({ targetUnitLines: targetUnitLines.array() });
 
 /**
  * List response

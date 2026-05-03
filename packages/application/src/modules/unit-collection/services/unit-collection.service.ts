@@ -1,8 +1,4 @@
-import {
-  Context,
-  FilteredPaginatedList,
-  ModuleService,
-} from "@avuny/core";
+import { Context, FilteredPaginatedList, ModuleService } from "@avuny/core";
 
 import {
   CreateUnitCollectionBody,
@@ -56,7 +52,7 @@ export class UnitCollectionService {
    * Transform UI filters → Repo filters
    */
   serializeFilters(
-    input: UnitCollectionFilters & { organizationId: string }
+    input: UnitCollectionFilters & { organizationId: string },
   ): UnitCollectionRepoFilters {
     const { name, ...restInput } = input;
 
@@ -86,9 +82,7 @@ export class UnitCollectionService {
   /**
    * Transform UI sorting → Repo sorting
    */
-  serializeSorting(
-    input?: UnitCollectionSorting
-  ): UnitCollectionRepoSorting {
+  serializeSorting(input?: UnitCollectionSorting): UnitCollectionRepoSorting {
     if (!input) return {};
 
     const { field, direction } = input;
@@ -110,6 +104,7 @@ export class UnitCollectionService {
     data: CreateUnitCollectionBody;
     tx?: unknown;
   }) => {
+    console.log(params.data, "CREATED DATA");
     const createUnitCollection = this.moduleService.create({
       /**
        * Prevent duplicate names per organization
@@ -127,8 +122,7 @@ export class UnitCollectionService {
       countChecker: [
         {
           keys: ["organizationId"],
-          errorKey:
-            UnitCollectionErrorCode.MODULE_CREATION_LIMIT_EXCEEDED,
+          errorKey: UnitCollectionErrorCode.MODULE_CREATION_LIMIT_EXCEEDED,
         },
       ],
     });
@@ -160,8 +154,7 @@ export class UnitCollectionService {
         rules: [
           {
             keys: ["name", "organizationId"],
-            errorKey:
-              UnitCollectionErrorCode.MODULE_NAME_CONFLICT,
+            errorKey: UnitCollectionErrorCode.MODULE_NAME_CONFLICT,
           },
         ],
         uniqueCheckerData: {
@@ -204,10 +197,7 @@ export class UnitCollectionService {
   /**
    * Get unitCollection by ID
    */
-  findById = async (params: {
-    context: Context;
-    id: string;
-  }) => {
+  findById = async (params: { context: Context; id: string }) => {
     const findById = this.moduleService.findById();
     return await findById(params);
   };
@@ -221,19 +211,14 @@ export class UnitCollectionService {
    */
   filteredPaginatedList = async (params: {
     context: Context;
-    query?: FilteredPaginatedList<
-      UnitCollectionFilters,
-      UnitCollectionSorting
-    >;
+    query?: FilteredPaginatedList<UnitCollectionFilters, UnitCollectionSorting>;
   }) => {
     const filters = this.serializeFilters({
       ...(params.query?.filters ?? {}),
       organizationId: params.context.organizationId!,
     });
 
-    const orderBy = this.serializeSorting(
-      params.query?.orderBy
-    );
+    const orderBy = this.serializeSorting(params.query?.orderBy);
 
     const list = this.moduleService.filteredPaginatedList();
 

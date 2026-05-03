@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { DataTable } from "@workspace/ui/blocks/data-table/data-table";
-import { DataColumnExample } from "@workspace/ui/blocks/customizable-table/example-columns";
-import DATA from "@workspace/ui/blocks/customizable-table/example-data";
+
 import { GetUnitCollectionByIdResponse } from "@avuny/shared";
 import { TargetUnitColumns } from "@/src/features/unit-collection/mutation/target-items-lines/columns";
 import { useUnitOptions } from "@/src/api";
@@ -10,14 +9,17 @@ import ErrorPage from "@/src/components/error";
 
 function TargetItemLines({
   targetUnits,
+  setTargetUnits,
 }: {
   targetUnits: GetUnitCollectionByIdResponse["targetUnitLines"];
+  setTargetUnits: React.Dispatch<
+    React.SetStateAction<GetUnitCollectionByIdResponse["targetUnitLines"]>
+  >;
 }) {
-  const [list, setList] = useState(targetUnits);
   const { data, isPending, error } = useUnitOptions();
   useEffect(() => {
-    if (list.length === 0) {
-      setList([{ id: "", factor: "", targetUnitId: "" }]);
+    if (targetUnits.length === 0) {
+      setTargetUnits([{ id: "", factor: "", targetUnitId: "" }]);
     }
   }, []);
   if (isPending) {
@@ -30,7 +32,7 @@ function TargetItemLines({
   return (
     <DataTable
       columns={TargetUnitColumns({ units: data?.data })}
-      data={{ list, totalCount: 0, set: setList }}
+      data={{ list: targetUnits, totalCount: 0, set: setTargetUnits }}
     />
   );
 }

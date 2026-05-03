@@ -1,7 +1,7 @@
 // update-unit-collection-form.tsx
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "@avuny/zod";
@@ -17,6 +17,7 @@ import { updateUnitCollectionBodySchema as schema } from "@avuny/shared";
 import { useUnitCollectionTranslations } from "@/src/features/unit-collection/translations/hooks/use-unit-collection-translations";
 
 import { GetUnitCollectionByIdResponse } from "@avuny/shared";
+import TargetItemLines from "@/src/features/unit-collection/mutation/target-items-lines";
 
 export type UpdateUnitCollectionFormProps = {
   unitCollection: GetUnitCollectionByIdResponse | null;
@@ -53,6 +54,9 @@ export const UpdateUnitCollectionForm: React.FC<
     page: 0,
     pageSize: 10,
   });
+  const [targetUnitLines, setTargetUnitLines] = useState<
+    GetUnitCollectionByIdResponse["targetUnitLines"]
+  >(unitCollection?.targetUnitLines || []);
   return (
     <CustomForm
       form={form}
@@ -92,6 +96,11 @@ export const UpdateUnitCollectionForm: React.FC<
           spans: { base: 4, md: 2 },
         },
       ]}
-    />
+    >
+      <TargetItemLines
+        targetUnits={targetUnitLines}
+        setTargetUnits={setTargetUnitLines}
+      ></TargetItemLines>
+    </CustomForm>
   );
 };
