@@ -15,7 +15,7 @@ export function TargetUnitColumns({
   const SelectCell = createSelectCell(units.list);
   return [
     {
-      accessorKey: "targetUnitId",
+      accessorKey: "targetUnit",
       header: "Target Unit",
       cell: SelectCell,
     },

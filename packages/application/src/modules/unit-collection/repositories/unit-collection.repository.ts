@@ -50,7 +50,15 @@ export class UnitCollectionRepository
     const db = this.getDB(tx);
 
     return db.unitCollection.create({
-      data: { ...restData, targetUnitLines: { create: targetUnitLines } },
+      data: {
+        ...restData,
+        targetUnitLines: {
+          create: targetUnitLines.map((tl) => ({
+            factor: tl.factor,
+            targetUnitId: tl.targetUnit.id,
+          })),
+        },
+      },
       select: { id: true, name: true },
     });
   }
@@ -112,7 +120,12 @@ export class UnitCollectionRepository
         targetUnitLines: {
           select: {
             id: true,
-            targetUnitId: true,
+            targetUnit: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             factor: true,
           },
         },
@@ -138,7 +151,13 @@ export class UnitCollectionRepository
         targetUnitLines: {
           select: {
             id: true,
-            targetUnitId: true,
+
+            targetUnit: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             factor: true,
           },
         },
@@ -222,7 +241,10 @@ export class UnitCollectionRepository
         ...restData,
         targetUnitLines: {
           deleteMany: { collectionId: where.id },
-          create: targetUnitLines,
+          create: targetUnitLines.map((tl) => ({
+            factor: tl.factor,
+            targetUnitId: tl.targetUnit.id,
+          })),
         },
       },
     });

@@ -121,6 +121,7 @@ export function DataTable<TData, TValue>({
     onSortingChange,
     meta: {
       updateData: (rowIndex, columnId, value) => {
+        console.log(value, "value");
         data?.set?.((prev) =>
           prev.map((row, index) =>
             index === rowIndex

@@ -20,7 +20,10 @@ export const unitCollectionSchema = z.object({
 
 export const targetUnitLines = z.object({
   id: z.uuid(),
-  targetUnitId: z.uuid(),
+  targetUnit: z.object({
+    id: z.uuid(),
+    name: z.string(),
+  }),
   factor: z.string(),
 });
 

@@ -11,6 +11,7 @@ import {
   useUpdateUnitCollection,
   getUnitCollectionListQueryKey,
   useUnitList,
+  useUnitOptions,
 } from "@/src/api";
 
 import { updateUnitCollectionBodySchema as schema } from "@avuny/shared";
@@ -48,25 +49,23 @@ export const UpdateUnitCollectionForm: React.FC<
   const { mutateAsync, isPending, error } = useUpdateUnitCollection();
   const { unitCollectionFormFieldsTranslations } =
     useUnitCollectionTranslations();
-  const { data: unitsData, isPending: unitsIsPending } = useUnitList({
-    filters: {},
-    orderBy: {},
-    page: 0,
-    pageSize: 10,
-  });
+  const { data: unitsData, isPending: unitsIsPending } = useUnitOptions();
   const [targetUnitLines, setTargetUnitLines] = useState<
     GetUnitCollectionByIdResponse["targetUnitLines"]
   >(unitCollection?.targetUnitLines || []);
+  console.log(targetUnitLines, "targetUnitLines");
+  console.log({ ...form.getValues(), targetUnitLines });
   return (
     <CustomForm
       form={form}
       error={error}
       api={{
         onSubmit: async (data) => {
+          console.log(data, "data");
           if (!unitCollection) return;
           await mutateAsync({
             id: unitCollection.id,
-            data,
+            data: { ...data, targetUnitLines },
           });
         },
         isLoading: isPending,

@@ -19,7 +19,9 @@ function TargetItemLines({
   const { data, isPending, error } = useUnitOptions();
   useEffect(() => {
     if (targetUnits.length === 0) {
-      setTargetUnits([{ id: "", factor: "", targetUnitId: "" }]);
+      setTargetUnits([
+        { id: "", factor: "", targetUnit: { id: "", name: "" } },
+      ]);
     }
   }, []);
   if (isPending) {
