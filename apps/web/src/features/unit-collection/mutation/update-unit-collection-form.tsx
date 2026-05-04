@@ -33,6 +33,7 @@ export const UpdateUnitCollectionForm: React.FC<
       name: "",
       description: "",
       baseUnitId: "",
+      targetUnitLines: [],
     },
   });
 
@@ -42,6 +43,7 @@ export const UpdateUnitCollectionForm: React.FC<
         name: unitCollection.name ?? "",
         description: unitCollection.description ?? "",
         baseUnitId: unitCollection.baseUnitId ?? "",
+        targetUnitLines: unitCollection.targetUnitLines ?? [],
       });
     }
   }, [unitCollection, form]);
