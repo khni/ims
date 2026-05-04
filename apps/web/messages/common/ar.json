@@ -25,6 +25,10 @@
     "alertMsgs": {
       "unknownError": "حدث خطأ غير معروف. يرجى المحاولة مرة أخرى لاحقًا."
     },
+    "deleteRowMsgs": {
+      "confirmTitle": "هل أنت متأكد من حذف هذا العنصر؟",
+      "confirmDeleteDescription": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف العنصر نهائيًا بعد إرسال النموذج."
+    },
     "actions": {
       "create": "إنشاء",
       "save": "حفظ",

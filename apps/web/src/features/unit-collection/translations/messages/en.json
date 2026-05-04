@@ -22,6 +22,11 @@
       "description": "description",
       "updatedAt": "Last Updated",
       "baseUnitId": "Base Unit"
+    },
+    "targetUnitLineColumnHeaders": {
+      "id": "ID",
+      "targetUnit": "Target Unit",
+      "factor": "Factor"
     }
   }
 }

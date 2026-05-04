@@ -22,6 +22,11 @@
       "description": "الوصف",
       "updatedAt": "آخر تحديث",
       "baseUnitId": "الوحدة الاساسية"
+    },
+    "targetUnitLineColumnHeaders": {
+      "id": "المعرف",
+      "targetUnit": "الوحدة المستهدفة",
+      "factor": "معامل التحويل"
     }
   }
 }

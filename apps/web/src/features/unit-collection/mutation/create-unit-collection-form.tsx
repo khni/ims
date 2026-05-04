@@ -48,7 +48,16 @@ export const CreateUnitCollectionForm: React.FC = () => {
       error={error}
       api={{
         onSubmit: async (data) => {
-          await mutateAsync({ data: { ...data, targetUnitLines } });
+          const hasEmptyLast =
+            !targetUnitLines[targetUnitLines.length - 1]?.targetUnit.id;
+          await mutateAsync({
+            data: {
+              ...data,
+              targetUnitLines: hasEmptyLast
+                ? targetUnitLines.slice(0, -1)
+                : targetUnitLines,
+            },
+          });
         },
         isLoading: isPending,
       }}

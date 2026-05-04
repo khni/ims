@@ -26,6 +26,10 @@
     "alertMsgs": {
       "unknownError": "An unknown error occurred. Please try again later."
     },
+    "deleteRowMsgs": {
+      "confirmTitle": "Are you absolutely sure?",
+      "confirmDeleteDescription": "This action cannot be undone. This will permanently delete this item after submitting the form."
+    },
     "actions": {
       "create": "Create",
       "save": "Save",

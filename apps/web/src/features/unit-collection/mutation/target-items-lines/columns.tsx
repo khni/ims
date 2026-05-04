@@ -5,25 +5,32 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 
 import createSelectCell from "@workspace/ui/blocks/data-table/create-select-cell";
+import { createColumns } from "@workspace/ui/blocks/data-table/custom-columns";
 import EditableCell from "@workspace/ui/blocks/data-table/editable-cell";
+import { Messages } from "next-intl";
 
 export function TargetUnitColumns({
   units,
+  getHeader,
 }: {
   units: UnitOptionsResponse;
-}): ColumnDef<GetUnitCollectionByIdResponse["targetUnitLines"][0]>[] {
+  getHeader: (
+    value: keyof Messages["unitCollection"]["targetUnitLineColumnHeaders"],
+  ) => string;
+}) {
   const SelectCell = createSelectCell(units.list);
-  return [
-    {
-      accessorKey: "targetUnit",
-      header: "Target Unit",
-      cell: SelectCell,
-    },
+  return createColumns<GetUnitCollectionByIdResponse["targetUnitLines"][0]>({
+    columns: [
+      {
+        key: "targetUnit",
+        render: SelectCell,
+      },
 
-    {
-      accessorKey: "factor",
-      header: "Factor",
-      cell: EditableCell,
-    },
-  ];
+      {
+        key: "factor",
+        render: EditableCell,
+      },
+    ],
+    getHeader,
+  });
 }
