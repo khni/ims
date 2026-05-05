@@ -17,20 +17,19 @@ export function TargetUnitColumns({
   getHeader: (
     value: keyof Messages["unitCollection"]["targetUnitLineColumnHeaders"],
   ) => string;
-}) {
+}): ColumnDef<GetUnitCollectionByIdResponse["targetUnitLines"][0]>[] {
   const SelectCell = createSelectCell(units.list);
-  return createColumns<GetUnitCollectionByIdResponse["targetUnitLines"][0]>({
-    columns: [
-      {
-        key: "targetUnit",
-        render: SelectCell,
-      },
+  return [
+    {
+      accessorKey: "targetUnit",
+      header: getHeader("targetUnit"),
+      cell: SelectCell,
+    },
 
-      {
-        key: "factor",
-        render: EditableCell,
-      },
-    ],
-    getHeader,
-  });
+    {
+      accessorKey: "factor",
+      header: getHeader("factor"),
+      cell: EditableCell,
+    },
+  ];
 }
