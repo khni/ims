@@ -1,7 +1,3 @@
-
-
-
-
 // NEW: System-defined custom permissions that don't fit CRUD patterns
 enum SystemCustomPermission {
   FULL_ACCESS
@@ -44,7 +40,6 @@ model Action {
   permissions Permission[]
 }
 
-
 // Standard CRUD permissions
 model Permission {
   id         String   @id @default(uuid())
@@ -59,7 +54,6 @@ model Permission {
   isDangerous Boolean @default(false)
 
   rolePermissions RolePermission[]
-
 
   @@unique([actionId, resourceId])
   @@index([category, isDangerous])

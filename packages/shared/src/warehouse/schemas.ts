@@ -1,7 +1,4 @@
-import { Context } from "../../../types";
-
-export function schemasTemplate({ featurePascal, featureCamel }: Context) {
-  return `import { z } from "@avuny/zod";
+import { z } from "@avuny/zod";
 
 /* =========================
    Base Schema
@@ -11,7 +8,7 @@ export function schemasTemplate({ featurePascal, featureCamel }: Context) {
  * Main entity schema
  * Represents full DB shape
  */
-export const ${featureCamel}Schema = z.object({
+export const warehouseSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
@@ -29,7 +26,7 @@ export const ${featureCamel}Schema = z.object({
  * - Removes auto-generated fields
  * - Used as base for create & update
  */
-export const baseMutate${featurePascal}Schema = ${featureCamel}Schema.omit({
+export const baseMutateWarehouseSchema = warehouseSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
@@ -39,25 +36,21 @@ export const baseMutate${featurePascal}Schema = ${featureCamel}Schema.omit({
  * Repo Schemas (DB layer)
  * - Includes organizationId
  */
-export const create${featurePascal}RepoSchema =
-  baseMutate${featurePascal}Schema;
+export const createWarehouseRepoSchema = baseMutateWarehouseSchema;
 
-export const update${featurePascal}RepoSchema =
-  baseMutate${featurePascal}Schema;
+export const updateWarehouseRepoSchema = baseMutateWarehouseSchema;
 
 /**
  * Body Schemas (API layer)
  * - organizationId comes from auth/context
  */
-export const create${featurePascal}BodySchema =
-  create${featurePascal}RepoSchema.omit({
-    organizationId: true,
-  });
+export const createWarehouseBodySchema = createWarehouseRepoSchema.omit({
+  organizationId: true,
+});
 
-export const update${featurePascal}BodySchema =
-  update${featurePascal}RepoSchema.omit({
-    organizationId: true,
-  });
+export const updateWarehouseBodySchema = updateWarehouseRepoSchema.omit({
+  organizationId: true,
+});
 
 /* =========================
    Response Schemas
@@ -66,43 +59,40 @@ export const update${featurePascal}BodySchema =
 /**
  * Minimal response after mutation
  */
-export const mutate${featurePascal}ResponseSchema =
-  ${featureCamel}Schema.pick({
-    id: true,
-    name: true,
-  });
-
-  /**
- * Single option entity response
- */
-export const get${featurePascal}OptionSchema = ${featureCamel}Schema.pick({
+export const mutateWarehouseResponseSchema = warehouseSchema.pick({
   id: true,
   name: true,
 });
 
+/**
+ * Single option entity response
+ */
+export const getWarehouseOptionSchema = warehouseSchema.pick({
+  id: true,
+  name: true,
+});
 
 /**
  * Single entity response
  */
-export const get${featurePascal}ByIdResponseSchema =
-  ${featureCamel}Schema.pick({
-    id: true,
-    name: true,
-    updatedAt: true,
-  });
+export const getWarehouseByIdResponseSchema = warehouseSchema.pick({
+  id: true,
+  name: true,
+  updatedAt: true,
+});
 
 /**
  * List response
  */
-export const ${featureCamel}ListResponseSchema =
-  get${featurePascal}ByIdResponseSchema.array();
+export const warehouseListResponseSchema =
+  getWarehouseByIdResponseSchema.array();
 
 /**
  * List options response
  */
-export const ${featureCamel}OptionsResponseSchema = z.object({
+export const warehouseOptionsResponseSchema = z.object({
   nextCursor: z.object({ id: z.string().optional() }).nullable(),
-  list: get${featurePascal}OptionSchema.array(),
+  list: getWarehouseOptionSchema.array(),
 });
 
 /* =========================
@@ -114,18 +104,18 @@ export const ${featureCamel}OptionsResponseSchema = z.object({
 ========================= */
 
 /**
- * Unique identifier for fetching a single ${featureCamel}
+ * Unique identifier for fetching a single warehouse
  * - Matches Prisma WhereUniqueInput
  * - Usually only "id", but can be extended (email, slug, etc.)
  */
-export const ${featureCamel}WhereUniqueInputSchema = z.object({
+export const warehouseWhereUniqueInputSchema = z.object({
   id: z.string(),
 });
 
 /**
  * UI Filters (simple)
  */
-export const ${featureCamel}FiltersSchema = z.object({
+export const warehouseFiltersSchema = z.object({
   name: z.string().optional(),
   updatedAt: z
     .object({
@@ -138,7 +128,7 @@ export const ${featureCamel}FiltersSchema = z.object({
 /**
  * UI Filters (simple)
  */
-export const ${featureCamel}OptionsQuerySchema = z.object({
+export const warehouseOptionsQuerySchema = z.object({
   name: z.string().optional(),
   cursor: z
     .object({
@@ -171,7 +161,7 @@ const OrFilterSchema = z.object({
  * Repo Filters (DB layer)
  * - Matches Prisma where input
  */
-export const ${featureCamel}RepoFiltersSchema = z.object({
+export const warehouseRepoFiltersSchema = z.object({
   OR: z
     .array(
       z.union([
@@ -201,7 +191,7 @@ export const ${featureCamel}RepoFiltersSchema = z.object({
  * UI Sorting
  * - Used in table headers
  */
-export const ${featureCamel}SortingSchema = z.object({
+export const warehouseSortingSchema = z.object({
   field: z.enum(["name", "createdAt", "updatedAt"]),
   direction: z.enum(["asc", "desc"]),
 });
@@ -210,10 +200,8 @@ export const ${featureCamel}SortingSchema = z.object({
  * Repo Sorting (DB layer)
  * - Matches Prisma orderBy
  */
-export const ${featureCamel}RepoSortingSchema = z.object({
+export const warehouseRepoSortingSchema = z.object({
   name: z.enum(["asc", "desc"]).optional(),
   createdAt: z.enum(["asc", "desc"]).optional(),
   updatedAt: z.enum(["asc", "desc"]).optional(),
 });
-`;
-}

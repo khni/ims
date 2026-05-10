@@ -12,6 +12,7 @@ import { createRouteTemplate } from "./templates/routes/create-route.template";
 import { deleteRouteTemplate } from "./templates/routes/delete-route.template";
 import { getByIdRouteTemplate } from "./templates/routes/get-route.template";
 import { listRouteTemplate } from "./templates/routes/list-route.template";
+import { optionsRouteTemplate } from "./templates/routes/option-route.template";
 import { routesIndexTemplate } from "./templates/routes/route-index.template";
 import { updateRouteTemplate } from "./templates/routes/update-route.template";
 import { schemasTemplate } from "./templates/shared/schemas.template";
@@ -126,6 +127,11 @@ export const createModuleStructure = (ctx: Context): StructureNode[] => [
             name: `get-${ctx.kebabCase}.route.ts`,
             type: "file",
             generate: () => getByIdRouteTemplate(ctx),
+          },
+          {
+            name: `${ctx.kebabCase}-options.route.ts`,
+            type: "file",
+            generate: () => optionsRouteTemplate(ctx),
           },
           {
             name: `index.ts`,

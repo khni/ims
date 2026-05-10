@@ -1,51 +1,44 @@
 model Item {
-  id                    String                  @id() @default(uuid())
-  name                  String                  @db.VarChar(255)
-  description           String?
+  id             String       @id() @default(uuid())
+  name           String       @db.VarChar(255)
+  description    String?
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
+  sku              String?
+  unitCollection   UnitCollection  @relation(fields: [unitCollectionId], references: [id], onDelete: Cascade)
+  unitCollectionId String
+  itemUnitPrices   ItemUnitPrice[]
 
-  sku                   String?
-  unitCollection        UnitCollection         @relation(fields: [unitCollectionId], references: [id], onDelete: Cascade)
-  unitCollectionId      String
-  itemUnitPrices ItemUnitPrice[]
-
-
-  barcode               String?
-  returnable            Boolean
-  PackedWeight          Float?
-  PackedHeight          Float?
-  PackedWidth           Float?
-  PackedDepth           Float?
-  Refrigerated          Boolean                 @default(false)
-  isActive              Boolean                 @default(true)
-  createdAt             DateTime                @default(now())
-  updatedAt             DateTime                @updatedAt()
+  barcode      String?
+  returnable   Boolean
+  PackedWeight Float?
+  PackedHeight Float?
+  PackedWidth  Float?
+  PackedDepth  Float?
+  Refrigerated Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt()
 
   @@unique([organizationId, name])
   @@index([organizationId])
   @@map("items")
 }
 
-
 model Unit {
-  id     String @id @default(uuid())
-  name   String // "Kilogram"
-  symbol String // "kg"
-  description           String?
-
-
+  id          String  @id @default(uuid())
+  name        String // "Kilogram"
+  symbol      String // "kg"
+  description String?
 
   // Organization scoping
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
-  itemUnitPrices ItemUnitPrice[]
+  itemUnitPrices  ItemUnitPrice[]
   unitCollections UnitCollection[] @relation("BaseUnit")
   targetUnitLines TargetUnitLine[] @relation("TargetUnit")
-
-
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -53,17 +46,14 @@ model Unit {
 
   @@unique([organizationId, name])
   @@unique([organizationId, symbol])
-
- 
   @@map("units")
 }
 
 model UnitCollection {
-
   id String @id @default(uuid())
 
-  name                  String                  @db.VarChar(255)
-  description           String?
+  name        String  @db.VarChar(255)
+  description String?
 
   baseUnit   Unit   @relation("BaseUnit", fields: [baseUnitId], references: [id], onDelete: Cascade)
   baseUnitId String
@@ -71,18 +61,16 @@ model UnitCollection {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
-  targetUnitLines   TargetUnitLine[]  
-  
+  targetUnitLines TargetUnitLine[]
 
   items Item[]
 
-
-  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   @@unique([organizationId, name])
   @@index([organizationId])
-  @@map("item_unit_conversions") 
+  @@map("item_unit_conversions")
 }
 
 model TargetUnitLine {
@@ -91,11 +79,8 @@ model TargetUnitLine {
   targetUnit   Unit   @relation("TargetUnit", fields: [targetUnitId], references: [id], onDelete: Cascade)
   targetUnitId String
 
-
   collectionId String
   collection   UnitCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-
-  
 
   factor Decimal @db.Decimal(10, 5) // Conversion factor from base unit to target unit
   // Example:
@@ -111,11 +96,11 @@ model TargetUnitLine {
 }
 
 model ItemUnitPrice {
-  id String @id @default(uuid())
-  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId String
-  unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  unitId String
+  id            String  @id @default(uuid())
+  item          Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId        String
+  unit          Unit    @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  unitId        String
   purchasePrice Decimal @db.Decimal(10, 2)
   salesPrice    Decimal @db.Decimal(10, 2)
 

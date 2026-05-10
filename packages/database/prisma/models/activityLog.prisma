@@ -11,37 +11,29 @@ enum ActivityActorType {
   system
 }
 
-
-
-
-
 model ActivityLog {
-  id               String   @id @default(uuid())
+  id String @id @default(uuid())
 
-  organizationId   String?
-  resourceId       String
-  resourceType     ResourceName
+  organizationId String?
+  resourceId     String
+  resourceType   ResourceName
 
-  event            ActionName
+  event ActionName
 
-  actorId          String?
-  actorType        ActivityActorType @default(user)
+  actorId   String?
+  actorType ActivityActorType @default(user)
 
   resourceSnapshot Json?
   changes          Json?
 
-  createdAt        DateTime @default(now())
+  createdAt DateTime @default(now())
 
   // 🔥 Core feed (most important)
   @@index([organizationId, createdAt], name: "idx_activity_org_created")
-
   // 🔍 Resource history
-  @@index([organizationId, resourceType, resourceId, createdAt],name: "idx_activity_org_resource")
-
+  @@index([organizationId, resourceType, resourceId, createdAt], name: "idx_activity_org_resource")
   // 👤 Actor activity
-  @@index([organizationId, actorId, createdAt],name: "idx_activity_org_actor")
-
+  @@index([organizationId, actorId, createdAt], name: "idx_activity_org_actor")
   // 🧾 Event filtering
-  @@index([organizationId, event, createdAt],name: "idx_activity_org_event")
+  @@index([organizationId, event, createdAt], name: "idx_activity_org_event")
 }
-

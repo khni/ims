@@ -5,4 +5,5 @@ export * from "./organization-user/schemas.js";
 export * from "./role/schemas.js";
 export * from "./unit/schemas.js";
 export * from "./unit-collection/schemas.js";
+export * from "./warehouse/schemas.js";
 

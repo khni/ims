@@ -1,57 +1,46 @@
-import { Context } from "../../../types";
-
-export function serviceTemplate({
-  featurePascal,
-  featureCamel,
-  kebabCase,
-}: Context) {
-  return `import {
-  Context,
-  FilteredPaginatedList,
-  ModuleService,
-} from "@avuny/core";
+import { Context, FilteredPaginatedList, ModuleService } from "@avuny/core";
 
 import {
-  Create${featurePascal}Body,
-  Update${featurePascal}Body,
-  ${featurePascal}Filters,
-  ${featurePascal}Sorting,
-  ${featurePascal}RepoFilters,
-  ${featurePascal}RepoSorting,
+  CreateWarehouseBody,
+  UpdateWarehouseBody,
+  WarehouseFilters,
+  WarehouseSorting,
+  WarehouseRepoFilters,
+  WarehouseRepoSorting,
 } from "@avuny/shared";
 
-import { ${featurePascal}Repository } from "../repositories/${kebabCase}.repository.js";
-import { ${featurePascal}ErrorCode } from "../errors/${kebabCase}.error-code.js";
+import { WarehouseRepository } from "../repositories/warehouse.repository.js";
+import { WarehouseErrorCode } from "../errors/warehouse.error-code.js";
 
 /**
- * ${featurePascal} Service
+ * Warehouse Service
  *
  * Responsibility:
  * - Handles business logic
  * - Validates and transforms input
  * - Delegates DB operations to repository via ModuleService
  */
-export class ${featurePascal}Service {
-  private ${featureCamel}Repository: ${featurePascal}Repository;
-  private moduleService: ModuleService<${featurePascal}Repository>;
+export class WarehouseService {
+  private warehouseRepository: WarehouseRepository;
+  private moduleService: ModuleService<WarehouseRepository>;
 
   constructor({
-    ${featureCamel}Repository,
+    warehouseRepository,
     moduleService,
   }: {
-    ${featureCamel}Repository: ${featurePascal}Repository;
-    moduleService: ModuleService<${featurePascal}Repository>;
+    warehouseRepository: WarehouseRepository;
+    moduleService: ModuleService<WarehouseRepository>;
   }) {
-    this.${featureCamel}Repository = ${featureCamel}Repository;
+    this.warehouseRepository = warehouseRepository;
     this.moduleService = moduleService;
 
     /**
      * Module configuration
      */
     this.moduleService.setConfig({
-      repository: this.${featureCamel}Repository,
+      repository: this.warehouseRepository,
       creationLimit: 10,
-      moduleName: "${featureCamel}",
+      moduleName: "warehouse",
     });
   }
 
@@ -63,8 +52,8 @@ export class ${featurePascal}Service {
    * Transform UI filters → Repo filters
    */
   serializeFilters(
-    input: ${featurePascal}Filters & { organizationId: string }
-  ): ${featurePascal}RepoFilters {
+    input: WarehouseFilters & { organizationId: string },
+  ): WarehouseRepoFilters {
     const { name, ...restInput } = input;
 
     return {
@@ -93,9 +82,7 @@ export class ${featurePascal}Service {
   /**
    * Transform UI sorting → Repo sorting
    */
-  serializeSorting(
-    input?: ${featurePascal}Sorting
-  ): ${featurePascal}RepoSorting {
+  serializeSorting(input?: WarehouseSorting): WarehouseRepoSorting {
     if (!input) return {};
 
     const { field, direction } = input;
@@ -110,21 +97,21 @@ export class ${featurePascal}Service {
   ========================= */
 
   /**
-   * Create ${featureCamel}
+   * Create warehouse
    */
   create = async (params: {
     context: Context;
-    data: Create${featurePascal}Body;
+    data: CreateWarehouseBody;
     tx?: unknown;
   }) => {
-    const create${featurePascal} = this.moduleService.create({
+    const createWarehouse = this.moduleService.create({
       /**
        * Prevent duplicate names per organization
        */
       uniqueChecker: [
         {
           keys: ["name", "organizationId"],
-          errorKey: ${featurePascal}ErrorCode.MODULE_NAME_CONFLICT,
+          errorKey: WarehouseErrorCode.MODULE_NAME_CONFLICT,
         },
       ],
 
@@ -134,13 +121,12 @@ export class ${featurePascal}Service {
       countChecker: [
         {
           keys: ["organizationId"],
-          errorKey:
-            ${featurePascal}ErrorCode.MODULE_CREATION_LIMIT_EXCEEDED,
+          errorKey: WarehouseErrorCode.MODULE_CREATION_LIMIT_EXCEEDED,
         },
       ],
     });
 
-    return await create${featurePascal}({
+    return await createWarehouse({
       ...params,
       data: {
         ...params.data,
@@ -154,21 +140,20 @@ export class ${featurePascal}Service {
   ========================= */
 
   /**
-   * Update ${featureCamel}
+   * Update warehouse
    */
   update = async (params: {
     context: Context;
     id: string;
-    data: Update${featurePascal}Body;
+    data: UpdateWarehouseBody;
     tx?: unknown;
   }) => {
-    const update${featurePascal} = this.moduleService.update({
+    const updateWarehouse = this.moduleService.update({
       uniqueChecker: {
         rules: [
           {
             keys: ["name", "organizationId"],
-            errorKey:
-              ${featurePascal}ErrorCode.MODULE_NAME_CONFLICT,
+            errorKey: WarehouseErrorCode.MODULE_NAME_CONFLICT,
           },
         ],
         uniqueCheckerData: {
@@ -178,7 +163,7 @@ export class ${featurePascal}Service {
       },
     });
 
-    return await update${featurePascal}({
+    return await updateWarehouse({
       ...params,
       data: {
         ...params.data,
@@ -192,16 +177,16 @@ export class ${featurePascal}Service {
   ========================= */
 
   /**
-   * Delete ${featureCamel}
+   * Delete warehouse
    */
   delete = async (params: {
     context: Context;
     where: { id: string };
     tx?: unknown;
   }) => {
-    const delete${featurePascal} = this.moduleService.delete();
+    const deleteWarehouse = this.moduleService.delete();
 
-    return await delete${featurePascal}(params);
+    return await deleteWarehouse(params);
   };
 
   /* =========================
@@ -209,12 +194,9 @@ export class ${featurePascal}Service {
   ========================= */
 
   /**
-   * Get ${featureCamel} by ID
+   * Get warehouse by ID
    */
-  findById = async (params: {
-    context: Context;
-    id: string;
-  }) => {
+  findById = async (params: { context: Context; id: string }) => {
     const findById = this.moduleService.findById();
     return await findById(params);
   };
@@ -224,23 +206,18 @@ export class ${featurePascal}Service {
   ========================= */
 
   /**
-   * Get filtered + paginated ${featureCamel} list
+   * Get filtered + paginated warehouse list
    */
   filteredPaginatedList = async (params: {
     context: Context;
-    query?: FilteredPaginatedList<
-      ${featurePascal}Filters,
-      ${featurePascal}Sorting
-    >;
+    query?: FilteredPaginatedList<WarehouseFilters, WarehouseSorting>;
   }) => {
     const filters = this.serializeFilters({
       ...(params.query?.filters ?? {}),
       organizationId: params.context.organizationId!,
     });
 
-    const orderBy = this.serializeSorting(
-      params.query?.orderBy
-    );
+    const orderBy = this.serializeSorting(params.query?.orderBy);
 
     const list = this.moduleService.filteredPaginatedList();
 
@@ -253,9 +230,8 @@ export class ${featurePascal}Service {
       },
     });
   };
-}
 
-getOptions = async (params: {
+  getOptions = async (params: {
     context: Context;
     query: { name?: string; cursor?: { id: string } };
   }) => {
@@ -276,5 +252,4 @@ getOptions = async (params: {
       ],
     });
   };
-`;
 }

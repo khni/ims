@@ -3,6 +3,7 @@ import { organizationUserDeps } from "./organization-user/container-deps.js";
 import { roleDeps } from "./role/container-deps.js";
 import { unitDeps } from "./unit/container-deps.js";
 import { unitCollectionDeps } from "./unit-collection/container-deps.js";
+import { warehouseDeps } from "./warehouse/container-deps.js";
 
 /**
  * Aggregated Module Dependencies
@@ -16,4 +17,5 @@ export const moduleDeps = {
   ...roleDeps,
   ...unitDeps,
   ...unitCollectionDeps,
+  ...warehouseDeps,
 };

@@ -1,4 +1,3 @@
-
 enum ResourceName {
   user
   role
@@ -17,10 +16,9 @@ enum ResourceName {
 }
 
 model Resource {
-  id          String       @id @default(uuid())
-  name        ResourceName @unique
-  description String?
-  permissions Permission[]
+  id            String         @id @default(uuid())
+  name          ResourceName   @unique
+  description   String?
+  permissions   Permission[]
   sidebarOption SidebarOption?
-
 }

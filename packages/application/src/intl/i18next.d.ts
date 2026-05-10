@@ -8,6 +8,7 @@ import type roleEn from "./locales/role/en.json";
 import type sidebarEn from "./locales/sidebar/en.json";
 import type unitEn from "./locales/unit/en.json";
 import type unitCollectionEn from "./locales/unit-collection/en.json";
+import type warehouseEn from "./locales/warehouse/en.json";
 
 type AuthMessages = typeof authEn;
 type ItemMessages = typeof itemEn;
@@ -19,6 +20,7 @@ type RoleMessages = typeof roleEn;
 type SidebarMessages = typeof sidebarEn;
 type UnitMessages = typeof unitEn;
 type UnitCollectionMessages = typeof unitCollectionEn;
+type WarehouseMessages = typeof warehouseEn;
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -33,6 +35,7 @@ declare module "i18next" {
       sidebar: SidebarMessages;
       unit: UnitMessages;
       unitCollection: UnitCollectionMessages;
+      warehouse: WarehouseMessages;
     };
   }
 }

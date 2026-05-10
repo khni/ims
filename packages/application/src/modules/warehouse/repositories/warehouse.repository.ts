@@ -1,31 +1,24 @@
-import { Context } from "../../types";
-
-export function repositoryTemplate({ featurePascal, featureCamel }: Context) {
-  return `import {
-  type Tx,
-  type DB,
-  PrismaTransaction,
-} from "@avuny/db";
+import { type Tx, type DB, PrismaTransaction } from "@avuny/db";
 
 import type {
-  Create${featurePascal}Repo,
-  Update${featurePascal}Repo,
-  ${featurePascal}RepoFilters,
-  ${featurePascal}RepoSorting,
-  ${featurePascal}WhereUniqueInput,
+  CreateWarehouseRepo,
+  UpdateWarehouseRepo,
+  WarehouseRepoFilters,
+  WarehouseRepoSorting,
+  WarehouseWhereUniqueInput,
 } from "@avuny/shared";
 
 import { IRepository } from "@avuny/core";
 
 /**
- * ${featurePascal} Repository
+ * Warehouse Repository
  *
  * Responsibility:
- * - Handles all DB operations for ${featureCamel}
+ * - Handles all DB operations for warehouse
  * - Abstracts Prisma from service layer
  * - Supports transactions via Tx
  */
-export class ${featurePascal}Repository
+export class WarehouseRepository
   extends PrismaTransaction
   implements IRepository
 {
@@ -48,26 +41,23 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Create ${featureCamel}
+   * Create warehouse
    */
-  async create(params: {
-    data: Create${featurePascal}Repo;
-    tx?: Tx;
-  }) {
+  async create(params: { data: CreateWarehouseRepo; tx?: Tx }) {
     const { data, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.create({
+    return db.warehouse.create({
       data,
       select: { id: true, name: true },
     });
   }
 
   /**
-   * Create many ${featureCamel}
+   * Create many warehouse
    */
   async createMany(params: {
-    data: Create${featurePascal}Repo[];
+    data: CreateWarehouseRepo[];
     skipDuplicates?: boolean;
     tx?: Tx;
   }): Promise<{
@@ -76,7 +66,7 @@ export class ${featurePascal}Repository
     const { data, skipDuplicates, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.createMany({
+    return db.warehouse.createMany({
       data,
       skipDuplicates,
     });
@@ -87,32 +77,29 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Find first ${featureCamel}
+   * Find first warehouse
    */
   async find(params: {
-    where: ${featurePascal}RepoFilters;
+    where: WarehouseRepoFilters;
     tx?: Tx;
   }): Promise<{ id: string } | null> {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findFirst({
+    return db.warehouse.findFirst({
       where,
       select: { id: true },
     });
   }
 
   /**
-   * Find unique ${featureCamel}
+   * Find unique warehouse
    */
-  async findUnique(params: {
-    where: ${featurePascal}WhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async findUnique(params: { where: WarehouseWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findUnique({
+    return db.warehouse.findUnique({
       where,
     });
   }
@@ -120,24 +107,21 @@ export class ${featurePascal}Repository
   /**
    * Find by ID (helper)
    */
-  async findById(params: {
-    id: string;
-    tx?: Tx;
-  }) {
+  async findById(params: { id: string; tx?: Tx }) {
     const { id, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findUnique({
+    return db.warehouse.findUnique({
       where: { id },
     });
   }
 
   /**
-   * Find many ${featureCamel}
+   * Find many warehouse
    */
   async findMany(params: {
-    where?: ${featurePascal}RepoFilters;
-    orderBy?: ${featurePascal}RepoSorting;
+    where?: WarehouseRepoFilters;
+    orderBy?: WarehouseRepoSorting;
     skip?: number;
     take?: number;
     tx?: Tx;
@@ -145,15 +129,16 @@ export class ${featurePascal}Repository
     const { tx, ...query } = params ?? {};
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findMany({
+    return db.warehouse.findMany({
       ...query,
     });
   }
+
   /**
-   * Find unit. ${featureCamel} options
+   * Find unit. warehouse options
    */
   async getOptions(params: {
-    where?: ${featurePascal}RepoFilters;
+    where?: WarehouseRepoFilters;
     take?: number;
     tx?: Tx;
     cursor?: { id: string };
@@ -161,23 +146,20 @@ export class ${featurePascal}Repository
     const { tx, ...query } = params ?? {};
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.findMany({
+    return db.warehouse.findMany({
       ...query,
       select: { id: true, name: true },
     });
   }
 
   /**
-   * Count ${featureCamel}
+   * Count warehouse
    */
-  async count(params?: {
-    where?: ${featurePascal}RepoFilters;
-    tx?: Tx;
-  }) {
+  async count(params?: { where?: WarehouseRepoFilters; tx?: Tx }) {
     const { tx, where } = params ?? {};
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.count({
+    return db.warehouse.count({
       where,
     });
   }
@@ -187,17 +169,17 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Update ${featureCamel}
+   * Update warehouse
    */
   async update(params: {
-    where: ${featurePascal}WhereUniqueInput;
-    data: Update${featurePascal}Repo;
+    where: WarehouseWhereUniqueInput;
+    data: UpdateWarehouseRepo;
     tx?: Tx;
   }) {
     const { where, data, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.update({
+    return db.warehouse.update({
       where,
       data,
     });
@@ -208,20 +190,15 @@ export class ${featurePascal}Repository
   ========================= */
 
   /**
-   * Delete ${featureCamel}
+   * Delete warehouse
    */
-  async delete(params: {
-    where: ${featurePascal}WhereUniqueInput;
-    tx?: Tx;
-  }) {
+  async delete(params: { where: WarehouseWhereUniqueInput; tx?: Tx }) {
     const { where, tx } = params;
     const db = this.getDB(tx);
 
-    return db.${featureCamel}.delete({
+    return db.warehouse.delete({
       where,
       select: { id: true },
     });
   }
-}
-`;
 }

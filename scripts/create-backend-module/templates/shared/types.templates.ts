@@ -14,14 +14,14 @@ import {
   create${featurePascal}RepoSchema,
   update${featurePascal}RepoSchema,
   
-  ${featurePascal}WhereUniqueInputSchema,
-  ${featurePascal}FiltersSchema,
-  ${featurePascal}RepoFiltersSchema,
+  ${featureCamel}WhereUniqueInputSchema,
+  ${featureCamel}FiltersSchema,
+  ${featureCamel}RepoFiltersSchema,
 
-  ${featurePascal}SortingSchema,
-  ${featurePascal}RepoSortingSchema,
+  ${featureCamel}SortingSchema,
+  ${featureCamel}RepoSortingSchema,
 
-  ${featurePascal}OptionsResponseSchema,
+  ${featureCamel}OptionsResponseSchema,
 } from "./schemas.js";
 
 /* =========================
@@ -67,7 +67,7 @@ export type ${featurePascal}ListResponse = z.infer<
 /**
  * Options response
  */
-export type ${featurePascal}OptionsResponse = z.infer<typeof ${featurePascal}OptionsResponseSchema>;
+export type ${featurePascal}OptionsResponse = z.infer<typeof ${featureCamel}OptionsResponseSchema>;
 
 /* =========================
    Mutations (API Layer)
@@ -120,21 +120,21 @@ export type Update${featurePascal}Repo = z.infer<
  * - Can be extended later (email, slug, etc.)
  */
 export type ${featurePascal}WhereUniqueInput = z.infer<
-  typeof ${featurePascal}WhereUniqueInputSchema
+  typeof ${featureCamel}WhereUniqueInputSchema
 >;
 
 /**
  * UI filters (from frontend)
  */
 export type ${featurePascal}Filters = z.infer<
-  typeof ${featurePascal}FiltersSchema
+  typeof ${featureCamel}FiltersSchema
 >;
 
 /**
  * Repo filters (Prisma / DB)
  */
 export type ${featurePascal}RepoFilters = z.infer<
-  typeof ${featurePascal}RepoFiltersSchema
+  typeof ${featureCamel}RepoFiltersSchema
 >;
 
 /* =========================
@@ -145,14 +145,14 @@ export type ${featurePascal}RepoFilters = z.infer<
  * UI sorting (table)
  */
 export type ${featurePascal}Sorting = z.infer<
-  typeof ${featurePascal}SortingSchema
+  typeof ${featureCamel}SortingSchema
 >;
 
 /**
  * Repo sorting (DB orderBy)
  */
 export type ${featurePascal}RepoSorting = z.infer<
-  typeof ${featurePascal}RepoSortingSchema
+  typeof ${featureCamel}RepoSortingSchema
 >;
 
 /* =========================

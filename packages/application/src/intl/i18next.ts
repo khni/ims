@@ -30,6 +30,9 @@ import unitAr from "./locales/unit/ar.json" with { type: "json" };
 import unitCollectionEn from "./locales/unit-collection/en.json" with { type: "json" };
 import unitCollectionAr from "./locales/unit-collection/ar.json" with { type: "json" };
 
+import warehouseEn from "./locales/warehouse/en.json" with { type: "json" };
+import warehouseAr from "./locales/warehouse/ar.json" with { type: "json" };
+
 i18n.init({
   fallbackLng: "en",
   lng: "en",
@@ -46,6 +49,7 @@ i18n.init({
       sidebar: sidebarEn,
       unit: unitEn,
       unitCollection: unitCollectionEn,
+      warehouse: warehouseEn,
     },
     ar: {
       auth: authAr,
@@ -58,6 +62,7 @@ i18n.init({
       sidebar: sidebarAr,
       unit: unitAr,
       unitCollection: unitCollectionAr,
+      warehouse: warehouseAr,
     },
   },
 
@@ -71,7 +76,8 @@ i18n.init({
     "role",
     "sidebar",
     "unit",
-    "unitCollection"
+    "unitCollection",
+    "warehouse"
   ],
 
   interpolation: {

@@ -13,7 +13,6 @@ model Role {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
-
   // Role metadata
   isSystem Boolean @default(false)
   priority Int     @default(0)
@@ -21,7 +20,7 @@ model Role {
   // Permissions
   rolePermissions       RolePermission[]
   roleCustomPermissions RoleCustomPermission[]
-  organizationUsers             OrganizationUser[]
+  organizationUsers     OrganizationUser[]
 
   // Audit
   createdAt DateTime  @default(now())
@@ -35,10 +34,9 @@ model Role {
 
 // Role Assignment to Users within Organizations
 
-
 model OrganizationUser {
   id             String       @id @default(uuid())
-  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
   name           String
   role           Role         @relation(fields: [roleId], references: [id], onDelete: Cascade)
@@ -46,16 +44,15 @@ model OrganizationUser {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
 
-  
-  status     OrganizationUserStatus @default(PENDING)
-  expiresAt  DateTime?
+  status    OrganizationUserStatus @default(PENDING)
+  expiresAt DateTime?
 
   // Metadata
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId,  organizationId])
-  @@unique([name,  organizationId])
+  @@unique([userId, organizationId])
+  @@unique([name, organizationId])
   @@index([userId, status])
   @@index([roleId, status])
   @@map("organization_users")
@@ -71,7 +68,6 @@ model RolePermission {
   roleId       String
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
   permissionId String
-
 
   conditions Json?
   isActive   Boolean @default(true)

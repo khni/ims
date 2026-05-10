@@ -1,11 +1,4 @@
-import { Context } from "../../../types";
-
-export function listRouteTemplate({
-  featurePascal,
-  featureCamel,
-  kebabCase,
-}: Context) {
-  return `import {
+import {
   AuthorizationHeaderSchema,
   createDomainErrorResponseSchema,
   createFindManyQuerySchema,
@@ -18,48 +11,40 @@ export function listRouteTemplate({
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 
 import {
-  ${featureCamel}FiltersSchema,
-  ${featureCamel}ListResponseSchema,
-  ${featurePascal}Filters,
-  ${featurePascal}Sorting,
+  warehouseFiltersSchema,
+  warehouseListResponseSchema,
+  WarehouseFilters,
+  WarehouseSorting,
 } from "@avuny/shared";
 
-import {
-  parseFindManyQuery,
-  getContext,
-  handleResult,
-} from "@avuny/hono";
+import { parseFindManyQuery, getContext, handleResult } from "@avuny/hono";
 
 import container from "../../../container.js";
 import { isAuthenticatedMiddleware } from "../../../shared.js";
 import { trans } from "../../../intl/trans.js";
 
-
 import { FilteredPaginatedList } from "@avuny/core";
 
-import { ${featurePascal}ErrorMap } from "../errors/${kebabCase}.error-map.js";
+import { WarehouseErrorMap } from "../errors/warehouse.error-map.js";
 
 /**
- * ${featurePascal} List Route
+ * Warehouse List Route
  * - Supports filtering, sorting, pagination
  */
-export const ${featureCamel}ListRoute = new OpenAPIHono();
+export const warehouseListRoute = new OpenAPIHono();
 
 const route = createRoute({
   method: "get",
   path: "/",
-  operationId: "${featureCamel}List",
-  tags: ["${featureCamel}"],
+  operationId: "warehouseList",
+  tags: ["warehouse"],
 
-  middleware: [
-    isAuthenticatedMiddleware,
-    parseFindManyQuery,
-  ],
+  middleware: [isAuthenticatedMiddleware, parseFindManyQuery],
 
   request: {
     headers: AuthorizationHeaderSchema,
     query: createFindManyQuerySchema({
-      filtersSchema: ${featureCamel}FiltersSchema,
+      filtersSchema: warehouseFiltersSchema,
     }),
   },
 
@@ -68,12 +53,10 @@ const route = createRoute({
      * Success
      */
     200: {
-      description: "${featurePascal} list retrieved successfully",
+      description: "Warehouse list retrieved successfully",
       content: {
         "application/json": {
-          schema: createPaginatedResponseSchema(
-            ${featureCamel}ListResponseSchema
-          ),
+          schema: createPaginatedResponseSchema(warehouseListResponseSchema),
         },
       },
     },
@@ -82,7 +65,7 @@ const route = createRoute({
      * Permission error
      */
     [ModuleErrorResponseMap.USER_NO_PERMISSION.statusCode]: {
-      description: "User has no permission to access ${featureCamel}",
+      description: "User has no permission to access warehouse",
       content: {
         "application/json": {
           schema: createDomainErrorResponseSchema([
@@ -99,10 +82,8 @@ const route = createRoute({
 /**
  * Route Handler
  */
-${featureCamel}ListRoute.openapi(route, async (c) => {
-  const ${featureCamel}Service = container.resolve(
-    "${featureCamel}Service"
-  );
+warehouseListRoute.openapi(route, async (c) => {
+  const warehouseService = container.resolve("warehouseService");
 
   const context = getContext(c);
 
@@ -114,29 +95,26 @@ ${featureCamel}ListRoute.openapi(route, async (c) => {
    * Parsed query (filters, sorting, pagination)
    */
   const query = c.get("findManyQuery") as FilteredPaginatedList<
-       ${featurePascal}Filters,
-       ${featurePascal}Sorting
-    >;
+    WarehouseFilters,
+    WarehouseSorting
+  >;
 
-  const result =
-    await ${featureCamel}Service.filteredPaginatedList({
-      context,
-      query,
-    });
+  const result = await warehouseService.filteredPaginatedList({
+    context,
+    query,
+  });
 
   /**
    * Only expose relevant errors
    */
-  const { USER_NO_PERMISSION } = ${featurePascal}ErrorMap;
+  const { USER_NO_PERMISSION } = WarehouseErrorMap;
 
   return handleResult({
     c,
     result,
     successStatus: 200,
     errorMap: { USER_NO_PERMISSION },
-    moduleName: "${featureCamel}",
+    moduleName: "warehouse",
     errorTrans,
   });
 });
-`;
-}

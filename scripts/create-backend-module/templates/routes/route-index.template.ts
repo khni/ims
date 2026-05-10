@@ -26,6 +26,7 @@ export const app = new OpenAPIHono();
 app.route("/", create${featurePascal}Route);
 app.route("/", ${featureCamel}ListRoute);
 app.route("/", update${featurePascal}Route);
+app.route("/", ${featureCamel}OptionListRoute);
 app.route("/", get${featurePascal}ByIdRoute);
 app.route("/", delete${featurePascal}Route);
 

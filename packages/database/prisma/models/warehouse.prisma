@@ -1,0 +1,113 @@
+enum WarehouseType {
+  PHYSICAL // Real warehouses, shelves, or vans
+  VIRTUAL // Suppliers, Customers, Adjustments, or Scrapped
+}
+
+model Warehouse {
+  id             String        @id() @default(uuid())
+  name           String        @db.VarChar(255)
+  type           WarehouseType @default(PHYSICAL)
+  description    String?
+  country        String?
+  city           String?
+  state          String?
+  postalCode     String?
+  address        String?
+  //itemsOnWarehouses ItemsOnWarehouse[]
+  zones          Zone[]
+  bins           Bin[]
+  location       String?
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt()
+  //defaultSetting    DefaultSetting?
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("warehouses")
+}
+
+model Zone {
+  id          String    @id() @default(uuid())
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  name        String
+  aisles      Aisle[]
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@unique([warehouseId, name])
+  @@index([warehouseId])
+  @@map("zones")
+}
+
+model Aisle {
+  id        String   @id() @default(uuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  zoneId    String
+  zone      Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  name      String
+  bays      Bay[]
+
+  @@unique([zoneId, name])
+}
+
+model Bay {
+  id        String   @id() @default(uuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  aisleId   String
+  aisle     Aisle    @relation(fields: [aisleId], references: [id], onDelete: Cascade)
+  name      String
+  shelves   Shelf[]
+
+  @@unique([aisleId, name])
+  @@index([aisleId])
+  @@map("bays")
+}
+
+model Shelf {
+  id        String   @id() @default(uuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+  bayId     String
+  bay       Bay      @relation(fields: [bayId], references: [id], onDelete: Cascade)
+  name      String
+  bins      Bin[]
+
+  @@unique([bayId, name])
+  @@index([bayId])
+  @@map("shelves")
+}
+
+model Bin {
+  id          String    @id() @default(uuid())
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt()
+  shelfId     String?
+  shelf       Shelf?    @relation(fields: [shelfId], references: [id], onDelete: SetNull)
+  binPosition String
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  code        String
+  description String?
+  // inventoryItems           InventoryItem[]
+  // itemsOnPurchaseOrders    ItemsOnPurchaseOrders[]
+  // itemsOnSalesOrders       ItemsOnSalesOrders[]
+  // itemTransferDestinations ItemTransfer[]          @relation(name: "destinationBin")
+  // itemTransferSources      ItemTransfer[]          @relation(name: "sourceBin")
+
+  @@unique([shelfId, binPosition])
+  @@unique([code, warehouseId])
+  @@index([warehouseId])
+  @@map("bins")
+}
