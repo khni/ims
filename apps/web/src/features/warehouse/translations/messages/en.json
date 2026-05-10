@@ -1,0 +1,24 @@
+{
+  "warehouse": {
+    "form": {
+      "headings": {
+        "title": "{action} warehouse",
+        "description": "Use this form to {action} an warehouse."
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description"
+      }
+    },
+    "headers": {
+      "list": "List",
+      "warehouses": "Warehouses"
+    },
+    "columnHeaders": {
+      "id": "ID",
+      "name": "name",
+      "description": "description",
+      "updatedAt": "Last Updated"
+    }
+  }
+}

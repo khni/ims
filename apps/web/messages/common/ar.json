@@ -49,6 +49,7 @@
       "organizationUser": "مستخدم المؤسسة",
       "role": "الدور",
       "item": "الصنف",
+      "warehouse": "المستودع",
       "unit": "الوحدة",
       "unitCollection": "مجموعة الوحدات",
       "invoice": "الفاتورة",

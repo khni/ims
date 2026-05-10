@@ -1,0 +1,24 @@
+{
+  "warehouse": {
+    "form": {
+      "headings": {
+        "title": "{action} warehouse",
+        "description": "استخدم هذا النموذج لـ {action} warehouse"
+      },
+      "fields": {
+        "name": "الاسم",
+        "description": "الوصف"
+      }
+    },
+    "headers": {
+      "list": "قائمة",
+      "warehouses": "المخازن"
+    },
+    "columnHeaders": {
+      "id": "المعرف",
+      "name": "الاسم",
+      "description": "الوصف",
+      "updatedAt": "آخر تحديث"
+    }
+  }
+}

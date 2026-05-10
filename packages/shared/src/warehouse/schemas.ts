@@ -11,7 +11,7 @@ import { z } from "@avuny/zod";
 export const warehouseSchema = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullable(),
   organizationId: z.string(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
@@ -79,6 +79,7 @@ export const getWarehouseByIdResponseSchema = warehouseSchema.pick({
   id: true,
   name: true,
   updatedAt: true,
+  description: true,
 });
 
 /**

@@ -120,7 +120,7 @@ export * from "./${DIRS.list}";
 });
 
 export const createModulePagesStructure = (ctx: Context): StructureNode => ({
-  name: ctx.kebabCase,
+  name: ctx.pluralKebabCase,
   type: "dir",
   children: [
     {

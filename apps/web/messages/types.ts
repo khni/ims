@@ -6,6 +6,7 @@ import organizationuserMessages from "../src/features/organizationUser/translati
 import roleMessages from "../src/features/role/translations/messages/en.json";
 import unitMessages from "../src/features/unit/translations/messages/en.json";
 import unitCollectionMessages from "../src/features/unit-collection/translations/messages/en.json";
+import warehouseMessages from "../src/features/warehouse/translations/messages/en.json";
 
 export type Messages = typeof commonMessages &
   typeof authMessages &
@@ -14,7 +15,8 @@ export type Messages = typeof commonMessages &
   typeof organizationuserMessages &
   typeof roleMessages &
   typeof unitMessages &
-  typeof unitCollectionMessages;
+  typeof unitCollectionMessages &
+  typeof warehouseMessages;
 
 export const messages: Messages = {
   ...commonMessages,
@@ -24,5 +26,6 @@ export const messages: Messages = {
   ...organizationuserMessages,
   ...roleMessages,
   ...unitMessages,
-  ...unitCollectionMessages
+  ...unitCollectionMessages,
+  ...warehouseMessages,
 };

@@ -50,6 +50,7 @@
       "organizationUser": "Organization User",
       "account": "Account",
       "item": "Item",
+      "warehouse": "Warehouse",
       "unit": "Unit",
       "unitCollection": "Unit Collection",
       "invoice": "Invoice",

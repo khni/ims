@@ -27,7 +27,7 @@ import { usePathname, useRouter } from "next/navigation";
 import LoadingPage from "@workspace/ui/blocks/loading/loading-page";
 import useOrganizationListHandler from "@/src/features/organization/list/hooks/useOrganizationListHandler";
 import { GetSidebar200Item, GetSidebar200ItemName } from "@/src/api/model";
-import { isSidebarOptionActive } from "@/src/features/sidebar/is-sidebar-option-active";
+import { isSidebarOptionActive } from "@/src/utils/sidebar/is-sidebar-option-active";
 
 export default function WorkSpaceLayout({
   children,

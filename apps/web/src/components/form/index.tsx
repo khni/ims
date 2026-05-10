@@ -17,6 +17,7 @@ export type FormProps<T extends FieldValues, E, S extends string> = {
     | "organization"
     | "role"
     | "item"
+    | "warehouse"
     | "organizationUser"
     | "unit"
     | "unitCollection";
