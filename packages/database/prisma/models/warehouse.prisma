@@ -16,7 +16,7 @@ model Warehouse {
   //itemsOnWarehouses ItemsOnWarehouse[]
   zones          Zone[]
   bins           Bin[]
-  location       String?
+  bin       String?
   organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
   isActive       Boolean       @default(true)
@@ -100,14 +100,19 @@ model Bin {
   warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
   code        String
   description String?
-  // inventoryItems           InventoryItem[]
-  // itemsOnPurchaseOrders    ItemsOnPurchaseOrders[]
-  // itemsOnSalesOrders       ItemsOnSalesOrders[]
-  // itemTransferDestinations ItemTransfer[]          @relation(name: "destinationBin")
-  // itemTransferSources      ItemTransfer[]          @relation(name: "sourceBin")
+  
+  stockBalance  StockBalance[]
+  fromStockMovements StockMovement[] @relation("SourceBin")
+  toStockMovements   StockMovement[] @relation("DestinationBin")
+  batchBins BatchBin[]
+
+  
+
+
 
   @@unique([shelfId, binPosition])
   @@unique([code, warehouseId])
   @@index([warehouseId])
   @@map("bins")
 }
+

@@ -1,0 +1,141 @@
+model StockMovement {
+  id              String   @id @default(cuid())
+  quantity        Decimal  @db.Decimal(18, 4)
+  createdAt       DateTime @default(now())
+
+  itemId       String
+  item         Item  @relation(fields: [itemId], references: [id])
+
+  // THE CREDIT SIDE: Where stock is leaving
+  fromBinId  String
+  fromBin    Bin @relation("SourceBin", fields: [fromBinId], references: [id])
+
+  // THE DEBIT SIDE: Where stock is entering
+  toBinId    String
+  toBin      Bin @relation("DestinationBin", fields: [toBinId], references: [id])
+
+  organizationId        String
+  organization          Organization   @relation(fields: [organizationId], references: [id])
+
+  @@index([itemId])
+  @@index([fromBinId])
+  @@index([toBinId])
+}
+
+
+model StockBalance {
+  id           String   @id @default(uuid())
+  binId        String
+  bin          Bin      @relation(fields: [binId], references: [id])
+  itemId       String
+  item         Item     @relation(fields: [itemId], references: [id])
+
+  // --- QUANTITY STATES ---
+  
+  // Physical items actually sitting on the shelf
+  onHandQty    Decimal  @default(0) @db.Decimal(18, 4)
+
+  // Items reserved for open orders (Physical, but not "available")
+  reservedQty  Decimal  @default(0) @db.Decimal(18, 4)
+
+  // Items bought from supplier but not yet arrived (Virtual)
+  incomingQty  Decimal  @default(0) @db.Decimal(18, 4)
+
+  // --- DERIVED LOGIC (Usually calculated in your service) ---
+  // Available = onHandQty - reservedQty
+
+  batches      Batch[]  // For traceability of which batches contribute to this balance
+
+  updatedAt    DateTime @updatedAt
+  @@unique([itemId, binId])
+}
+
+
+model Batch {
+  id String @id @default(uuid())
+
+  itemId String
+  item   Item @relation(fields: [itemId], references: [id], onDelete: Restrict)
+
+  stockBalanceId String
+  stockBalance   StockBalance @relation(fields: [stockBalanceId], references: [id], onDelete: Cascade)
+
+  batchBins BatchBin[]
+
+  // =========================
+  // COSTING / TRACEABILITY
+  // =========================
+
+  unitCost Decimal @db.Decimal(18, 4)
+
+  lotNumber String?
+
+  supplierBatchNumber String?
+
+  receivedAt DateTime @default(now())
+
+  manufacturingDate DateTime?
+
+  expirationDate DateTime?
+
+  // =========================
+  // STATUS
+  // =========================
+
+  isFullyConsumed Boolean @default(false)
+
+  isActive Boolean @default(true)
+
+  // =========================
+  // AUDIT
+  // =========================
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@index([itemId])
+  @@index([stockBalanceId])
+  @@index([expirationDate])
+  @@map("batches")
+}
+model BatchBin {
+  /// Why this table exists instead of adding `binId` directly to Batch:
+  /// A single batch can be split across multiple bins in a warehouse.
+  /// This allows partial storage, movement, and tracking of quantities per location.
+  /// Example:
+  /// Batch A → 30 units in Bin-1, 70 units in Bin-2.
+  /// Storing `binId` in Batch would incorrectly limit a batch to only one bin.
+  batchId String
+  binId   String
+
+  batch Batch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  bin   Bin   @relation(fields: [binId], references: [id], onDelete: Cascade)
+
+  // =========================
+  // PHYSICAL INVENTORY
+  // =========================
+
+  quantity Decimal @db.Decimal(18, 4)
+
+  reservedQuantity Decimal @default(0) @db.Decimal(18, 4)
+
+  // =========================
+  // CONTROL
+  // =========================
+
+  isLocked Boolean @default(false)
+
+  // =========================
+  // AUDIT
+  // =========================
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@id([batchId, binId])
+
+  @@index([batchId])
+  @@index([binId])
+
+  @@map("batch_bins")
+}

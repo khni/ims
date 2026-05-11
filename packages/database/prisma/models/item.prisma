@@ -9,6 +9,9 @@ model Item {
   unitCollection   UnitCollection  @relation(fields: [unitCollectionId], references: [id], onDelete: Cascade)
   unitCollectionId String
   itemUnitPrices   ItemUnitPrice[]
+  stockMovements     StockMovement[]
+  stockBalances      StockBalance[]
+  batches            Batch[]
 
   barcode      String?
   returnable   Boolean

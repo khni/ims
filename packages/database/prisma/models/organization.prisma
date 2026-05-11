@@ -23,6 +23,7 @@ model Organization {
   units             Unit[]
   unitCollections   UnitCollection[]
   warehouses        Warehouse[]
+  stockMovements     StockMovement[]
 
   // optional fields
   address String?
