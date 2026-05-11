@@ -36,7 +36,16 @@ export const baseMutateWarehouseSchema = warehouseSchema.omit({
  * Repo Schemas (DB layer)
  * - Includes organizationId
  */
-export const createWarehouseRepoSchema = baseMutateWarehouseSchema;
+export const createWarehouseRepoSchema = baseMutateWarehouseSchema.extend({
+  bins: z
+    .array(
+      z.object({
+        code: z.string(),
+        binPosition: z.string(),
+      }),
+    )
+    .optional(),
+});
 
 export const updateWarehouseRepoSchema = baseMutateWarehouseSchema;
 

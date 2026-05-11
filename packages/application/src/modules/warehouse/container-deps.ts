@@ -2,6 +2,7 @@ import { asClass } from "awilix";
 
 import { WarehouseRepository } from "./repositories/warehouse.repository.js";
 import { WarehouseService } from "./services/warehouse.service.js";
+import { DefaultWarehouseService } from "./services/default-warehouse.service.js";
 
 /**
  * Warehouse Dependencies
@@ -16,4 +17,5 @@ import { WarehouseService } from "./services/warehouse.service.js";
 export const warehouseDeps = {
   warehouseRepository: asClass(WarehouseRepository).scoped(),
   warehouseService: asClass(WarehouseService).scoped(),
+  defaultWarehouseService: asClass(DefaultWarehouseService).scoped(),
 };

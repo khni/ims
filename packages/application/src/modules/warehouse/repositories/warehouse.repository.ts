@@ -47,8 +47,13 @@ export class WarehouseRepository
     const { data, tx } = params;
     const db = this.getDB(tx);
 
+    const { bins, ...warehouseData } = data;
+
     return db.warehouse.create({
-      data,
+      data: {
+        ...warehouseData,
+        bins: { create: bins },
+      },
       select: { id: true, name: true },
     });
   }

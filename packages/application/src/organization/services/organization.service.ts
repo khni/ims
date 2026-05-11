@@ -4,27 +4,32 @@ import { OrganizationErrorCode } from "../errors/errorCode.js";
 import { CreateOrganizationBody, UpdateOrganizationBody } from "../types.js";
 import { IOwnerOrganizationUserService } from "../../shared/owner-oganization-user.interface.js";
 import { IOwnerRoleService } from "../../shared/owner-role.interface.js";
+import { IDefaultWarehouseService } from "../../shared/default-warehouses.interface.js";
 export class OrganizationService {
   private organizationRepository: OrganizationRepository;
   private moduleService: ModuleService<OrganizationRepository>;
   private ownerOrganizationUserService: IOwnerOrganizationUserService;
   private ownerRoleService: IOwnerRoleService;
+  private defaultWarehouseService: IDefaultWarehouseService;
 
   constructor({
     organizationRepository,
     moduleService,
     ownerOrganizationUserService,
     ownerRoleService,
+    defaultWarehouseService,
   }: {
     organizationRepository: OrganizationRepository;
     moduleService: ModuleService<OrganizationRepository>;
     ownerOrganizationUserService: IOwnerOrganizationUserService;
     ownerRoleService: IOwnerRoleService;
+    defaultWarehouseService: IDefaultWarehouseService;
   }) {
     this.organizationRepository = organizationRepository;
     this.moduleService = moduleService;
     this.ownerOrganizationUserService = ownerOrganizationUserService;
     this.ownerRoleService = ownerRoleService;
+    this.defaultWarehouseService = defaultWarehouseService;
 
     this.moduleService.setConfig({
       repository: this.organizationRepository,
@@ -75,7 +80,15 @@ export class OrganizationService {
               organizationId: record.id,
             },
           });
+          const warehouses = await this.defaultWarehouseService.create({
+            context,
+            tx,
+            data: {
+              organizationId: record.id,
+            },
+          });
           console.log(user, "user");
+          console.log(warehouses, "warehouses");
         },
       },
     });
